@@ -1,0 +1,1640 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+<title>آزمون‌یار | برنامه‌ریز مطالعه و کنکور</title>
+<link rel="stylesheet" href="../libs/vazirmatn/Vazirmatn-font-face.css" />
+<script src="../libs/chart.umd.js"></script>
+    <style>
+:root{
+  /* رنگ‌های برنامه‌ریز از تم مشترک (shared/theme.css) گرفته می‌شود */
+  --bg:var(--water-color);--card:var(--water-light);--text:var(--text-color);--muted:var(--text-muted);--line:var(--border-color);
+  --primary:var(--primary-color);--primary2:var(--primary-light);--primary-soft:color-mix(in srgb,var(--primary-color) 14%,var(--water-light));
+  --green:#1f9d63;--green-soft:#e7f8ef;--orange:#e08a1a;--orange-soft:#fdf1de;
+  --red:#e0505e;--red-soft:#fdeaec;--blue:#3b7fd6;--blue-soft:#e9f2fe;
+  --radius:16px;--radius-sm:10px;
+}
+/* حالت شب مستقلِ برنامه‌ریز؛ با تم سراسری آزمون‌یار هم‌زیستی دارد. */
+body.dark{
+  --bg:#12141c;--card:#191c27;--text:#eef0f6;--muted:#8a90a3;--line:#272b3a;
+  --primary:#8384ff;--primary2:#9d9eff;--primary-soft:#22233a;
+  --green:#33c07e;--green-soft:#173226;--orange:#f0a53c;--orange-soft:#332711;
+  --red:#f0707c;--red-soft:#331f22;--blue:#5b9bef;--blue-soft:#182a3f;
+  --shadow:0 10px 28px rgba(0,0,0,.35);
+}
+/* رنگ‌های معنایی (سبز/نارنجی/قرمز/آبی) در تم‌های تیره */
+html[data-theme="galaxy"],html[data-theme="coal-mine"]{
+  --green:#33c07e;--green-soft:#173226;--orange:#f0a53c;--orange-soft:#332711;
+  --red:#f0707c;--red-soft:#331f22;--blue:#5b9bef;--blue-soft:#182a3f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;transition:background .25s,color .25s}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.hidden{display:none!important}
+.app{min-height:100vh}
+.top{height:70px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:20;gap:14px}
+.brand{display:flex;gap:11px;align-items:center;white-space:nowrap}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#9b6ff0);color:#fff;display:grid;place-items:center;font-size:19px;font-weight:900;flex:none}
+.brand h1{font-size:15px;margin:0}
+.brand small{color:var(--muted);font-size:10.5px}
+.quickadd{flex:1;max-width:520px;display:flex;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:6px 6px 6px 12px}
+.quickadd input{flex:1;background:none;border:0;outline:none;font-size:12.5px;color:var(--text)}
+.quickadd button{background:var(--primary);color:#fff;padding:8px 13px;border-radius:9px;font-size:11.5px;white-space:nowrap}
+.top-actions{display:flex;gap:8px;flex:none}
+.btn{padding:9px 14px;border-radius:10px;background:var(--primary-soft);color:var(--primary);font-size:12px;font-weight:700;white-space:nowrap}
+.btn.primary{background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(91,92,226,.25)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:600}
+.btn.sm{padding:6px 10px;font-size:11px}
+.btn.danger{background:var(--red-soft);color:var(--red)}
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 70px)}
+.side{background:var(--card);border-left:1px solid var(--line);padding:18px 12px;overflow-y:auto}
+.side-label{font-size:10px;color:#9aa1b0;margin:16px 10px 6px;font-weight:800;letter-spacing:.3px}
+.nav{width:100%;padding:10px 11px;text-align:right;border-radius:10px;color:var(--muted);margin:2px 0;font-size:12.5px;display:flex;align-items:center;gap:9px;font-weight:600}
+.nav:hover{background:var(--primary-soft);color:var(--primary)}
+.nav.active{background:var(--primary-soft);color:var(--primary);font-weight:800}
+main{padding:24px;max-width:1500px;width:100%;margin:auto}
+.view{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero{background:var(--gradient-primary);color:#fff;border-radius:20px;padding:24px 26px;box-shadow:0 16px 36px rgba(91,92,226,.2)}
+.hero h2{margin:0 0 6px;font-size:20px}
+.hero p{margin:0;opacity:.85;font-size:12.5px;max-width:560px}
+.hero-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.score{text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);padding:11px 20px;border-radius:14px}
+.score b{font-size:21px;display:block}
+.score span{font-size:9.5px;opacity:.85}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}
+.stat,.panel,.task,.card{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius)}
+.stat{padding:15px}
+.stat .ico{font-size:17px;color:var(--primary)}
+.stat .label{display:block;color:var(--muted);font-size:10.5px;margin:7px 0}
+.stat b{font-size:17px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{padding:18px}
+.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.panel-title h3{font-size:13.5px;margin:0}
+.muted{color:var(--muted);font-size:11px}
+.now{border:1px solid var(--primary-soft);background:var(--primary-soft);border-radius:14px;padding:15px}
+.now .tag{display:inline-block;background:var(--card);color:var(--primary);padding:4px 9px;border-radius:7px;font-size:10px;font-weight:800}
+.now h4{margin:9px 0 4px;font-size:15px}
+.now-row{display:flex;justify-content:space-between;align-items:center;font-size:11.5px}
+.reason{font-size:10.5px;color:var(--muted);margin:3px 0}
+.progress{height:7px;background:var(--bg);border-radius:9px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--primary);border-radius:9px}
+.progress.green i{background:var(--green)}
+.progress.orange i{background:var(--orange)}
+.progress.red i{background:var(--red)}
+.task-list{display:flex;flex-direction:column;gap:8px}
+.task{padding:12px;display:flex;align-items:center;gap:10px;box-shadow:none}
+.check{width:23px;height:23px;border:2px solid var(--line);border-radius:7px;background:var(--card);color:#fff;display:grid;place-items:center;flex:none;font-size:12px}
+.task.done .check{background:var(--green);border-color:var(--green)}
+.task.done .taskname{text-decoration:line-through;color:var(--muted)}
+.task.overdue{border-color:var(--red)}
+.taskmain{flex:1;min-width:0}
+.taskname{font-size:12.5px;font-weight:700}
+.taskmeta{color:var(--muted);font-size:10px;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:4px 8px;border-radius:7px;font-size:9.5px;font-weight:800;white-space:nowrap}
+.pill.study{background:var(--primary-soft);color:var(--primary)}
+.pill.test{background:var(--orange-soft);color:var(--orange)}
+.pill.review{background:var(--green-soft);color:var(--green)}
+.pill.analysis{background:var(--blue-soft);color:var(--blue)}
+.pill.exam{background:var(--red-soft);color:var(--red)}
+.pill.class{background:var(--blue-soft);color:var(--blue)}
+.pill.high{background:var(--red-soft);color:var(--red)}
+.pill.medium{background:var(--orange-soft);color:var(--orange)}
+.pill.low{background:var(--green-soft);color:var(--green)}
+.taskactions{display:flex;gap:5px;flex:none}
+.icobtn{width:26px;height:26px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:12px;color:var(--muted)}
+.icobtn:hover{color:var(--primary)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.day{border:1px solid var(--line);border-radius:12px;min-height:150px;padding:8px;background:var(--bg)}
+.day.today{border:2px solid var(--primary);background:var(--primary-soft)}
+.dayhead{font-size:10px;color:var(--muted);display:flex;justify-content:space-between}
+.daynum{font-size:14px;color:var(--text);font-weight:800}
+.event{font-size:9px;border-radius:7px;padding:6px;margin-top:6px;line-height:1.5;cursor:pointer}
+.event.study{background:var(--primary-soft);color:var(--primary)}
+.event.test{background:var(--orange-soft);color:var(--orange)}
+.event.review{background:var(--green-soft);color:var(--green)}
+.event.exam{background:var(--red-soft);color:var(--red)}
+.event.class{background:var(--blue-soft);color:var(--blue)}
+.goalbox{padding:14px;border:1px solid var(--line);border-radius:13px;margin-bottom:10px}
+.goalrow{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px}
+.subject-list{display:grid;gap:9px}
+.subject{border:1px solid var(--line);border-radius:12px;padding:12px}
+.subject-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.subject-head b{font-size:12.5px}
+.topics{margin-top:10px;display:none;flex-direction:column;gap:6px}
+.topics.open{display:flex}
+.topic-row{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer}
+.topic-row:hover{border-color:var(--primary)}
+.topic-name{font-size:11.5px;font-weight:700}
+.topic-chapter{font-size:9.5px;color:var(--muted)}
+.mastery-tag{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:7px}
+.mastery-weak{background:var(--red-soft);color:var(--red)}
+.mastery-mid{background:var(--orange-soft);color:var(--orange)}
+.mastery-good{background:var(--green-soft);color:var(--green)}
+.mastery-none{background:var(--bg);color:var(--muted);border:1px dashed var(--line)}
+.chip{display:inline-block;padding:5px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-size:10.5px;margin:3px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(10,12,20,.5);z-index:50;align-items:center;justify-content:center;padding:18px}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border-radius:18px;width:min(640px,100%);padding:20px;max-height:92vh;overflow:auto}
+.modal.wide{width:min(880px,100%)}
+.modal h3{margin:0 0 14px;font-size:15px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.field label{font-size:10px;color:var(--muted);display:block;margin-bottom:5px;font-weight:700}
+.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;outline:none;background:var(--bg);color:var(--text)}
+.field textarea{min-height:70px;resize:vertical}
+.full{grid-column:1/-1}
+.modal-actions{display:flex;justify-content:flex-start;gap:8px;margin-top:15px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;left:20px;background:#20242f;color:#fff;padding:11px 16px;border-radius:10px;display:none;z-index:80;font-size:11.5px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.timer{font-size:44px;font-weight:900;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.timer small{font-size:11px;color:var(--muted);display:block;font-weight:500;margin-top:4px}
+.empty{padding:22px;text-align:center;color:var(--muted);font-size:11.5px}
+.tabbar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tabbtn{padding:8px 13px;border-radius:9px;background:var(--bg);font-size:11.5px;font-weight:700;color:var(--muted)}
+.tabbtn.active{background:var(--primary);color:#fff}
+.kv{display:flex;justify-content:space-between;font-size:11.5px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.kv:last-child{border:0}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px}
+.badge{border:1px solid var(--line);border-radius:12px;padding:11px;text-align:center;width:104px;font-size:10px}
+.badge .bi{font-size:20px;display:block;margin-bottom:5px}
+.badge.locked{opacity:.38}
+.badge.earned{border-color:var(--primary);background:var(--primary-soft)}
+table.simple{width:100%;border-collapse:collapse;font-size:11.5px}
+table.simple th{text-align:right;color:var(--muted);font-weight:700;padding:8px 6px;border-bottom:1px solid var(--line);font-size:10.5px}
+table.simple td{padding:8px 6px;border-bottom:1px solid var(--line)}
+.warn-box{background:var(--orange-soft);color:var(--orange);border-radius:10px;padding:10px 12px;font-size:11px;font-weight:700;margin-bottom:12px}
+.ok-box{background:var(--green-soft);color:var(--green);border-radius:10px;padding:10px 12px;font-size:11px;font-weight:700;margin-bottom:12px}
+.err-box{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-size:11px;font-weight:700;margin-bottom:12px}
+.insight{padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:11.5px;margin-bottom:8px;display:flex;gap:8px}
+.chartbox{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.chartbox canvas{max-height:230px}
+.qa-preview{background:var(--primary-soft);border-radius:12px;padding:12px;margin-top:12px;font-size:11.5px;display:none}
+.qa-preview.show{display:block}
+.switchrow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px dashed var(--line)}
+.pomo-opts{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.pomo-opt{padding:8px 12px;border-radius:9px;background:var(--bg);border:1px solid var(--line);font-size:11px}
+.pomo-opt.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.side{display:none}.stats{grid-template-columns:repeat(2,1fr)}.grid2,.grid3,.split{grid-template-columns:1fr}.week{overflow:auto;grid-template-columns:repeat(7,128px)}main{padding:14px}.quickadd{display:none}.form{grid-template-columns:1fr}}
+
+/* ===== Planner-YAR V2 additions ===== */
+.mobile-nav{display:none}
+.searchbar{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.searchbar input,.searchbar select{flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);outline:none}
+.month-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.month-cell{min-height:105px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:7px;cursor:pointer}
+.month-cell.muted-day{opacity:.45}
+.month-cell.today{border:2px solid var(--primary);background:var(--primary-soft)}
+.month-cell b{font-size:12px}
+.month-events{display:flex;flex-direction:column;gap:3px;margin-top:5px}
+.month-event{font-size:8.5px;padding:3px 5px;border-radius:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--primary-soft);color:var(--primary)}
+.heatmap{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.heat{height:18px;border-radius:4px;background:var(--line)}
+.heat[data-v="1"]{background:#dcdcff}.heat[data-v="2"]{background:#bdbef7}.heat[data-v="3"]{background:#9495ef}.heat[data-v="4"]{background:#6d6ee6}.heat[data-v="5"]{background:#5051d2}
+.filter-count{font-size:10px;color:var(--muted);white-space:nowrap}
+@media(max-width:1050px){.mobile-nav{display:flex;position:fixed;bottom:0;right:0;left:0;height:58px;background:var(--card);border-top:1px solid var(--line);z-index:40;justify-content:space-around;padding:5px}.mobile-nav button{font-size:9px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px}.mobile-nav button.active{color:var(--primary);font-weight:800}.app{padding-bottom:58px}.month-grid{grid-template-columns:repeat(7,110px);overflow:auto}.month-cell{min-height:90px}.month-grid{overflow-x:auto}}
+
+
+/* ===== PLANNER-YAR PRO EXTENSIONS ===== */
+.pro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.pro-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}.pro-card h3{margin:0 0 10px;font-size:14px}.metric-big{font-size:28px;font-weight:900}.mini-list{display:grid;gap:7px}.mini-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}.pro-actions{display:flex;gap:7px;flex-wrap:wrap}.filterbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.filterbar input,.filterbar select{max-width:220px}.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kan-col{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:180px}.kan-col h4{margin:0 0 9px}.kan-task{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px;margin-bottom:7px}.risk{font-size:11px;padding:3px 7px;border-radius:20px;background:var(--bg);border:1px solid var(--line)}.health-ok{color:#16804d}.health-warn{color:#b36a00}.health-bad{color:#c0392b}.plan-score{font-size:11px;color:var(--muted)}.progress2{height:9px;background:var(--line);border-radius:10px;overflow:hidden}.progress2 i{display:block;height:100%;background:var(--primary)}
+@media(max-width:1050px){.pro-grid,.kanban{grid-template-columns:1fr 1fr}}@media(max-width:650px){.pro-grid,.kanban{grid-template-columns:1fr}}
+</style>
+
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+<body>
+<div class="app">
+
+<header class="top">
+  <div class="brand"><div class="logo">آ</div><div><h1>برنامه‌ریز آزمون‌یار</h1><small>سیستم‌عامل مطالعه و کنکور</small></div></div>
+  <div class="quickadd">
+    <input id="qaInput" placeholder="مثلاً: فردا ساعت ۵ عصر ۶۰ دقیقه ریاضی تابع ۳۰ تست" onkeydown="if(event.key==='Enter')quickAddParse()">
+    <button onclick="quickAddParse()">افزودن سریع</button>
+  </div>
+  <div class="top-actions">
+    <div class="theme-picker"></div>
+    <button class="btn ghost" onclick="toggleDark()" id="darkBtn" aria-label="تغییر حالت شب">◐</button>
+    <button class="btn primary" onclick="openPlanModal()">＋ برنامه جدید</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="side">
+  <div class="side-label">برنامه‌ریزی</div>
+  <button class="nav active" data-v="dashboard" onclick="show('dashboard',this)">⌂ <span>داشبورد</span></button>
+  <button class="nav" data-v="today" onclick="show('today',this)">☀ <span>امروز</span></button>
+  <button class="nav" data-v="week" onclick="show('week',this)">▦ <span>تقویم هفتگی</span></button>
+  <button class="nav" data-v="subjects" onclick="show('subjects',this)">◉ <span>دروس و مباحث</span></button>
+  <button class="nav" data-v="goals" onclick="show('goals',this)">◎ <span>اهداف</span></button>
+  <div class="side-label">اجرا</div>
+  <button class="nav" data-v="focus" onclick="show('focus',this)">◷ <span>مطالعه متمرکز</span></button>
+  <button class="nav" data-v="tests" onclick="show('tests',this)">✎ <span>تست و دفترچه خطا</span></button>
+  <button class="nav" data-v="reviews" onclick="show('reviews',this)">↻ <span>مرور هوشمند</span></button>
+  <button class="nav" data-v="exams" onclick="show('exams',this)">🎓 <span>آزمون‌ها</span></button>
+  <div class="side-label">مدیریت حرفه‌ای</div><button class="nav" data-v="pro" onclick="show('pro',this)">★ <span>مرکز مدیریت پیشرفته</span></button><div class="side-label">عملکرد</div>
+  <button class="nav" data-v="analytics" onclick="show('analytics',this)">↗ <span>گزارش و تحلیل</span></button>
+  <button class="nav" data-v="journal" onclick="show('journal',this)">🗒 <span>مرور روز و هفته</span></button>
+  <div class="side-label">داده و تنظیمات</div>
+  <button class="nav" data-v="data" onclick="show('data',this)">⇩ <span>ورود / خروج JSON</span></button>
+  <button class="nav" data-v="settings" onclick="show('settings',this)">⚙ <span>تنظیمات</span></button>
+</aside>
+<nav class="mobile-nav" id="mobileNav">
+  <button data-v="dashboard" onclick="show('dashboard',this)">⌂<span>خانه</span></button>
+  <button data-v="today" onclick="show('today',this)">☀<span>امروز</span></button>
+  <button data-v="week" onclick="show('week',this)">▦<span>تقویم</span></button>
+  <button data-v="focus" onclick="show('focus',this)">◷<span>تمرکز</span></button>
+  <button data-v="analytics" onclick="show('analytics',this)">↗<span>گزارش</span></button>
+</nav>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="v-dashboard" class="view">
+  <div class="hero">
+    <div class="hero-row">
+      <div>
+        <h2 id="heroGreeting">سلام! 👋 آماده‌ای امروز رو بسازی؟</h2>
+        <p>یک قدم کوچک، اما واقعی؛ برنامه‌ات را اجرا کن، سیستم بقیه‌ی مسیر را ثبت و تحلیل می‌کند.</p>
+      </div>
+      <div class="score"><span>سطح مطالعه</span><b id="heroLevel">Lv 1</b><span id="heroXp">0 XP</span></div>
+    </div>
+  </div>
+  <div class="stats" id="dashStats"></div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title"><h3>برنامه‌های امروز</h3><span class="muted" id="dashDate"></span></div>
+      <div id="dashTasks" class="task-list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h3>🎯 الان چه کار کنم؟</h3></div>
+      <div id="smartNow"></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>این هفته</h3><span class="muted">برنامه‌ریزی‌شده / واقعی</span></div>
+    <div class="week" id="dashWeek"></div>
+  </div>
+  <div class="split" style="margin-top:14px">
+    <div class="panel">
+      <div class="panel-title"><h3>هدف هفته</h3></div>
+      <div id="dashGoals"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h3>بینش‌های هوشمند</h3></div>
+      <div id="dashInsights"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TODAY -->
+<section id="v-today" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><h3>برنامه امروز</h3><button class="btn primary sm" onclick="openPlanModal()">＋ برنامه جدید</button></div>
+    <div id="todayCapacity"></div>
+    <div id="todayTasks" class="task-list"></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>عقب‌افتاده‌ها</h3><span class="muted">همراه با پیشنهاد جبران</span></div>
+    <div id="overdueTasks" class="task-list"></div>
+  </div>
+</section>
+
+<!-- WEEK -->
+<section id="v-week" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><h3>نمای هفتگی</h3><span class="muted">برنامه + کلاس/آزمون تقویم — زمان کلاس و آزمون جزو مطالعه حساب نمی‌شود</span></div>
+    <div class="week" id="weekFull"></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="month-head"><h3 style="margin:0;font-size:13.5px">تقویم ماهانه</h3><div style="display:flex;gap:6px"><button class="btn sm" onclick="changeMonth(-1)">‹ ماه قبل</button><span class="btn sm ghost" id="monthLabel"></span><button class="btn sm" onclick="changeMonth(1)">ماه بعد ›</button></div></div>
+    <div class="month-grid" id="monthGrid"></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>رویدادهای تقویم</h3><button class="btn sm" onclick="openEventModal()">＋ رویداد جدید</button></div>
+    <div id="eventsList" class="task-list"></div>
+  </div>
+</section>
+
+<!-- SUBJECTS -->
+<section id="v-subjects" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><h3>دروس و مباحث</h3><button class="btn primary sm" onclick="openSubjectModal()">＋ درس جدید</button></div>
+    <div class="searchbar"><input id="subjectSearch" placeholder="جست‌وجوی درس یا مبحث..." oninput="renderSubjects()"><span class="filter-count" id="subjectCount"></span></div>
+    <div class="subject-list" id="subjectsList"></div>
+  </div>
+</section>
+
+<!-- GOALS -->
+<section id="v-goals" class="view hidden">
+  <div class="grid3">
+    <div class="panel"><h3>هدف روزانه</h3><div id="goalDaily"></div></div>
+    <div class="panel"><h3>هدف هفتگی</h3><div id="goalWeekly"></div></div>
+    <div class="panel"><h3>هدف ماهانه</h3><div id="goalMonthly"></div></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>ویرایش اهداف</h3></div>
+    <div class="form">
+      <div class="field"><label>هدف مطالعه روزانه (دقیقه)</label><input id="goalDailyMin" type="number"></div>
+      <div class="field"><label>هدف تست روزانه</label><input id="goalDailyTests" type="number"></div>
+      <div class="field"><label>هدف مطالعه هفتگی (دقیقه)</label><input id="goalWeeklyMin" type="number"></div>
+      <div class="field"><label>هدف مطالعه ماهانه (دقیقه)</label><input id="goalMonthlyMin" type="number"></div>
+    </div>
+    <div class="modal-actions"><button class="btn primary" onclick="saveGoals()">ذخیره اهداف</button></div>
+    <div class="muted" style="margin-top:10px">تجزیه‌ی خودکار هدف: هدف ماهانه ÷ ۴٫۳ ≈ هدف هفتگی، هدف هفتگی ÷ ۷ ≈ هدف روزانه.</div>
+  </div>
+</section>
+
+<!-- FOCUS / TIMER -->
+<section id="v-focus" class="view hidden">
+  <div class="panel" style="max-width:680px;margin:auto;text-align:center">
+    <h3>مطالعه متمرکز</h3>
+    <p class="muted">جلسه را به یک برنامه متصل کن؛ فقط زمان واقعی تایمر ثبت می‌شود، نه زمان برنامه‌ریزی‌شده.</p>
+    <div class="field" style="max-width:320px;margin:14px auto;text-align:right">
+      <label>اتصال به برنامه</label>
+      <select id="timerPlanSelect"></select>
+    </div>
+    <div class="pomo-opts" style="justify-content:center">
+      <button class="pomo-opt active" onclick="setPomo(0,this)">آزاد</button>
+      <button class="pomo-opt" onclick="setPomo(25,this)">۲۵/۵</button>
+      <button class="pomo-opt" onclick="setPomo(50,this)">۵۰/۱۰</button>
+    </div>
+    <div class="timer" id="timerDisplay">۰۰:۰۰:۰۰<small id="timerTaskLabel">جلسه آزاد</small></div>
+    <div style="margin-top:18px;display:flex;justify-content:center;gap:8px">
+      <button class="btn primary" onclick="timerStart()">شروع</button>
+      <button class="btn" onclick="timerPause()">توقف موقت</button>
+      <button class="btn danger" onclick="timerStop()">پایان و ثبت</button>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px;max-width:680px;margin-inline:auto">
+    <div class="panel-title"><h3>ثبت مطالعه بدون تایمر</h3></div>
+    <p class="muted">برای تحلیل تست یا مرور، لازم نیست تایمر روشن کنی — زمان را دستی وارد کن.</p>
+    <div class="form">
+      <div class="field"><label>برنامه</label><select id="manualPlanSelect"></select></div>
+      <div class="field"><label>مدت واقعی (دقیقه)</label><input id="manualMinutes" type="number" value="20"></div>
+    </div>
+    <div class="modal-actions"><button class="btn primary" onclick="saveManualDuration()">ثبت زمان</button></div>
+  </div>
+</section>
+
+<!-- TESTS -->
+<section id="v-tests" class="view hidden">
+  <div class="tabbar">
+    <button class="tabbtn active" id="tabTests" onclick="switchTestTab('tests')">ثبت تست</button>
+    <button class="tabbtn" id="tabErrors" onclick="switchTestTab('errors')">دفترچه خطا</button>
+  </div>
+  <div id="testsPane">
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-title"><h3>ثبت تست واقعی</h3></div>
+        <div class="form">
+          <div class="field"><label>منبع</label><select id="testSource"><option>آزمون‌یار</option><option>بوک‌یار</option><option>دستی</option></select></div>
+          <div class="field"><label>درس</label><select id="testSubject" onchange="fillTopicOptions('testTopic',testSubject.value)"></select></div>
+          <div class="field"><label>مبحث</label><select id="testTopic"></select></div>
+          <div class="field"><label>تعداد کل</label><input id="testTotal" type="number" value="20"></div>
+          <div class="field"><label>درست</label><input id="testCorrect" type="number" value="14"></div>
+          <div class="field"><label>غلط</label><input id="testWrong" type="number" value="5"></div>
+          <div class="field"><label>نزده</label><input id="testBlank" type="number" value="1"></div>
+          <div class="field full"><label>علت اصلی غلط‌ها (اختیاری)</label>
+            <select id="testReason"><option value="">—</option><option>بلد نبودن</option><option>فراموشی</option><option>بی‌دقتی</option><option>کمبود زمان</option><option>شک بین گزینه‌ها</option><option>محاسبات اشتباه</option></select>
+          </div>
+        </div>
+        <div class="modal-actions"><button class="btn primary" onclick="saveTest()">ثبت تست</button></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>تست‌های اخیر</h3></div>
+        <div id="testsList" class="task-list"></div>
+      </div>
+    </div>
+  </div>
+  <div id="errorsPane" class="hidden">
+    <div class="panel">
+      <div class="panel-title"><h3>دفترچه خطا</h3><span class="muted">سوال‌هایی که بیشتر از یک‌بار اشتباه شدند اولویت مرور دارند</span></div>
+      <div id="errorsList" class="task-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="v-reviews" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><h3>مرورهای امروز و عقب‌افتاده</h3></div>
+    <div id="reviewsDue" class="task-list"></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>مرورهای پیش‌رو</h3><span class="muted">برنامه مرور خودکار: ۱، ۳، ۷، ۱۴ و ۳۰ روز بعد از مطالعه</span></div>
+    <div id="reviewsUpcoming" class="task-list"></div>
+  </div>
+</section>
+
+<!-- EXAMS -->
+<section id="v-exams" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><h3>آزمون‌ها</h3><button class="btn primary sm" onclick="openExamModal()">＋ آزمون جدید</button></div>
+    <div id="examsList"></div>
+  </div>
+</section>
+
+<!-- ANALYTICS -->
+<section id="v-analytics" class="view hidden">
+  <div class="grid2">
+    <div class="chartbox"><h3 style="font-size:13px;margin:0 0 10px">مطالعه ۷ روز اخیر (برنامه‌ریزی‌شده / واقعی)</h3><canvas id="chartWeek"></canvas></div>
+    <div class="chartbox"><h3 style="font-size:13px;margin:0 0 10px">سهم دروس از زمان مطالعه واقعی</h3><canvas id="chartSubjects"></canvas></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="chartbox"><h3 style="font-size:13px;margin:0 0 10px">روند درصد تست‌ها</h3><canvas id="chartTests"></canvas></div>
+    <div class="panel"><div class="panel-title"><h3>امتیازهای عملکرد</h3></div><div id="perfScores"></div></div>
+  </div>
+  <div class="panel" style="margin-top:14px"><div class="panel-title"><h3>تقویم استمرار مطالعه</h3><span class="muted">۵۶ روز اخیر</span></div><div id="heatmap" class="heatmap"></div></div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>تحلیل هر درس</h3></div>
+    <div style="overflow:auto"><table class="simple" id="subjectTable"></table></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel"><div class="panel-title"><h3>دستاوردها</h3></div><div class="badge-row" id="achList"></div></div>
+    <div class="panel"><div class="panel-title"><h3>بینش‌های هوشمند</h3></div><div id="analyticsInsights"></div></div>
+  </div>
+</section>
+
+<!-- JOURNAL -->
+<section id="v-journal" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><h3>مرور امروز</h3><span class="muted" id="journalDate"></span></div>
+    <div id="journalSummary"></div>
+    <div class="form" style="margin-top:12px">
+      <div class="field"><label>انرژی امروز (۱ تا ۵)</label><input id="jEnergy" type="number" min="1" max="5" value="3"></div>
+      <div class="field"><label>علت اصلی عقب‌افتادگی امروز</label><select id="jReason"><option value="">—</option><option>کمبود وقت</option><option>فراموشی</option><option>خستگی</option><option>سخت بودن</option><option>حجم زیاد</option><option>اتفاق غیرمنتظره</option></select></div>
+      <div class="field full"><label>یادداشت امروز</label><textarea id="jNote" placeholder="چه چیزی خوب پیش رفت؟ چه چیزی باید فردا جبران شود؟"></textarea></div>
+    </div>
+    <div class="modal-actions"><button class="btn primary" onclick="saveJournal()">ثبت مرور امروز</button></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>مرور هفته</h3><span class="muted" id="weekCompareLabel"></span></div>
+    <div id="weeklyReview"></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>یادداشت‌های قبلی</h3></div>
+    <div id="journalHistory" class="task-list"></div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="v-data" class="view hidden">
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title"><h3>خروجی گرفتن (Backup)</h3></div>
+      <p class="muted">تمام برنامه‌ها، تست‌ها، مرورها، آزمون‌ها و تنظیمات به‌صورت JSON خروجی گرفته می‌شود.</p>
+      <div class="modal-actions"><button class="btn primary" onclick="exportData()">دانلود / نمایش JSON</button></div>
+      <textarea class="field" id="exportBox" style="min-height:180px;font-family:Consolas,monospace;direction:ltr;text-align:left;margin-top:10px" readonly></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h3>ورود اطلاعات</h3><span class="muted">JSON آزمون / کلاس / رویداد یا Backup کامل</span></div>
+      <textarea class="field" id="importBox" style="min-height:180px;font-family:Consolas,monospace;direction:ltr;text-align:left" placeholder='{"events":[{"type":"class","title":"کلاس ریاضی","date":"2026-09-10","start":"17:00","end":"19:00"}]}'></textarea>
+      <div style="margin-top:8px"><input id="backupFile" type="file" accept=".json,application/json" onchange="importBackupFile(this)"></div>
+      <div class="modal-actions">
+        <button class="btn primary" onclick="importData()">وارد کردن</button>
+        <button class="btn danger" onclick="resetAllData()">حذف همه‌ی داده‌ها</button>
+      </div>
+      <div class="muted" id="importResult" style="margin-top:8px"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SMART PLANNER PRO -->
+<section id="v-pro" class="view hidden">
+  <div class="panel">
+    <div class="panel-title"><div><h3>مرکز مدیریت پیشرفته</h3><span class="muted">کنترل برنامه، پیشرفت، ریسک عقب‌افتادگی و تولید برنامه</span></div><div class="pro-actions"><button class="btn primary sm" onclick="generateSmartWeek()">ساخت برنامه ۷ روزه</button><button class="btn sm" onclick="openCommandCenter()">مرکز فرمان</button></div></div>
+    <div class="pro-grid">
+      <div class="pro-card"><h3>وضعیت امروز</h3><div class="metric-big" id="proTodayPercent">۰٪</div><div class="muted">اجرای برنامه امروز</div><div class="progress2" style="margin-top:10px"><i id="proTodayBar" style="width:0"></i></div></div>
+      <div class="pro-card"><h3>ریسک عقب‌افتادگی</h3><div class="metric-big" id="proRisk">۰</div><div class="muted">برنامه‌های نیازمند اقدام</div></div>
+      <div class="pro-card"><h3>پیشرفت این هفته</h3><div class="metric-big" id="proWeekMin">۰</div><div class="muted">دقیقه مطالعه واقعی</div></div>
+    </div>
+  </div>
+  <div class="pro-grid" style="margin-top:14px">
+    <div class="pro-card"><h3>اولویت‌های پیشنهادی</h3><div id="proPriorities" class="mini-list"></div></div>
+    <div class="pro-card"><h3>مباحث در معرض فراموشی</h3><div id="proMemoryRisk" class="mini-list"></div></div>
+    <div class="pro-card"><h3>سلامت داده‌ها</h3><div id="proHealth" class="mini-list"></div></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="panel-title"><h3>مدیریت همه برنامه‌ها</h3><span class="muted">جست‌وجو، فیلتر و تغییر وضعیت</span></div>
+    <div class="filterbar"><input id="proSearch" placeholder="جست‌وجوی درس، مبحث یا یادداشت" oninput="renderProTasks()"><select id="proStatus" onchange="renderProTasks()"><option value="all">همه وضعیت‌ها</option><option value="pending">در انتظار</option><option value="done">انجام‌شده</option><option value="canceled">لغوشده</option></select><select id="proRange" onchange="renderProTasks()"><option value="all">همه تاریخ‌ها</option><option value="today">امروز</option><option value="week">این هفته</option><option value="overdue">عقب‌افتاده</option></select></div>
+    <div id="proTasks"></div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="v-settings" class="view hidden">
+  <div class="panel" style="max-width:560px">
+    <div class="panel-title"><h3>تنظیمات</h3></div>
+    <div class="field" style="margin-top:14px"><label>ظرفیت مطالعه روزانه (دقیقه)</label><input id="capacityInput" type="number"></div>
+    <div class="switchrow"><span>اعلان شروع برنامه‌ها</span><button class="btn sm" id="notifyBtn" onclick="enableNotifications()">فعال‌سازی</button></div>
+    <div class="switchrow"><span>یادآوری مرورهای سررسیدشده</span><button class="btn sm" id="reviewNotifyBtn" onclick="toggleReviewNotify()">روشن/خاموش</button></div>
+    <div class="modal-actions"><button class="btn primary" onclick="saveSettings()">ذخیره تنظیمات</button><button class="btn" onclick="downloadBackup()">دانلود پشتیبان</button></div>
+    <div class="muted" style="margin-top:10px">تمام داده‌ها در مرورگر ذخیره می‌شوند. برای جلوگیری از دست رفتن اطلاعات، پشتیبان JSON بگیر.</div>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<!-- MODAL: PLAN -->
+<div class="modal-bg" id="modal-plan"><div class="modal">
+  <h3 id="planModalTitle">＋ برنامه جدید</h3>
+  <input type="hidden" id="planId">
+  <div class="form">
+    <div class="field"><label>تاریخ</label><input id="planDate" type="date"></div>
+    <div class="field"><label>ساعت</label><input id="planTime" type="time" value="17:00"></div>
+    <div class="field"><label>نوع فعالیت</label><select id="planType"><option value="study">مطالعه</option><option value="test">تست</option><option value="review">مرور</option><option value="analysis">تحلیل تست</option><option value="summary">جمع‌بندی</option></select></div>
+    <div class="field"><label>اولویت</label><select id="planPriority"><option value="high">زیاد</option><option value="medium" selected>متوسط</option><option value="low">کم</option></select></div>
+    <div class="field"><label>درس</label><select id="planSubject" onchange="fillTopicOptions('planTopic',planSubject.value)"></select></div>
+    <div class="field"><label>مبحث</label><select id="planTopic"></select></div>
+    <div class="field"><label>مدت برنامه‌ریزی‌شده (دقیقه)</label><input id="planMin" type="number" value="60"></div>
+    <div class="field"><label>تعداد تست برنامه‌ریزی‌شده</label><input id="planTests" type="number" value="0"></div>
+    <div class="field"><label>تکرار</label><select id="planRepeat"><option value="none">بدون تکرار</option><option value="daily">هر روز</option><option value="weekdays">روزهای هفته</option><option value="weekly">هر هفته</option></select></div>
+    <div class="field"><label>یادآوری</label><select id="planReminder"><option value="none">بدون اعلان</option><option value="10">۱۰ دقیقه قبل</option><option value="30">۳۰ دقیقه قبل</option><option value="60">۱ ساعت قبل</option></select></div>
+    <div class="field full"><label>یادداشت</label><textarea id="planNote" placeholder="مثلاً صفحات ۳۰ تا ۴۰..."></textarea></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn primary" onclick="savePlan()">ذخیره برنامه</button>
+    <button class="btn" onclick="closeModal('modal-plan')">انصراف</button>
+  </div>
+</div></div>
+
+<!-- MODAL: SUBJECT -->
+<div class="modal-bg" id="modal-subject"><div class="modal">
+  <h3>＋ درس جدید</h3>
+  <div class="form"><div class="field full"><label>نام درس</label><input id="subjectName" placeholder="مثلاً هندسه"></div></div>
+  <div class="modal-actions"><button class="btn primary" onclick="saveSubject()">ذخیره</button><button class="btn" onclick="closeModal('modal-subject')">انصراف</button></div>
+</div></div>
+
+<!-- MODAL: TOPIC -->
+<div class="modal-bg" id="modal-topic"><div class="modal">
+  <h3>＋ مبحث جدید</h3>
+  <input type="hidden" id="topicSubjectId">
+  <div class="form">
+    <div class="field"><label>نام مبحث</label><input id="topicName" placeholder="مثلاً مقاطع مخروطی"></div>
+    <div class="field"><label>فصل (اختیاری)</label><input id="topicChapter" placeholder="مثلاً هندسه تحلیلی"></div>
+  </div>
+  <div class="modal-actions"><button class="btn primary" onclick="saveTopic()">ذخیره</button><button class="btn" onclick="closeModal('modal-topic')">انصراف</button></div>
+</div></div>
+
+<!-- MODAL: TOPIC PROFILE -->
+<div class="modal-bg" id="modal-topicprofile"><div class="modal wide"><div id="topicProfileBody"></div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal('modal-topicprofile')">بستن</button></div>
+</div></div>
+
+<!-- MODAL: EXAM -->
+<div class="modal-bg" id="modal-exam"><div class="modal wide">
+  <h3>＋ آزمون جدید</h3>
+  <div class="form">
+    <div class="field"><label>عنوان آزمون</label><input id="examTitle" placeholder="مثلاً آزمون جامع شماره ۴"></div>
+    <div class="field"><label>تاریخ</label><input id="examDate" type="date"></div>
+    <div class="field"><label>ساعت شروع</label><input id="examStart" type="time" value="08:00"></div>
+    <div class="field"><label>ساعت پایان</label><input id="examEnd" type="time" value="11:00"></div>
+  </div>
+  <div style="margin-top:12px">
+    <label class="muted" style="font-size:10px;font-weight:700">بودجه سؤال هر درس</label>
+    <div id="examSubjectsBudget" style="margin-top:8px;display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+  <div class="modal-actions"><button class="btn primary" onclick="saveExam()">ذخیره آزمون</button><button class="btn" onclick="closeModal('modal-exam')">انصراف</button></div>
+</div></div>
+
+<!-- MODAL: EVENT -->
+<div class="modal-bg" id="modal-event"><div class="modal">
+  <h3>＋ رویداد تقویم</h3>
+  <div class="form">
+    <div class="field"><label>نوع</label><select id="eventType"><option value="class">کلاس</option><option value="event">رویداد شخصی</option><option value="deadline">ددلاین</option></select></div>
+    <div class="field"><label>عنوان</label><input id="eventTitle" placeholder="مثلاً کلاس فیزیک"></div>
+    <div class="field"><label>تاریخ</label><input id="eventDate" type="date"></div>
+    <div class="field"><label>ساعت شروع</label><input id="eventStart" type="time" value="17:00"></div>
+    <div class="field"><label>ساعت پایان</label><input id="eventEnd" type="time" value="18:00"></div>
+  </div>
+  <div class="modal-actions"><button class="btn primary" onclick="saveEvent()">ذخیره رویداد</button><button class="btn" onclick="closeModal('modal-event')">انصراف</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ UTILITIES ============ */
+function faNum(n){return String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);}
+function pad(n){return String(n).padStart(2,"0");}
+function todayISO(){let d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function addDaysISO(iso,n){let d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function daysDiff(a,b){return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/86400000);}
+const DAY_SHORT=["ی","د","س","چ","پ","ج","ش"];
+const DAY_FULL=["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"];
+function dayShort(iso){return DAY_SHORT[new Date(iso+"T12:00:00").getDay()];}
+function dayFull(iso){return DAY_FULL[new Date(iso+"T12:00:00").getDay()];}
+function fmtDate(iso){let d=new Date(iso+"T12:00:00");return `${dayFull(iso)} ${faNum(d.getDate())}`;}
+function uid(p){return p+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function toast(t){let x=document.getElementById("toast");x.textContent=t;x.style.display="block";clearTimeout(window._toastT);window._toastT=setTimeout(()=>x.style.display="none",2400);}
+function minToHM(m){let h=Math.floor(m/60),mm=Math.round(m%60);return h?`${faNum(h)} ساعت${mm?" و "+faNum(mm)+" دقیقه":""}`:`${faNum(mm)} دقیقه`;}
+function weekStartISO(){let iso=todayISO();let d=new Date(iso+"T12:00:00");let diff=(d.getDay()+1)%7;return addDaysISO(iso,-diff);}
+
+/* ============ STATE / PERSISTENCE ============ */
+const LS_KEY="ayplan_v1";
+function seedData(){
+  const T=todayISO();
+  const s=id=>id;
+  return {
+    subjects:[
+      {id:"s1",name:"ریاضی",topics:[{id:"t1",name:"تابع",chapter:"حسابان"},{id:"t2",name:"مشتق",chapter:"حسابان"},{id:"t3",name:"مقاطع مخروطی",chapter:"هندسه تحلیلی"}]},
+      {id:"s2",name:"فیزیک",topics:[{id:"t4",name:"حرکت‌شناسی",chapter:"مکانیک"},{id:"t5",name:"دینامیک",chapter:"مکانیک"}]},
+      {id:"s3",name:"شیمی",topics:[{id:"t6",name:"استوکیومتری",chapter:"واکنش‌های شیمیایی"}]},
+      {id:"s4",name:"زیست‌شناسی",topics:[{id:"t7",name:"سلول",chapter:"مولکول و سلول"}]},
+      {id:"s5",name:"ادبیات",topics:[{id:"t8",name:"آرایه‌های ادبی",chapter:"زبان و ادبیات فارسی"}]},
+      {id:"s6",name:"عربی",topics:[{id:"t9",name:"ترجمه و قواعد",chapter:"عربی عمومی"}]}
+    ],
+    plans:[
+      {id:"p1",date:T,time:"08:30",subjectId:"s1",topicId:"t1",type:"study",priority:"high",minPlanned:60,testsPlanned:20,note:"تثبیت دامنه و برد",status:"done",actualMinutes:47,actualTests:18},
+      {id:"p2",date:T,time:"10:30",subjectId:"s2",topicId:"t4",type:"study",priority:"medium",minPlanned:45,testsPlanned:15,note:"",status:"pending",actualMinutes:0,actualTests:0},
+      {id:"p3",date:T,time:"16:00",subjectId:"s3",topicId:"t6",type:"test",priority:"medium",minPlanned:60,testsPlanned:25,note:"",status:"pending",actualMinutes:0,actualTests:0},
+      {id:"p4",date:addDaysISO(T,-1),time:"18:00",subjectId:"s6",topicId:"t9",type:"study",priority:"medium",minPlanned:40,testsPlanned:10,note:"",status:"pending",actualMinutes:0,actualTests:0},
+      {id:"p5",date:addDaysISO(T,1),time:"09:00",subjectId:"s4",topicId:"t7",type:"review",priority:"low",minPlanned:20,testsPlanned:0,note:"",status:"pending",actualMinutes:0,actualTests:0}
+    ],
+    sessions:[],
+    tests:[
+      {id:"te1",date:addDaysISO(T,-2),subjectId:"s1",topicId:"t1",source:"آزمون‌یار",total:20,correct:15,wrong:4,blank:1,reason:""},
+      {id:"te2",date:addDaysISO(T,-1),subjectId:"s2",topicId:"t4",source:"بوک‌یار",total:15,correct:8,wrong:5,blank:2,reason:"بی‌دقتی"}
+    ],
+    errors:[
+      {id:"er1",date:addDaysISO(T,-1),subjectId:"s2",topicId:"t4",reason:"بی‌دقتی",note:"اشتباه در علامت شتاب",repeatCount:2}
+    ],
+    reviews:[
+      {id:"rv1",subjectId:"s1",topicId:"t1",dueDate:T,stage:1,status:"pending"},
+      {id:"rv2",subjectId:"s2",topicId:"t4",dueDate:addDaysISO(T,1),stage:1,status:"pending"}
+    ],
+    exams:[
+      {id:"ex1",title:"آزمون جامع شماره ۳",date:addDaysISO(T,7),start:"08:00",end:"11:00",subjects:[{subjectId:"s1",questions:20},{subjectId:"s2",questions:20},{subjectId:"s3",questions:15},{subjectId:"s4",questions:15}]}
+    ],
+    events:[
+      {id:"ev1",type:"class",title:"کلاس ریاضی",date:addDaysISO(T,2),start:"17:00",end:"19:00"}
+    ],
+    goals:{dailyMin:120,dailyTests:40,weeklyMin:600,monthlyMin:2400},
+    journal:[],
+    settings:{theme:"light",capacityMin:300}
+  };
+}
+let state=load();
+function normalizeState(st){
+  st=st||seedData(); st.subjects=st.subjects||[]; st.plans=st.plans||[]; st.sessions=st.sessions||[]; st.tests=st.tests||[]; st.errors=st.errors||[]; st.reviews=st.reviews||[]; st.exams=st.exams||[]; st.events=st.events||[]; st.journal=st.journal||[]; st.goals=st.goals||{dailyMin:120,dailyTests:40,weeklyMin:600,monthlyMin:2400}; st.settings={theme:"light",capacityMin:300,notifications:false,reviewNotifications:true,...(st.settings||{})};
+  st.plans.forEach(p=>{p.repeat=p.repeat||"none";p.reminder=p.reminder||"none";p.status=p.status||"pending";p.actualMinutes=p.actualMinutes||0;p.actualTests=p.actualTests||0;});
+  return st;
+}
+function load(){try{let raw=localStorage.getItem(LS_KEY);if(raw)return normalizeState(JSON.parse(raw));}catch(e){}return normalizeState(seedData());}
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(state));}
+
+/* ============ LOOKUPS ============ */
+function getSubject(id){return state.subjects.find(s=>s.id===id);}
+function getTopic(id){for(const s of state.subjects){const t=s.topics.find(t=>t.id===id);if(t)return {...t,subjectId:s.id,subjectName:s.name};}return null;}
+function subjectName(id){let s=getSubject(id);return s?s.name:"—";}
+function topicName(id){let t=getTopic(id);return t?t.name:"—";}
+function allTopics(){let out=[];state.subjects.forEach(s=>s.topics.forEach(t=>out.push({...t,subjectId:s.id,subjectName:s.name})));return out;}
+
+/* ============ DERIVED STATS ============ */
+function topicStats(topicId){
+  const plans=state.plans.filter(p=>p.topicId===topicId);
+  const doneStudy=plans.filter(p=>p.type==="study"&&p.status==="done");
+  const totalMinutes=plans.reduce((s,p)=>s+(p.actualMinutes||0),0);
+  const lastStudy=doneStudy.length?doneStudy.reduce((a,b)=>a.date>b.date?a:b).date:null;
+  const relTests=state.tests.filter(t=>t.topicId===topicId);
+  const testCount=relTests.reduce((s,t)=>s+t.total,0);
+  const avgPercent=relTests.length?Math.round(relTests.reduce((s,t)=>s+(t.correct/t.total*100),0)/relTests.length):null;
+  const relReviews=state.reviews.filter(r=>r.topicId===topicId);
+  const reviewDone=relReviews.filter(r=>r.status==="done").length;
+  const errCount=state.errors.filter(e=>e.topicId===topicId).reduce((s,e)=>s+(e.repeatCount||1),0);
+  let masteryLabel,masteryClass;
+  if(avgPercent===null){masteryLabel=plans.length?"در حال یادگیری":"نخوانده";masteryClass="mastery-none";}
+  else if(avgPercent<40){masteryLabel="ضعیف";masteryClass="mastery-weak";}
+  else if(avgPercent<70){masteryLabel="نیازمند تمرین";masteryClass="mastery-mid";}
+  else if(avgPercent<90){masteryLabel="خوب";masteryClass="mastery-good";}
+  else{masteryLabel="مسلط";masteryClass="mastery-good";}
+  return {plans,totalMinutes,lastStudy,testCount,avgPercent,masteryLabel,masteryClass,reviewDone,relReviews,errCount,relTests};
+}
+function subjectStats(subjectId){
+  const s=getSubject(subjectId);
+  const tIds=s.topics.map(t=>t.id);
+  const plans=state.plans.filter(p=>p.subjectId===subjectId);
+  const totalMinutes=plans.reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const plannedMinutes=plans.reduce((a,p)=>a+(p.minPlanned||0),0);
+  const done=plans.filter(p=>p.status==="done").length;
+  const tests=state.tests.filter(t=>t.subjectId===subjectId);
+  const testCount=tests.reduce((a,t)=>a+t.total,0);
+  const avgPercent=tests.length?Math.round(tests.reduce((s2,t)=>s2+(t.correct/t.total*100),0)/tests.length):null;
+  const masteries=tIds.map(id=>topicStats(id).avgPercent).filter(v=>v!==null);
+  const mastery=masteries.length?Math.round(masteries.reduce((a,b)=>a+b,0)/masteries.length):null;
+  return {name:s.name,totalMinutes,plannedMinutes,done,total:plans.length,testCount,avgPercent,mastery};
+}
+function streakCalc(){
+  let dateSet=new Set();
+  state.plans.forEach(p=>{if(p.actualMinutes>0)dateSet.add(p.date);});
+  state.sessions.forEach(s=>dateSet.add(s.date));
+  let streak=0,cur=todayISO();
+  while(dateSet.has(cur)){streak++;cur=addDaysISO(cur,-1);}
+  return streak;
+}
+function xpCalc(){
+  let xp=state.plans.filter(p=>p.status==="done").length*10;
+  xp+=Math.round(state.plans.reduce((a,p)=>a+(p.actualMinutes||0),0)/10);
+  xp+=state.tests.reduce((a,t)=>a+t.total,0);
+  return xp;
+}
+function levelCalc(xp){return Math.floor(xp/200)+1;}
+function achievements(){
+  const totalMin=state.plans.reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const streak=streakCalc();
+  const testTotal=state.tests.reduce((a,t)=>a+t.total,0);
+  const doneAny=state.plans.some(p=>p.status==="done");
+  const fullDay=(()=>{let byDate={};state.plans.forEach(p=>{byDate[p.date]=byDate[p.date]||[];byDate[p.date].push(p);});return Object.values(byDate).some(arr=>arr.length&&arr.every(p=>p.status==="done"));})();
+  return [
+    {t:"اولین جلسه مطالعه",i:"🌱",cond:doneAny},
+    {t:"۱۰ ساعت مطالعه",i:"⏱",cond:totalMin>=600},
+    {t:"۷ روز متوالی",i:"🔥",cond:streak>=7},
+    {t:"۳۰ روز متوالی",i:"🏆",cond:streak>=30},
+    {t:"۱۰۰ تست",i:"✎",cond:testTotal>=100},
+    {t:"۱۰۰۰ تست",i:"📚",cond:testTotal>=1000},
+    {t:"یک روز کامل",i:"✅",cond:fullDay},
+    {t:"اولین آزمون",i:"🎓",cond:state.exams.length>0}
+  ];
+}
+function capacityToday(){
+  const T=todayISO();
+  const planned=state.plans.filter(p=>p.date===T&&p.status!=="canceled").reduce((a,p)=>a+(p.minPlanned||0),0);
+  return {planned,capacity:state.settings.capacityMin};
+}
+function nearestExamFor(subjectId){
+  const T=todayISO();
+  const exs=state.exams.filter(e=>e.date>=T&&e.subjects.some(s=>s.subjectId===subjectId));
+  if(!exs.length)return null;
+  return exs.reduce((a,b)=>a.date<b.date?a:b);
+}
+function smartSuggestion(){
+  const T=todayISO();
+  const candidates=state.plans.filter(p=>p.status==="pending"&&p.date<=T);
+  if(!candidates.length){
+    const weakest=allTopics().map(t=>({t,st:topicStats(t.id)})).filter(x=>x.st.avgPercent!==null).sort((a,b)=>a.st.avgPercent-b.st.avgPercent)[0];
+    if(weakest)return {topic:weakest.t,reasons:[`ضعیف‌ترین مبحث فعلی با تسلط ${faNum(weakest.st.avgPercent)}٪ است`,"برنامه‌ای برای امروز ثبت نشده"],minutes:45,tests:20,plan:null};
+    return null;
+  }
+  let best=null,bestScore=-1,bestReasons=[];
+  candidates.forEach(p=>{
+    let score=0,reasons=[];
+    if(p.date<T){score+=40;reasons.push("این برنامه عقب افتاده است");}
+    const pw={high:30,medium:15,low:5}[p.priority]||15;
+    score+=pw;
+    if(p.priority==="high")reasons.push("اولویت آن زیاد تعیین شده");
+    const exam=nearestExamFor(p.subjectId);
+    if(exam){
+      const d=daysDiff(T,exam.date);
+      const bonus=Math.max(0,30-d*3);
+      score+=bonus;
+      if(bonus>10)reasons.push(`آزمون این درس ${faNum(d)} روز دیگر است`);
+    }
+    const st=topicStats(p.topicId);
+    if(st.avgPercent===null){score+=15;reasons.push("هنوز تستی از این مبحث ثبت نشده");}
+    else{const w=(100-st.avgPercent)/5;score+=w;if(st.avgPercent<60)reasons.push(`تسلط فعلی ${faNum(st.avgPercent)}٪ است`);}
+    if(score>bestScore){bestScore=score;best=p;bestReasons=reasons;}
+  });
+  return {plan:best,topic:getTopic(best.topicId),reasons:bestReasons,minutes:best.minPlanned,tests:best.testsPlanned};
+}
+function generateInsights(){
+  const T=todayISO();
+  const insights=[];
+  const wStart=weekStartISO(),wStartPrev=addDaysISO(wStart,-7);
+  const thisWeekMin=state.plans.filter(p=>p.date>=wStart&&p.date<addDaysISO(wStart,7)).reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const prevWeekMin=state.plans.filter(p=>p.date>=wStartPrev&&p.date<wStart).reduce((a,p)=>a+(p.actualMinutes||0),0);
+  if(prevWeekMin>0){
+    const diff=Math.round((thisWeekMin-prevWeekMin)/prevWeekMin*100);
+    if(diff>0)insights.push(`📈 این هفته ${faNum(diff)}٪ بیشتر از هفته قبل مطالعه کردی.`);
+    else if(diff<0)insights.push(`📉 این هفته ${faNum(Math.abs(diff))}٪ کمتر از هفته قبل مطالعه کردی.`);
+  }
+  const weak=state.subjects.map(s=>({name:s.name,st:subjectStats(s.id)})).filter(x=>x.st.mastery!==null).sort((a,b)=>a.st.mastery-b.st.mastery)[0];
+  if(weak)insights.push(`ضعیف‌ترین درس فعلاً «${weak.name}» با تسلط ${faNum(weak.st.mastery)}٪ است.`);
+  const overdueReviews=state.reviews.filter(r=>r.status==="pending"&&r.dueDate<T).length;
+  if(overdueReviews>0)insights.push(`${faNum(overdueReviews)} مرور عقب‌افتاده داری که باید هرچه زودتر انجام شود.`);
+  const overduePlans=state.plans.filter(p=>p.status==="pending"&&p.date<T).length;
+  if(overduePlans>0)insights.push(`${faNum(overduePlans)} برنامه عقب‌مانده داری.`);
+  const analyzedGap=state.tests.length-state.plans.filter(p=>p.type==="analysis"&&p.status==="done").length;
+  if(state.tests.length>0&&analyzedGap>0)insights.push("بعضی از تست‌های ثبت‌شده هنوز تحلیل نشده‌اند.");
+  if(!insights.length)insights.push("هنوز داده کافی برای تحلیل هوشمند جمع نشده — چند روز دیگر برگرد!");
+  return insights;
+}
+
+/* ============ RENDER: SHELL ============ */
+function show(id,btn){
+  document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));
+  document.getElementById("v-"+id).classList.remove("hidden");
+  document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+  if(btn)btn.classList.add("active");else{let b=document.querySelector(`.nav[data-v="${id}"]`);if(b)b.classList.add("active");}
+  if(id==="analytics")renderCharts();
+  document.querySelectorAll("#mobileNav button").forEach(x=>x.classList.toggle("active",x.dataset.v===id));
+  if(id==="week")renderMonthCalendar();
+}
+function toggleDark(){
+  document.body.classList.toggle("dark");
+  state.settings.theme=document.body.classList.contains("dark")?"dark":"light";
+  save();
+}
+function openModal(id){document.getElementById(id).classList.add("show");}
+function closeModal(id){document.getElementById(id).classList.remove("show");}
+function fillSubjectSelects(){
+  document.querySelectorAll("#planSubject,#testSubject").forEach(sel=>{
+    sel.innerHTML=state.subjects.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
+  });
+}
+function fillTopicOptions(selId,subjectId){
+  const sel=document.getElementById(selId);
+  const s=getSubject(subjectId);
+  if(!sel||!s)return;
+  sel.innerHTML=s.topics.map(t=>`<option value="${t.id}">${t.name}${t.chapter?" — "+t.chapter:""}</option>`).join("")||'<option value="">مبحثی ثبت نشده</option>';
+}
+
+/* ============ RENDER: MAIN ============ */
+function renderAll(){
+  document.body.classList.toggle("dark",state.settings.theme==="dark");
+  fillSubjectSelects();
+  if(state.subjects[0])fillTopicOptions("planTopic",document.getElementById("planSubject").value||state.subjects[0].id);
+  if(state.subjects[0])fillTopicOptions("testTopic",document.getElementById("testSubject").value||state.subjects[0].id);
+  renderDashboard();
+  renderToday();
+  renderWeek();
+  renderMonthCalendar();
+  renderSubjects();
+  renderGoalsView();
+  renderTimerSelects();
+  renderTests();
+  renderErrors();
+  renderReviews();
+  renderExams();
+  renderJournal();
+  renderPro();
+  document.getElementById("capacityInput").value=state.settings.capacityMin;
+  updateNotificationButtons();
+}
+
+function renderDashboard(){
+  const T=todayISO();
+  const xp=xpCalc(),lvl=levelCalc(xp),streak=streakCalc();
+  document.getElementById("heroLevel").textContent="Lv "+faNum(lvl);
+  document.getElementById("heroXp").textContent=faNum(xp)+" XP";
+  document.getElementById("dashDate").textContent=fmtDate(T);
+  const todaysPlans=state.plans.filter(p=>p.date===T);
+  const actualMin=todaysPlans.reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const donePct=todaysPlans.length?Math.round(todaysPlans.filter(p=>p.status==="done").length/todaysPlans.length*100):0;
+  document.getElementById("dashStats").innerHTML=`
+    <div class="stat"><div class="ico">◷</div><span class="label">مطالعه واقعی امروز</span><b>${minToHM(actualMin)}</b></div>
+    <div class="stat"><div class="ico">✓</div><span class="label">برنامه انجام‌شده</span><b>${faNum(donePct)}٪</b></div>
+    <div class="stat"><div class="ico">◎</div><span class="label">هدف امروز</span><b>${minToHM(state.goals.dailyMin)}</b></div>
+    <div class="stat"><div class="ico">🔥</div><span class="label">زنجیره مطالعه</span><b>${faNum(streak)} روز</b></div>
+    <div class="stat"><div class="ico">★</div><span class="label">سطح</span><b>Level ${faNum(lvl)}</b></div>`;
+  document.getElementById("dashTasks").innerHTML=renderTaskListHTML(todaysPlans);
+  const sug=smartSuggestion();
+  document.getElementById("smartNow").innerHTML=sug?`
+    <div class="now">
+      <span class="tag">${sug.topic?sug.topic.subjectName:""}</span>
+      <h4>${sug.topic?sug.topic.name:"—"}</h4>
+      <div class="now-row"><span class="muted">${minToHM(sug.minutes||0)} مطالعه</span><span class="muted">${faNum(sug.tests||0)} تست</span></div>
+      ${sug.reasons.map(r=>`<div class="reason">• ${r}</div>`).join("")}
+      <div style="margin-top:11px"><button class="btn primary sm" onclick="startFromSuggestion('${sug.plan?sug.plan.id:""}')">شروع مطالعه</button></div>
+    </div>`:'<div class="empty">فعلاً پیشنهادی نیست — یک درس یا مبحث اضافه کن.</div>';
+  document.getElementById("dashWeek").innerHTML=renderWeekGridHTML();
+  const gw=Math.round((state.plans.filter(p=>p.date>=weekStartISO()).reduce((a,p)=>a+(p.actualMinutes||0),0)/state.goals.weeklyMin)*100)||0;
+  const gt=state.tests.filter(t=>t.date>=weekStartISO()).reduce((a,t)=>a+t.total,0);
+  document.getElementById("dashGoals").innerHTML=`
+    <div class="goalbox"><div class="goalrow"><b>مطالعه</b><span>${minToHM(state.plans.filter(p=>p.date>=weekStartISO()).reduce((a,p)=>a+(p.actualMinutes||0),0))} / ${minToHM(state.goals.weeklyMin)}</span></div><div class="progress"><i style="width:${Math.min(100,gw)}%"></i></div></div>
+    <div class="goalbox"><div class="goalrow"><b>تست</b><span>${faNum(gt)}</span></div></div>`;
+  document.getElementById("dashInsights").innerHTML=generateInsights().slice(0,4).map(i=>`<div class="insight">${i}</div>`).join("");
+}
+
+function renderTaskListHTML(list){
+  const T=todayISO();
+  if(!list.length)return '<div class="empty">برنامه‌ای ثبت نشده.</div>';
+  return list.sort((a,b)=>a.time.localeCompare(b.time)).map(p=>{
+    const overdue=p.status==="pending"&&p.date<T;
+    return `<div class="task ${p.status==="done"?"done":""} ${overdue?"overdue":""}">
+      <button class="check" onclick="togglePlanDone('${p.id}')">${p.status==="done"?"✓":""}</button>
+      <div class="taskmain">
+        <div class="taskname">${subjectName(p.subjectId)} — ${topicName(p.topicId)}</div>
+        <div class="taskmeta">
+          <span>${p.time}</span><span>${fmtDate(p.date)}</span>
+          <span>${minToHM(p.minPlanned)}${p.actualMinutes?` (واقعی: ${minToHM(p.actualMinutes)})`:""}</span>
+          ${p.testsPlanned?`<span>${faNum(p.testsPlanned)} تست</span>`:""}
+        </div>
+      </div>
+      <span class="pill ${p.type}">${typeLabel(p.type)}</span>
+      <span class="pill ${p.priority}">${priorityLabel(p.priority)}</span>
+      <div class="taskactions">
+        <button class="icobtn" onclick="editPlan('${p.id}')" title="ویرایش">✎</button>
+        <button class="icobtn" onclick="duplicatePlan('${p.id}')" title="کپی برای فردا">⧉</button>
+        <button class="icobtn" onclick="postponePlan('${p.id}',1)" title="انتقال به فردا">→</button>
+        <button class="icobtn" onclick="deletePlan('${p.id}')" title="حذف">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+function typeLabel(t){return {study:"مطالعه",test:"تست",review:"مرور",analysis:"تحلیل",summary:"جمع‌بندی"}[t]||t;}
+function priorityLabel(p){return {high:"زیاد",medium:"متوسط",low:"کم"}[p]||p;}
+
+function renderWeekGridHTML(){
+  const wStart=weekStartISO();
+  return Array.from({length:7},(_,i)=>{
+    const d=addDaysISO(wStart,i);
+    const isToday=d===todayISO();
+    const ps=state.plans.filter(p=>p.date===d);
+    const es=state.events.filter(e=>e.date===d);
+    const exs=state.exams.filter(e=>e.date===d);
+    return `<div class="day ${isToday?"today":""}">
+      <div class="dayhead"><span>${dayShort(d)}</span><span class="daynum">${faNum(new Date(d+"T12:00:00").getDate())}</span></div>
+      ${ps.map(p=>`<div class="event ${p.type}">${p.time} ${subjectName(p.subjectId)}<br>${topicName(p.topicId)}</div>`).join("")}
+      ${es.map(e=>`<div class="event ${e.type==="class"?"class":"exam"}">${e.title}<br>${e.start}–${e.end}</div>`).join("")}
+      ${exs.map(e=>`<div class="event exam">🎓 ${e.title}<br>${e.start}–${e.end}</div>`).join("")}
+    </div>`;
+  }).join("");
+}
+
+function renderToday(){
+  const T=todayISO();
+  const cap=capacityToday();
+  const capBox=document.getElementById("todayCapacity");
+  if(cap.planned>cap.capacity){
+    capBox.innerHTML=`<div class="warn-box">⚠️ برنامه امروز (${minToHM(cap.planned)}) بیشتر از ظرفیت روزانه تعیین‌شده (${minToHM(cap.capacity)}) است.</div>`;
+  }else{
+    capBox.innerHTML=`<div class="ok-box">امروز ${minToHM(cap.planned)} از ${minToHM(cap.capacity)} ظرفیت برنامه‌ریزی شده.</div>`;
+  }
+  document.getElementById("todayTasks").innerHTML=renderTaskListHTML(state.plans.filter(p=>p.date===T));
+  const overdue=state.plans.filter(p=>p.status==="pending"&&p.date<T);
+  document.getElementById("overdueTasks").innerHTML=overdue.length?overdue.map(p=>`
+    <div class="task overdue">
+      <div class="taskmain">
+        <div class="taskname">${subjectName(p.subjectId)} — ${topicName(p.topicId)}</div>
+        <div class="taskmeta"><span>از ${fmtDate(p.date)}</span><span>${minToHM(p.minPlanned)}</span></div>
+      </div>
+      <button class="btn sm" onclick="moveToToday('${p.id}')">جابه‌جایی به امروز</button>
+    </div>`).join(""):'<div class="empty">هیچ برنامه عقب‌افتاده‌ای نداری 🎉</div>';
+}
+function moveToToday(id){const p=state.plans.find(x=>x.id===id);p.date=todayISO();save();renderAll();toast("برنامه به امروز منتقل شد");}
+
+function renderWeek(){
+  document.getElementById("weekFull").innerHTML=renderWeekGridHTML();
+  const evs=[...state.events].sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById("eventsList").innerHTML=evs.length?evs.map(e=>`
+    <div class="task">
+      <span class="pill ${e.type==="class"?"class":"exam"}">${e.type==="class"?"کلاس":e.type==="deadline"?"ددلاین":"رویداد"}</span>
+      <div class="taskmain"><div class="taskname">${e.title}</div><div class="taskmeta"><span>${fmtDate(e.date)}</span><span>${e.start}–${e.end}</span></div></div>
+      <button class="icobtn" onclick="deleteEvent('${e.id}')">🗑</button>
+    </div>`).join(""):'<div class="empty">رویدادی ثبت نشده.</div>';
+}
+
+function renderSubjects(){
+  document.getElementById("subjectsList").innerHTML=state.subjects.map(s=>{
+    const st=subjectStats(s.id);
+    return `<div class="subject">
+      <div class="subject-head" onclick="toggleTopics('${s.id}')">
+        <b>${s.name}</b>
+        <span class="muted">${faNum(s.topics.length)} مبحث · ${minToHM(st.totalMinutes)} مطالعه واقعی${st.mastery!==null?" · تسلط "+faNum(st.mastery)+"٪":""}</span>
+      </div>
+      <div class="topics" id="topics-${s.id}">
+        ${s.topics.map(t=>{
+          const ts=topicStats(t.id);
+          return `<div class="topic-row" onclick="openTopicProfile('${t.id}')">
+            <div><div class="topic-name">${t.name}</div><div class="topic-chapter">${t.chapter||""}</div></div>
+            <span class="mastery-tag ${ts.masteryClass}">${ts.masteryLabel}${ts.avgPercent!==null?" "+faNum(ts.avgPercent)+"٪":""}</span>
+          </div>`;
+        }).join("")}
+        <button class="btn sm" style="align-self:flex-start" onclick="openTopicModal('${s.id}')">＋ مبحث جدید</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+function toggleTopics(sid){document.getElementById("topics-"+sid).classList.toggle("open");}
+
+function openTopicProfile(topicId){
+  const t=getTopic(topicId);
+  const st=topicStats(topicId);
+  document.getElementById("topicProfileBody").innerHTML=`
+    <h3>${t.subjectName} — ${t.name}</h3>
+    <div class="split">
+      <div>
+        <div class="kv"><span>آخرین مطالعه</span><b>${st.lastStudy?fmtDate(st.lastStudy):"—"}</b></div>
+        <div class="kv"><span>مجموع مطالعه واقعی</span><b>${minToHM(st.totalMinutes)}</b></div>
+        <div class="kv"><span>تعداد تست ثبت‌شده</span><b>${faNum(st.testCount)}</b></div>
+        <div class="kv"><span>میانگین درصد تست</span><b>${st.avgPercent!==null?faNum(st.avgPercent)+"٪":"—"}</b></div>
+        <div class="kv"><span>سطح تسلط</span><b>${st.masteryLabel}</b></div>
+        <div class="kv"><span>تعداد خطای ثبت‌شده</span><b>${faNum(st.errCount)}</b></div>
+      </div>
+      <div>
+        <div class="muted" style="font-size:10px;font-weight:700;margin-bottom:6px">برنامه‌های مرتبط</div>
+        ${st.plans.length?st.plans.map(p=>`<div class="chip">${fmtDate(p.date)} · ${typeLabel(p.type)} · ${p.status==="done"?"انجام‌شده":"در انتظار"}</div>`).join(""):'<div class="muted">برنامه‌ای ثبت نشده</div>'}
+        <div class="muted" style="font-size:10px;font-weight:700;margin:10px 0 6px">مرورهای این مبحث</div>
+        ${st.relReviews.length?st.relReviews.map(r=>`<div class="chip">${fmtDate(r.dueDate)} · ${r.status==="done"?"انجام‌شده":"در انتظار"}</div>`).join(""):'<div class="muted">مروری زمان‌بندی نشده</div>'}
+      </div>
+    </div>`;
+  openModal("modal-topicprofile");
+}
+
+function renderGoalsView(){
+  const T=todayISO();
+  const dailyMin=state.plans.filter(p=>p.date===T).reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const dailyTests=state.tests.filter(t=>t.date===T).reduce((a,t)=>a+t.total,0);
+  const wS=weekStartISO();
+  const weeklyMin=state.plans.filter(p=>p.date>=wS).reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const monthStart=T.slice(0,7)+"-01";
+  const monthlyMin=state.plans.filter(p=>p.date>=monthStart).reduce((a,p)=>a+(p.actualMinutes||0),0);
+  document.getElementById("goalDaily").innerHTML=goalBoxHTML(dailyMin,state.goals.dailyMin,`${faNum(dailyTests)} / ${faNum(state.goals.dailyTests)} تست`);
+  document.getElementById("goalWeekly").innerHTML=goalBoxHTML(weeklyMin,state.goals.weeklyMin);
+  document.getElementById("goalMonthly").innerHTML=goalBoxHTML(monthlyMin,state.goals.monthlyMin);
+  document.getElementById("goalDailyMin").value=state.goals.dailyMin;
+  document.getElementById("goalDailyTests").value=state.goals.dailyTests;
+  document.getElementById("goalWeeklyMin").value=state.goals.weeklyMin;
+  document.getElementById("goalMonthlyMin").value=state.goals.monthlyMin;
+}
+function goalBoxHTML(actual,target,extra){
+  const pct=target?Math.min(100,Math.round(actual/target*100)):0;
+  const cls=pct>=100?"green":pct>=50?"":"orange";
+  return `<div class="goalrow"><b>مطالعه</b><span>${minToHM(actual)} / ${minToHM(target)}</span></div><div class="progress ${cls}"><i style="width:${pct}%"></i></div>${extra?`<div class="muted" style="margin-top:8px">${extra}</div>`:""}`;
+}
+function saveGoals(){
+  state.goals.dailyMin=+document.getElementById("goalDailyMin").value||0;
+  state.goals.dailyTests=+document.getElementById("goalDailyTests").value||0;
+  state.goals.weeklyMin=+document.getElementById("goalWeeklyMin").value||0;
+  state.goals.monthlyMin=+document.getElementById("goalMonthlyMin").value||0;
+  save();renderAll();toast("اهداف ذخیره شد");
+}
+
+/* ============ PLAN CRUD ============ */
+function openPlanModal(prefill){
+  document.getElementById("planModalTitle").textContent="＋ برنامه جدید";
+  document.getElementById("planId").value="";
+  document.getElementById("planDate").value=(prefill&&prefill.date)||todayISO();
+  document.getElementById("planTime").value=(prefill&&prefill.time)||"17:00";
+  document.getElementById("planType").value=(prefill&&prefill.type)||"study";
+  document.getElementById("planPriority").value=(prefill&&prefill.priority)||"medium";
+  fillSubjectSelects();
+  if(prefill&&prefill.subjectId)document.getElementById("planSubject").value=prefill.subjectId;
+  fillTopicOptions("planTopic",document.getElementById("planSubject").value);
+  if(prefill&&prefill.topicId)document.getElementById("planTopic").value=prefill.topicId;
+  document.getElementById("planMin").value=(prefill&&prefill.min)||60;
+  document.getElementById("planTests").value=(prefill&&prefill.tests)||0;
+  document.getElementById("planNote").value="";
+  document.getElementById("planRepeat").value=(prefill&&prefill.repeat)||"none";
+  document.getElementById("planReminder").value=(prefill&&prefill.reminder)||"none";
+  openModal("modal-plan");
+}
+function editPlan(id){
+  const p=state.plans.find(x=>x.id===id);if(!p)return;
+  document.getElementById("planModalTitle").textContent="ویرایش برنامه";
+  document.getElementById("planId").value=p.id;
+  document.getElementById("planDate").value=p.date;
+  document.getElementById("planTime").value=p.time;
+  document.getElementById("planType").value=p.type;
+  document.getElementById("planPriority").value=p.priority;
+  fillSubjectSelects();
+  document.getElementById("planSubject").value=p.subjectId;
+  fillTopicOptions("planTopic",p.subjectId);
+  document.getElementById("planTopic").value=p.topicId;
+  document.getElementById("planMin").value=p.minPlanned;
+  document.getElementById("planTests").value=p.testsPlanned;
+  document.getElementById("planNote").value=p.note||"";
+  document.getElementById("planRepeat").value=p.repeat||"none";
+  document.getElementById("planReminder").value=p.reminder||"none";
+  openModal("modal-plan");
+}
+function savePlan(){
+  const id=document.getElementById("planId").value;
+  const data={
+    date:document.getElementById("planDate").value||todayISO(),
+    time:document.getElementById("planTime").value||"12:00",
+    type:document.getElementById("planType").value,
+    priority:document.getElementById("planPriority").value,
+    subjectId:document.getElementById("planSubject").value,
+    topicId:document.getElementById("planTopic").value,
+    minPlanned:+document.getElementById("planMin").value||0,
+    testsPlanned:+document.getElementById("planTests").value||0,
+    note:document.getElementById("planNote").value,
+    repeat:document.getElementById("planRepeat").value,
+    reminder:document.getElementById("planReminder").value
+  };
+  if(id){Object.assign(state.plans.find(p=>p.id===id),data);toast("برنامه ویرایش شد");}
+  else{
+    state.plans.push({id:uid("p"),status:"pending",actualMinutes:0,actualTests:0,...data});
+    if(data.repeat!=="none"){
+      const count=data.repeat==="weekly"?8:14;
+      for(let i=1;i<=count;i++){
+        const d=addDaysISO(data.date,data.repeat==="weekly"?i*7:i);
+        if(data.repeat==="weekdays" && [5,6].includes(new Date(d+"T12:00:00").getDay())) continue;
+        state.plans.push({id:uid("p"),...data,date:d,status:"pending",actualMinutes:0,actualTests:0,repeat:"none"});
+      }
+    }
+    toast(data.repeat!=="none"?"برنامه و تکرارهای آن ساخته شد":"برنامه ساخته شد");
+  }
+  save();closeModal("modal-plan");renderAll();
+}
+function deletePlan(id){state.plans=state.plans.filter(p=>p.id!==id);save();renderAll();toast("برنامه حذف شد");}
+function togglePlanDone(id){
+  const p=state.plans.find(x=>x.id===id);if(!p)return;
+  if(p.status==="done"){p.status="pending";}
+  else{
+    p.status="done";
+    if(!p.actualMinutes)p.actualMinutes=p.minPlanned;
+    if(!p.actualTests)p.actualTests=p.testsPlanned;
+    if(p.type==="study")scheduleReviews(p.subjectId,p.topicId,p.date);
+    toast("آفرین! برنامه انجام شد (+۱۰ XP)");
+  }
+  save();renderAll();
+}
+function scheduleReviews(subjectId,topicId,fromDate){
+  [1,3,7,14,30].forEach((n,idx)=>{
+    state.reviews.push({id:uid("rv"),subjectId,topicId,dueDate:addDaysISO(fromDate,n),stage:idx+1,status:"pending"});
+  });
+}
+
+/* ============ SUBJECT / TOPIC CRUD ============ */
+function openSubjectModal(){document.getElementById("subjectName").value="";openModal("modal-subject");}
+function saveSubject(){
+  const name=document.getElementById("subjectName").value.trim();
+  if(!name)return toast("نام درس را وارد کن");
+  state.subjects.push({id:uid("s"),name,topics:[]});
+  save();closeModal("modal-subject");renderAll();toast("درس اضافه شد");
+}
+function openTopicModal(subjectId){
+  document.getElementById("topicSubjectId").value=subjectId;
+  document.getElementById("topicName").value="";
+  document.getElementById("topicChapter").value="";
+  openModal("modal-topic");
+}
+function saveTopic(){
+  const sid=document.getElementById("topicSubjectId").value;
+  const name=document.getElementById("topicName").value.trim();
+  if(!name)return toast("نام مبحث را وارد کن");
+  const s=getSubject(sid);
+  s.topics.push({id:uid("t"),name,chapter:document.getElementById("topicChapter").value.trim()});
+  save();closeModal("modal-topic");renderAll();toast("مبحث اضافه شد");
+}
+
+/* ============ V2 PRODUCTIVITY FEATURES ============ */
+let calendarCursor=new Date(todayISO()+"T12:00:00");
+function changeMonth(delta){calendarCursor.setMonth(calendarCursor.getMonth()+delta);renderMonthCalendar();}
+function monthTitle(d){return `${faNum(d.getFullYear())}/${faNum(d.getMonth()+1)}`;}
+function renderMonthCalendar(){
+  const el=document.getElementById("monthGrid"), lab=document.getElementById("monthLabel"); if(!el)return;
+  const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();
+  lab.textContent=monthTitle(calendarCursor);
+  const first=new Date(y,m,1); const start=(first.getDay()+1)%7; const days=new Date(y,m+1,0).getDate();
+  let html=""; const names=["ش","ی","د","س","چ","پ","ج"];
+  names.forEach(n=>html+=`<div class="muted" style="text-align:center;font-size:9px;padding:4px">${n}</div>`);
+  for(let i=0;i<start;i++)html+=`<div class="month-cell muted-day"></div>`;
+  for(let day=1;day<=days;day++){
+    const iso=`${y}-${pad(m+1)}-${pad(day)}`; const plans=state.plans.filter(p=>p.date===iso); const evs=state.events.filter(e=>e.date===iso);
+    html+=`<div class="month-cell ${iso===todayISO()?"today":""}" onclick="openPlanModal({date:'${iso}'})"><b>${faNum(day)}</b><div class="month-events">${plans.slice(0,3).map(p=>`<div class="month-event">${subjectName(p.subjectId)} • ${p.time}</div>`).join("")}${evs.slice(0,2).map(e=>`<div class="month-event">${e.title}</div>`).join("")}${plans.length+evs.length>5?`<span class="muted">+${faNum(plans.length+evs.length-5)}</span>`:""}</div></div>`;
+  }
+  el.innerHTML=html;
+}
+function renameSubject(id){const s=getSubject(id);if(!s)return;const n=prompt("نام جدید درس:",s.name);if(n&&n.trim()){s.name=n.trim();save();renderAll();toast("نام درس تغییر کرد");}}
+function deleteSubject(id){const s=getSubject(id);if(!s)return;if(!confirm(`درس «${s.name}» و مباحث آن حذف شود؟ برنامه‌های مرتبط نیز حذف می‌شوند.`))return;const tids=s.topics.map(t=>t.id);state.subjects=state.subjects.filter(x=>x.id!==id);state.plans=state.plans.filter(p=>p.subjectId!==id);state.tests=state.tests.filter(t=>t.subjectId!==id);state.errors=state.errors.filter(e=>e.subjectId!==id);state.reviews=state.reviews.filter(r=>r.subjectId!==id);save();renderAll();toast("درس حذف شد");}
+function postponePlan(id,days){const p=state.plans.find(x=>x.id===id);if(!p)return;p.date=addDaysISO(p.date,days||1);p.status="pending";save();renderAll();toast("برنامه جابه‌جا شد");}
+function duplicatePlan(id){const p=state.plans.find(x=>x.id===id);if(!p)return;state.plans.push({...p,id:uid("p"),date:addDaysISO(p.date,1),status:"pending",actualMinutes:0,actualTests:0,repeat:"none"});save();renderAll();toast("برنامه برای روز بعد کپی شد");}
+function downloadBackup(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Planner-YAR-${todayISO()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast("فایل پشتیبان دانلود شد");}
+function importBackupFile(input){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById("importBox").value=r.result;importData();};r.readAsText(f,"utf-8");}
+function enableNotifications(){if(!("Notification" in window)){toast("مرورگر شما اعلان را پشتیبانی نمی‌کند");return;}Notification.requestPermission().then(x=>{state.settings.notifications=x==="granted";save();updateNotificationButtons();toast(x==="granted"?"اعلان‌ها فعال شد":"مجوز اعلان داده نشد");});}
+function toggleReviewNotify(){state.settings.reviewNotifications=!state.settings.reviewNotifications;save();updateNotificationButtons();toast(state.settings.reviewNotifications?"یادآوری مرور روشن شد":"یادآوری مرور خاموش شد");}
+function updateNotificationButtons(){const a=document.getElementById("notifyBtn"),b=document.getElementById("reviewNotifyBtn");if(a)a.textContent=state.settings.notifications?"فعال است":"فعال‌سازی";if(b)b.textContent=state.settings.reviewNotifications?"روشن است":"خاموش است";}
+function notificationTick(){
+  if(!state.settings.notifications || !window.Notification || Notification.permission!=="granted")return;
+  const now=new Date(), iso=todayISO(), cur=now.getHours()*60+now.getMinutes();
+  const sent=JSON.parse(localStorage.getItem("ayplan_notify_sent")||"{}");
+  state.plans.filter(p=>p.date===iso&&p.status==="pending"&&p.reminder!=="none").forEach(p=>{
+    const mins=+p.reminder; const [h,m]=p.time.split(":").map(Number); const target=h*60+m-mins;
+    const key=`plan:${p.id}:${iso}:${target}`;
+    if(cur===target&&!sent[key]){sent[key]=Date.now();new Notification("آزمون‌یار | یادآوری مطالعه",{body:`${subjectName(p.subjectId)} — ${topicName(p.topicId)} تا ${mins} دقیقه دیگر`});}
+  });
+  if(state.settings.reviewNotifications){
+    const due=state.reviews.filter(r=>r.status==="pending"&&r.dueDate===iso); const key=`review:${iso}`;
+    if(due.length&&!sent[key]){sent[key]=Date.now();new Notification("آزمون‌یار | مرور امروز",{body:`${faNum(due.length)} مرور برای امروز داری.`});}
+  }
+  const keys=Object.keys(sent); if(keys.length>300){keys.sort((a,b)=>sent[a]-sent[b]).slice(0,100).forEach(k=>delete sent[k]);}
+  localStorage.setItem("ayplan_notify_sent",JSON.stringify(sent));
+}
+function renderHeatmap(){const host=document.getElementById("heatmap");if(!host)return;let end=todayISO(),start=addDaysISO(end,-55);let html="";for(let i=0;i<56;i++){const d=addDaysISO(start,i);const m=state.plans.filter(p=>p.date===d).reduce((a,p)=>a+(p.actualMinutes||0),0);const v=m>=180?5:m>=120?4:m>=60?3:m>0?2:0;html+=`<div class="heat" data-v="${v}" title="${fmtDate(d)} — ${minToHM(m)}"></div>`;}host.innerHTML=html;}
+
+/* ============ TIMER ============ */
+let timerSec=0,timerRunning=false,timerInterval=null,timerLinkedPlanId=null,pomoWorkMin=0,pomoOnBreak=false;
+function renderTimerSelects(){
+  const opts=`<option value="">جلسه آزاد</option>`+state.plans.filter(p=>p.status!=="done").map(p=>`<option value="${p.id}">${subjectName(p.subjectId)} — ${topicName(p.topicId)}</option>`).join("");
+  document.getElementById("timerPlanSelect").innerHTML=opts;
+  document.getElementById("manualPlanSelect").innerHTML=`<option value="">— انتخاب برنامه —</option>`+state.plans.filter(p=>p.status!=="done").map(p=>`<option value="${p.id}">${subjectName(p.subjectId)} — ${topicName(p.topicId)}</option>`).join("");
+}
+function setPomo(min,btn){pomoWorkMin=min;document.querySelectorAll(".pomo-opt").forEach(b=>b.classList.remove("active"));btn.classList.add("active");}
+function startFromSuggestion(planId){
+  show("focus");document.querySelectorAll('.nav[data-v="focus"]')[0]?.classList.add("active");
+  if(planId){document.getElementById("timerPlanSelect").value=planId;}
+  timerStart();
+}
+function timerStart(){
+  timerLinkedPlanId=document.getElementById("timerPlanSelect").value;
+  const label=timerLinkedPlanId?(()=>{const p=state.plans.find(x=>x.id===timerLinkedPlanId);return p?subjectName(p.subjectId)+" — "+topicName(p.topicId):"جلسه آزاد";})():"جلسه آزاد";
+  document.getElementById("timerTaskLabel").textContent=label;
+  timerRunning=true;
+  if(!timerInterval)timerInterval=setInterval(()=>{if(timerRunning){timerSec++;updateTimerDisplay();checkPomo();}},1000);
+  toast("تایمر شروع شد — فقط زمان واقعی ثبت می‌شود");
+}
+function checkPomo(){
+  if(!pomoWorkMin)return;
+  const limit=(pomoOnBreak?(pomoWorkMin===25?5:10):pomoWorkMin)*60;
+  if(timerSec>0&&timerSec%limit===0){
+    pomoOnBreak=!pomoOnBreak;
+    toast(pomoOnBreak?"وقت استراحت کوتاه است ☕":"برگردیم به مطالعه 💪");
+  }
+}
+function timerPause(){timerRunning=false;toast("تایمر متوقف شد");}
+function timerStop(){
+  timerRunning=false;clearInterval(timerInterval);timerInterval=null;
+  const mins=Math.floor(timerSec/60);
+  if(mins>0){
+    state.sessions.push({id:uid("se"),date:todayISO(),minutes:mins,planId:timerLinkedPlanId||null});
+    if(timerLinkedPlanId){
+      const p=state.plans.find(x=>x.id===timerLinkedPlanId);
+      if(p){p.actualMinutes=(p.actualMinutes||0)+mins;if(p.status!=="done"){/* leave pending until user marks done */}}
+    }
+    save();renderAll();
+    toast(`${faNum(mins)} دقیقه مطالعه ثبت شد`);
+  }
+  timerSec=0;updateTimerDisplay();
+}
+function updateTimerDisplay(){
+  const h=Math.floor(timerSec/3600),m=Math.floor(timerSec%3600/60),s=timerSec%60;
+  document.getElementById("timerDisplay").firstChild.textContent=[h,m,s].map(x=>faNum(pad(x))).join(":");
+}
+function saveManualDuration(){
+  const planId=document.getElementById("manualPlanSelect").value;
+  const mins=+document.getElementById("manualMinutes").value||0;
+  if(!planId)return toast("یک برنامه انتخاب کن");
+  const p=state.plans.find(x=>x.id===planId);
+  p.actualMinutes=(p.actualMinutes||0)+mins;
+  save();renderAll();toast("زمان واقعی ثبت شد");
+}
+
+/* ============ TESTS / ERRORS ============ */
+function switchTestTab(tab){
+  document.getElementById("tabTests").classList.toggle("active",tab==="tests");
+  document.getElementById("tabErrors").classList.toggle("active",tab==="errors");
+  document.getElementById("testsPane").classList.toggle("hidden",tab!=="tests");
+  document.getElementById("errorsPane").classList.toggle("hidden",tab!=="errors");
+}
+function saveTest(){
+  const subjectId=document.getElementById("testSubject").value;
+  const topicId=document.getElementById("testTopic").value;
+  const total=+document.getElementById("testTotal").value||0;
+  const correct=+document.getElementById("testCorrect").value||0;
+  const wrong=+document.getElementById("testWrong").value||0;
+  const blank=+document.getElementById("testBlank").value||0;
+  const reason=document.getElementById("testReason").value;
+  if(!total)return toast("تعداد کل را وارد کن");
+  state.tests.push({id:uid("te"),date:todayISO(),subjectId,topicId,source:document.getElementById("testSource").value,total,correct,wrong,blank,reason});
+  if(wrong>0){
+    const ex=state.errors.find(e=>e.topicId===topicId&&e.reason===reason&&reason);
+    if(ex)ex.repeatCount=(ex.repeatCount||1)+wrong;
+    else state.errors.push({id:uid("er"),date:todayISO(),subjectId,topicId,reason:reason||"نامشخص",note:"",repeatCount:wrong});
+  }
+  save();renderAll();toast("تست ثبت شد");
+}
+function renderTests(){
+  const list=[...state.tests].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
+  document.getElementById("testsList").innerHTML=list.length?list.map(t=>{
+    const pct=Math.round(t.correct/t.total*100);
+    return `<div class="task">
+      <div class="taskmain">
+        <div class="taskname">${subjectName(t.subjectId)} — ${topicName(t.topicId)}</div>
+        <div class="taskmeta"><span>${fmtDate(t.date)}</span><span>${t.source}</span><span>${faNum(t.correct)}/${faNum(t.total)} صحیح</span></div>
+      </div>
+      <span class="pill ${pct>=70?"review":pct>=40?"class":"exam"}">${faNum(pct)}٪</span>
+    </div>`;
+  }).join(""):'<div class="empty">هنوز تستی ثبت نشده.</div>';
+}
+function renderErrors(){
+  const list=[...state.errors].sort((a,b)=>(b.repeatCount||1)-(a.repeatCount||1));
+  document.getElementById("errorsList").innerHTML=list.length?list.map(e=>`
+    <div class="task">
+      <div class="taskmain">
+        <div class="taskname">${subjectName(e.subjectId)} — ${topicName(e.topicId)}</div>
+        <div class="taskmeta"><span>${e.reason}</span><span>${fmtDate(e.date)}</span>${e.note?`<span>${e.note}</span>`:""}</div>
+      </div>
+      <span class="pill exam">${faNum(e.repeatCount||1)} بار</span>
+    </div>`).join(""):'<div class="empty">دفترچه خطا خالی است.</div>';
+}
+
+/* ============ REVIEWS ============ */
+function renderReviews(){
+  const T=todayISO();
+  const due=state.reviews.filter(r=>r.status==="pending"&&r.dueDate<=T).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
+  const upcoming=state.reviews.filter(r=>r.status==="pending"&&r.dueDate>T).sort((a,b)=>a.dueDate.localeCompare(b.dueDate)).slice(0,10);
+  document.getElementById("reviewsDue").innerHTML=due.length?due.map(r=>`
+    <div class="task ${r.dueDate<T?"overdue":""}">
+      <div class="taskmain"><div class="taskname">${subjectName(r.subjectId)} — ${topicName(r.topicId)}</div>
+      <div class="taskmeta"><span>مرور ${faNum(r.stage)}</span><span>سررسید ${fmtDate(r.dueDate)}</span></div></div>
+      <button class="btn primary sm" onclick="completeReview('${r.id}')">انجام شد</button>
+    </div>`).join(""):'<div class="empty">مرور معوقه‌ای نداری 🎉</div>';
+  document.getElementById("reviewsUpcoming").innerHTML=upcoming.length?upcoming.map(r=>`
+    <div class="task"><div class="taskmain"><div class="taskname">${subjectName(r.subjectId)} — ${topicName(r.topicId)}</div>
+    <div class="taskmeta"><span>مرور ${faNum(r.stage)}</span><span>${fmtDate(r.dueDate)}</span></div></div></div>`).join(""):'<div class="empty">مرور پیش‌رویی ثبت نشده.</div>';
+}
+function completeReview(id){
+  const r=state.reviews.find(x=>x.id===id);r.status="done";
+  save();renderAll();toast("مرور ثبت شد (+۵ XP)");
+}
+
+/* ============ EXAMS ============ */
+function openExamModal(){
+  document.getElementById("examTitle").value="";
+  document.getElementById("examDate").value=addDaysISO(todayISO(),14);
+  document.getElementById("examStart").value="08:00";
+  document.getElementById("examEnd").value="11:00";
+  document.getElementById("examSubjectsBudget").innerHTML=state.subjects.map(s=>`
+    <div class="field" style="display:flex;align-items:center;gap:8px;flex-direction:row">
+      <label style="min-width:90px;margin:0">${s.name}</label>
+      <input type="number" placeholder="تعداد سؤال" data-sub="${s.id}" class="examq" value="0">
+    </div>`).join("");
+  openModal("modal-exam");
+}
+function saveExam(){
+  const title=document.getElementById("examTitle").value.trim();
+  if(!title)return toast("عنوان آزمون را وارد کن");
+  const subjects=[...document.querySelectorAll(".examq")].map(inp=>({subjectId:inp.dataset.sub,questions:+inp.value||0})).filter(x=>x.questions>0);
+  state.exams.push({id:uid("ex"),title,date:document.getElementById("examDate").value,start:document.getElementById("examStart").value,end:document.getElementById("examEnd").value,subjects});
+  save();closeModal("modal-exam");renderAll();toast("آزمون ثبت شد");
+}
+function examCoverage(exam,sub){
+  const s=getSubject(sub.subjectId);
+  const topicIds=s.topics.map(t=>t.id);
+  const covered=topicIds.filter(id=>state.tests.some(t=>t.topicId===id)).length;
+  const breadth=topicIds.length?Math.round(covered/topicIds.length*100):0;
+  const testsDone=state.tests.filter(t=>t.subjectId===sub.subjectId).reduce((a,t)=>a+t.total,0);
+  const depth=sub.questions?Math.min(100,Math.round(testsDone/sub.questions*100)):0;
+  const coverage=Math.round((breadth+depth)/2);
+  const weakTopics=s.topics.filter(t=>{const st=topicStats(t.id);return st.avgPercent!==null&&st.avgPercent<60;});
+  return {coverage,breadth,depth,weakTopics};
+}
+function renderExams(){
+  const T=todayISO();
+  const list=[...state.exams].sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById("examsList").innerHTML=list.length?list.map(ex=>{
+    const d=daysDiff(T,ex.date);
+    const rows=ex.subjects.map(sub=>{
+      const c=examCoverage(ex,sub);
+      const cls=c.coverage>=80?"green":c.coverage>=50?"orange":"red";
+      return `<div class="goalbox"><div class="goalrow"><b>${subjectName(sub.subjectId)}</b><span>${faNum(c.coverage)}٪ پوشش (${faNum(sub.questions)} سؤال هدف)</span></div>
+      <div class="progress ${cls}"><i style="width:${c.coverage}%"></i></div>
+      ${c.weakTopics.length?`<div class="muted" style="margin-top:7px">مباحث ضعیف: ${c.weakTopics.map(t=>t.name).join("، ")}</div>`:""}</div>`;
+    }).join("");
+    return `<div class="panel" style="margin-bottom:12px">
+      <div class="panel-title"><h3>${ex.title}</h3><span class="pill ${d<=3?"exam":d<=7?"test":"study"}">${d>=0?faNum(d)+" روز مانده":"برگزار شده"}</span></div>
+      <div class="muted" style="margin-bottom:10px">${fmtDate(ex.date)} · ${ex.start} تا ${ex.end}</div>
+      ${rows||'<div class="empty">بودجه سؤالی برای این آزمون ثبت نشده.</div>'}
+      <div class="modal-actions"><button class="btn danger sm" onclick="deleteExam('${ex.id}')">حذف آزمون</button></div>
+    </div>`;
+  }).join(""):'<div class="empty">آزمونی ثبت نشده.</div>';
+}
+function deleteExam(id){state.exams=state.exams.filter(e=>e.id!==id);save();renderAll();toast("آزمون حذف شد");}
+
+/* ============ EVENTS ============ */
+function openEventModal(){
+  document.getElementById("eventTitle").value="";
+  document.getElementById("eventDate").value=todayISO();
+  openModal("modal-event");
+}
+function saveEvent(){
+  state.events.push({id:uid("ev"),type:document.getElementById("eventType").value,title:document.getElementById("eventTitle").value.trim()||"رویداد",date:document.getElementById("eventDate").value,start:document.getElementById("eventStart").value,end:document.getElementById("eventEnd").value});
+  save();closeModal("modal-event");renderAll();toast("رویداد ثبت شد");
+}
+function deleteEvent(id){state.events=state.events.filter(e=>e.id!==id);save();renderAll();toast("رویداد حذف شد");}
+
+/* ============ ANALYTICS / CHARTS ============ */
+let charts={};
+function renderCharts(){
+  renderHeatmap();
+  const T=todayISO();
+  const days=Array.from({length:7},(_,i)=>addDaysISO(T,i-6));
+  const planned=days.map(d=>state.plans.filter(p=>p.date===d).reduce((a,p)=>a+(p.minPlanned||0),0));
+  const actual=days.map(d=>state.plans.filter(p=>p.date===d).reduce((a,p)=>a+(p.actualMinutes||0),0));
+  drawChart("chartWeek","bar",{labels:days.map(d=>dayShort(d)),datasets:[
+    {label:"برنامه‌ریزی‌شده",data:planned,backgroundColor:"#c7c8fb"},
+    {label:"واقعی",data:actual,backgroundColor:"#5b5ce2"}
+  ]});
+  const subLabels=state.subjects.map(s=>s.name);
+  const subData=state.subjects.map(s=>subjectStats(s.id).totalMinutes);
+  drawChart("chartSubjects","doughnut",{labels:subLabels,datasets:[{data:subData,backgroundColor:["#5b5ce2","#7c7dee","#3b7fd6","#1f9d63","#e08a1a","#e0505e"]}]});
+  const testsSorted=[...state.tests].sort((a,b)=>a.date.localeCompare(b.date));
+  drawChart("chartTests","line",{labels:testsSorted.map(t=>fmtDate(t.date)),datasets:[{label:"درصد",data:testsSorted.map(t=>Math.round(t.correct/t.total*100)),borderColor:"#5b5ce2",tension:.3}]});
+
+  const totalMin=state.plans.reduce((a,p)=>a+(p.actualMinutes||0),0);
+  const doneCount=state.plans.filter(p=>p.status==="done").length;
+  const completion=state.plans.length?Math.round(doneCount/state.plans.length*100):0;
+  const streak=streakCalc();
+  const perf=Math.round((Math.min(100,totalMin/10)+completion+Math.min(100,streak*10))/3);
+  document.getElementById("perfScores").innerHTML=`
+    <div class="kv"><span>امتیاز کلی عملکرد</span><b>${faNum(perf)}/۱۰۰</b></div>
+    <div class="kv"><span>درصد اجرای برنامه</span><b>${faNum(completion)}٪</b></div>
+    <div class="kv"><span>مجموع مطالعه واقعی</span><b>${minToHM(totalMin)}</b></div>
+    <div class="kv"><span>مجموع تست ثبت‌شده</span><b>${faNum(state.tests.reduce((a,t)=>a+t.total,0))}</b></div>
+    <div class="kv"><span>زنجیره فعلی</span><b>${faNum(streak)} روز</b></div>`;
+
+  document.getElementById("subjectTable").innerHTML=`
+    <tr><th>درس</th><th>مطالعه واقعی</th><th>اجرا</th><th>تست</th><th>درصد میانگین</th><th>تسلط</th></tr>
+    ${state.subjects.map(s=>{const st=subjectStats(s.id);return `<tr>
+      <td>${s.name}</td><td>${minToHM(st.totalMinutes)}</td>
+      <td>${faNum(st.done)}/${faNum(st.total)}</td>
+      <td>${faNum(st.testCount)}</td>
+      <td>${st.avgPercent!==null?faNum(st.avgPercent)+"٪":"—"}</td>
+      <td>${st.mastery!==null?faNum(st.mastery)+"٪":"—"}</td>
+    </tr>`;}).join("")}`;
+
+  document.getElementById("achList").innerHTML=achievements().map(a=>`
+    <div class="badge ${a.cond?"earned":"locked"}"><span class="bi">${a.i}</span>${a.t}</div>`).join("");
+  document.getElementById("analyticsInsights").innerHTML=generateInsights().map(i=>`<div class="insight">${i}</div>`).join("");
+}
+function drawChart(id,type,data){
+  const ctx=document.getElementById(id);
+  if(!ctx||typeof Chart==="undefined")return;
+  if(charts[id])charts[id].destroy();
+  charts[id]=new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:getComputedStyle(document.body).getPropertyValue("--text")}}},scales:type==="doughnut"?{}:{x:{ticks:{color:getComputedStyle(document.body).getPropertyValue("--muted")}},y:{ticks:{color:getComputedStyle(document.body).getPropertyValue("--muted")}}}}});
+}
+
+/* ============ JOURNAL ============ */
+function renderJournal(){
+  const T=todayISO();
+  document.getElementById("journalDate").textContent=fmtDate(T);
+  const todaysPlans=state.plans.filter(p=>p.date===T);
+  const done=todaysPlans.filter(p=>p.status==="done").length;
+  const overdue=state.plans.filter(p=>p.status==="pending"&&p.date<T).length;
+  const min=todaysPlans.reduce((a,p)=>a+(p.actualMinutes||0),0);
+  document.getElementById("journalSummary").innerHTML=`
+    <div class="kv"><span>مطالعه واقعی امروز</span><b>${minToHM(min)}</b></div>
+    <div class="kv"><span>برنامه انجام‌شده</span><b>${faNum(done)} از ${faNum(todaysPlans.length)}</b></div>
+    <div class="kv"><span>عقب‌افتادگی فعلی</span><b>${faNum(overdue)} برنامه</b></div>`;
+  const wS=weekStartISO(),wSp=addDaysISO(wS,-7);
+  const thisWeek=state.plans.filter(p=>p.date>=wS&&p.date<addDaysISO(wS,7));
+  const prevWeek=state.plans.filter(p=>p.date>=wSp&&p.date<wS);
+  const tw={min:thisWeek.reduce((a,p)=>a+(p.actualMinutes||0),0),tests:state.tests.filter(t=>t.date>=wS).reduce((a,t)=>a+t.total,0),done:thisWeek.filter(p=>p.status==="done").length,total:thisWeek.length};
+  const pw={min:prevWeek.reduce((a,p)=>a+(p.actualMinutes||0),0)};
+  document.getElementById("weekCompareLabel").textContent=`${fmtDate(wS)} تا امروز`;
+  document.getElementById("weeklyReview").innerHTML=`
+    <div class="kv"><span>مطالعه این هفته</span><b>${minToHM(tw.min)}</b></div>
+    <div class="kv"><span>تغییر نسبت به هفته قبل</span><b>${pw.min?faNum(Math.round((tw.min-pw.min)/pw.min*100))+"٪":"—"}</b></div>
+    <div class="kv"><span>تست این هفته</span><b>${faNum(tw.tests)}</b></div>
+    <div class="kv"><span>درصد اجرای برنامه</span><b>${tw.total?faNum(Math.round(tw.done/tw.total*100))+"٪":"—"}</b></div>`;
+  const hist=[...state.journal].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+  document.getElementById("journalHistory").innerHTML=hist.length?hist.map(j=>`
+    <div class="task"><div class="taskmain"><div class="taskname">${fmtDate(j.date)}</div>
+    <div class="taskmeta"><span>انرژی ${faNum(j.energy)}/۵</span>${j.reason?`<span>${j.reason}</span>`:""}</div>
+    ${j.note?`<div class="muted" style="margin-top:5px">${j.note}</div>`:""}</div></div>`).join(""):'<div class="empty">یادداشتی ثبت نشده.</div>';
+}
+function saveJournal(){
+  const T=todayISO();
+  state.journal=state.journal.filter(j=>j.date!==T);
+  state.journal.push({date:T,energy:+document.getElementById("jEnergy").value||3,reason:document.getElementById("jReason").value,note:document.getElementById("jNote").value});
+  save();renderAll();toast("مرور امروز ثبت شد");
+}
+
+/* ============ QUICK ADD (heuristic parser) ============ */
+function quickAddParse(){
+  const raw=document.getElementById("qaInput").value.trim();
+  if(!raw)return;
+  const faDigits={"۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9"};
+  const norm=raw.replace(/[۰-۹]/g,d=>faDigits[d]);
+  let date=todayISO();
+  if(/فردا/.test(norm))date=addDaysISO(todayISO(),1);
+  else if(/پس[‌ ]?فردا/.test(norm))date=addDaysISO(todayISO(),2);
+  let time="17:00";
+  const timeMatch=norm.match(/ساعت\s*(\d{1,2})(?::(\d{2}))?/)||norm.match(/(\d{1,2}):(\d{2})/);
+  if(timeMatch){let h=+timeMatch[1];const m=timeMatch[2]?+timeMatch[2]:0;if(/عصر|شب/.test(norm)&&h<12)h+=12;time=pad(h)+":"+pad(m);}
+  let minutes=60;
+  const minMatch=norm.match(/(\d+)\s*دقیقه/);
+  const hourMatch=norm.match(/(\d+)\s*ساعت(?!\S*\s*\d)/);
+  if(minMatch)minutes=+minMatch[1];else if(hourMatch)minutes=+hourMatch[1]*60;
+  let tests=0;
+  const testMatch=norm.match(/(\d+)\s*تست/);
+  if(testMatch)tests=+testMatch[1];
+  let subject=state.subjects.find(s=>norm.includes(s.name));
+  let topic=null;
+  if(subject)topic=subject.topics.find(t=>norm.includes(t.name));
+  if(!subject)subject=state.subjects[0];
+  if(!topic)topic=subject.topics[0];
+  const preview={date,time,minutes,tests,subjectId:subject?subject.id:null,topicId:topic?topic.id:null};
+  document.getElementById("qaInput").dataset.preview=JSON.stringify(preview);
+  openPlanModal({date,time,type:"study",priority:"medium",subjectId:preview.subjectId,topicId:preview.topicId,min:minutes,tests});
+  document.getElementById("qaInput").value="";
+  toast("پیش‌نویس برنامه ساخته شد — بررسی و ذخیره کن");
+}
+
+/* ============ SETTINGS / DATA ============ */
+function saveSettings(){
+  state.settings.capacityMin=+document.getElementById("capacityInput").value||300;
+  save();renderAll();toast("تنظیمات ذخیره شد");
+}
+function exportData(){
+  document.getElementById("exportBox").value=JSON.stringify(state,null,2);
+  toast("خروجی آماده شد — کپی کن یا ذخیره‌اش کن");
+}
+function importData(){
+  const raw=document.getElementById("importBox").value.trim();
+  const res=document.getElementById("importResult");
+  if(!raw){res.textContent="متنی وارد نشده.";return;}
+  try{
+    const j=JSON.parse(raw);
+    if(j.subjects&&j.plans){
+      state=j;res.textContent="بازیابی کامل با موفقیت انجام شد.";
+    }else if(j.events){
+      state.events.push(...j.events.map(e=>({id:uid("ev"),...e})));
+      res.textContent=`${faNum(j.events.length)} رویداد وارد شد.`;
+    }else{
+      res.textContent="ساختار JSON شناسایی نشد.";return;
+    }
+    save();renderAll();toast("اطلاعات وارد شد");
+  }catch(e){res.textContent="JSON نامعتبر است.";}
+}
+function resetAllData(){
+  if(!confirm("همه‌ی داده‌های برنامه‌ریز پاک شود؟ این کار قابل بازگشت نیست."))return;
+  localStorage.removeItem(LS_KEY);
+  state=normalizeState(seedData());save();renderAll();toast("داده‌ها بازنشانی شد");
+}
+
+
+/* ===== PRO ENGINE ===== */
+function proWeekBounds(){const s=weekStartISO();return [s,addDaysISO(s,7)];}
+function proTodayStats(){const T=todayISO(), ps=state.plans.filter(p=>p.date===T&&p.status!=="canceled"), done=ps.filter(p=>p.status==="done").length;return {ps,done,pct:ps.length?Math.round(done/ps.length*100):0};}
+function proPriorityItems(){
+ const T=todayISO();
+ const candidates=state.plans.filter(p=>p.status!=="done"&&p.status!=="canceled").map(p=>{let score=0;const reasons=[];if(p.date<T){score+=80;reasons.push("عقب‌افتاده")}else if(p.date===T){score+=45;reasons.push("امروز")}if(p.priority==="high"){score+=30;reasons.push("اولویت بالا")}else if(p.priority==="medium")score+=15;const st=topicStats(p.topicId);if(st.avgPercent!==null&&st.avgPercent<60){score+=25;reasons.push("تسلط پایین")}if(st.errCount>0){score+=Math.min(20,st.errCount*3);reasons.push("دفترچه خطا")}const ex=nearestExamFor(p.subjectId);if(ex){const d=Math.max(0,daysDiff(T,ex.date));if(d<=14){score+=Math.max(5,25-d);reasons.push("آزمون نزدیک")}}return {p,score,reasons}}).sort((a,b)=>b.score-a.score).slice(0,7);return candidates;}
+function renderPro(){
+ const st=proTodayStats();document.getElementById("proTodayPercent").textContent=faNum(st.pct)+"٪";document.getElementById("proTodayBar").style.width=st.pct+"%";
+ const risk=state.plans.filter(p=>p.status!=="done"&&p.status!=="canceled"&&p.date<todayISO()).length+state.reviews.filter(r=>r.status==="pending"&&r.dueDate<todayISO()).length;document.getElementById("proRisk").textContent=faNum(risk);
+ const [a,b]=proWeekBounds();const wm=state.plans.filter(p=>p.date>=a&&p.date<b).reduce((x,p)=>x+(p.actualMinutes||0),0);document.getElementById("proWeekMin").textContent=minToHM(wm);
+ document.getElementById("proPriorities").innerHTML=proPriorityItems().map(x=>`<div class="mini-item"><span><b>${subjectName(x.p.subjectId)}</b> — ${topicName(x.p.topicId)}<br><span class="plan-score">${x.reasons.join(" · ")}</span></span><button class="btn sm" onclick="quickPlanAction('${x.p.id}')">اقدام</button></div>`).join("")||'<div class="empty">فعلاً کار مهمی باقی نمانده 🎉</div>';
+ const memory=allTopics().map(t=>{const st=topicStats(t.id);const last=st.lastStudy?daysDiff(st.lastStudy,todayISO()):999;return {t,st,last,score:(last>14?40:0)+(st.avgPercent!==null&&st.avgPercent<70?30:0)+(st.errCount?20:0)+(st.lastStudy?0:15)}}).filter(x=>x.score>25).sort((a,b)=>b.score-a.score).slice(0,6);
+ document.getElementById("proMemoryRisk").innerHTML=memory.map(x=>`<div class="mini-item"><span>${x.t.subjectName} — ${x.t.name}<br><span class="plan-score">${x.last===999?"هنوز مطالعه نشده":"آخرین مطالعه: "+faNum(x.last)+" روز قبل"}</span></span><span class="risk">${x.st.avgPercent===null?"بدون درصد":faNum(x.st.avgPercent)+"٪"}</span></div>`).join("")||'<div class="empty">ریسک مهمی شناسایی نشد.</div>';
+ const orphan=state.plans.filter(p=>!getSubject(p.subjectId)||!getTopic(p.topicId)).length;const noTopic=state.subjects.filter(s=>!s.topics.length).length;const dup=state.plans.length-new Set(state.plans.map(p=>p.id)).size;
+ document.getElementById("proHealth").innerHTML=`<div class="mini-item"><span>برنامه‌های بدون درس معتبر</span><b class="${orphan?'health-bad':'health-ok'}">${faNum(orphan)}</b></div><div class="mini-item"><span>درس‌های بدون مبحث</span><b class="${noTopic?'health-warn':'health-ok'}">${faNum(noTopic)}</b></div><div class="mini-item"><span>شناسه تکراری برنامه</span><b class="${dup?'health-bad':'health-ok'}">${faNum(dup)}</b></div><div class="mini-item"><span>حجم داده</span><b>${faNum(JSON.stringify(state).length)} کاراکتر</b></div>`;
+ renderProTasks();
+}
+function renderProTasks(){
+ const box=document.getElementById("proTasks");if(!box)return;const q=(document.getElementById("proSearch")?.value||"").trim().toLowerCase(),status=document.getElementById("proStatus")?.value||"all",range=document.getElementById("proRange")?.value||"all",T=todayISO(),[ws,we]=proWeekBounds();
+ let ps=state.plans.filter(p=>{if(status!=="all"&&p.status!==status)return false;if(range==="today"&&p.date!==T)return false;if(range==="week"&&(p.date<ws||p.date>=we))return false;if(range==="overdue"&&!(p.status!=="done"&&p.date<T))return false;const txt=(subjectName(p.subjectId)+" "+topicName(p.topicId)+" "+(p.note||"")).toLowerCase();return !q||txt.includes(q)}).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ const groups={pending:[],today:[],done:[],canceled:[]};ps.forEach(p=>{if(p.status==="done")groups.done.push(p);else if(p.status==="canceled")groups.canceled.push(p);else if(p.date===T)groups.today.push(p);else groups.pending.push(p)});
+ const col=(title,key)=>`<div class="kan-col"><h4>${title} <span class="risk">${faNum(groups[key].length)}</span></h4>${groups[key].slice(0,30).map(p=>`<div class="kan-task"><b>${subjectName(p.subjectId)} — ${topicName(p.topicId)}</b><div class="taskmeta">${fmtDate(p.date)} · ${p.time} · ${minToHM(p.minPlanned||0)}</div><div class="pro-actions" style="margin-top:7px"><button class="btn sm" onclick="editProPlan('${p.id}')">ویرایش</button>${p.status!=="done"?`<button class="btn primary sm" onclick="proComplete('${p.id}')">انجام شد</button>`:`<button class="btn sm" onclick="proUndo('${p.id}')">برگردان</button>`}</div></div>`).join("")||'<div class="muted">خالی</div>'}</div>`;
+ box.innerHTML=`<div class="kanban">${col("در انتظار","pending")}${col("امروز","today")}${col("انجام‌شده","done")}${col("لغوشده","canceled")}</div>`;
+}
+function quickPlanAction(id){const p=state.plans.find(x=>x.id===id);if(!p)return;if(p.date!==todayISO()){p.date=todayISO();p.status="pending";save();renderAll();toast("برنامه به امروز منتقل شد")}else{show("focus");document.getElementById("timerPlanSelect").value=id;toast("برنامه برای تایمر انتخاب شد")}}
+function proComplete(id){const p=state.plans.find(x=>x.id===id);if(p){p.status="done";if(!p.actualMinutes)p.actualMinutes=p.minPlanned||0;save();renderAll();toast("برنامه تکمیل شد")}}
+function proUndo(id){const p=state.plans.find(x=>x.id===id);if(p){p.status="pending";save();renderAll();toast("وضعیت برنامه برگشت")}}
+function editProPlan(id){const p=state.plans.find(x=>x.id===id);if(!p)return;openPlanModal(p)}
+function generateSmartWeek(){
+ const [ws,we]=proWeekBounds();const weak=allTopics().map(t=>{const st=topicStats(t.id);const score=(st.avgPercent===null?20:100-st.avgPercent)+(st.errCount*3)+(st.lastStudy?Math.min(20,daysDiff(st.lastStudy,todayISO())):25);return {...t,score}}).sort((a,b)=>b.score-a.score);
+ const used=new Set(state.plans.filter(p=>p.date>=ws&&p.date<we).map(p=>p.date+"|"+p.topicId));let made=0;
+ for(let d=0;d<7;d++){const date=addDaysISO(ws,d);let slots=0;for(const t of weak){if(slots>=2)break;const key=date+"|"+t.id;if(used.has(key))continue;state.plans.push({id:uid("p"),date,time:slots?"17:00":"09:00",subjectId:t.subjectId,topicId:t.id,type:"study",priority:t.score>80?"high":"medium",minPlanned:Math.min(60,Math.max(30,Math.round(state.settings.capacityMin/5))),testsPlanned:t.score>70?15:10,note:"ساخته‌شده توسط برنامه‌ریز هوشمند",status:"pending",actualMinutes:0,actualTests:0,repeat:"none",reminder:"none"});used.add(key);slots++;made++}}
+ save();renderAll();show("pro");toast(`${faNum(made)} برنامه هوشمند برای این هفته ساخته شد`);
+}
+function openCommandCenter(){
+ const overdue=state.plans.filter(p=>p.status!=="done"&&p.date<todayISO()).length;const due=state.reviews.filter(r=>r.status==="pending"&&r.dueDate<=todayISO()).length;const exams=state.exams.filter(e=>e.date>=todayISO()).length;
+ alert(`مرکز فرمان Planner-YAR\
+\
+عقب‌افتاده: ${overdue}\
+مرورهای سررسید: ${due}\
+آزمون‌های پیش‌رو: ${exams}\
+\
+میانبرها:\
+• برنامه هوشمند: از همین صفحه\
+• مطالعه: بخش مطالعه متمرکز\
+• تحلیل: گزارش و تحلیل\
+• پشتیبان: ورود/خروج JSON`);
+}
+
+/* ============ INIT ============ */
+renderAll();
+setInterval(()=>{ if(!document.getElementById("v-dashboard").classList.contains("hidden")) renderDashboard(); notificationTick(); },60000);
+renderMonthCalendar();
+</script>
+</body>
+</html>

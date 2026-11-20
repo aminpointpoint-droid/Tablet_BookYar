@@ -1,0 +1,2743 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+<!-- LITE-MODE:BEGIN -->
+<style id="lite-mode-css">
+  *, *::before, *::after { animation: none !important; transition: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; text-shadow: none !important; scroll-behavior: auto !important; }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti { display: none !important; }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header { box-shadow: 0 1px 4px rgba(0,0,0,.15) !important; }
+  body { background-attachment: scroll !important; }
+</style>
+<!-- LITE-MODE:END -->
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+    <title>فیلم کمک آموزشی - آزمون لایت</title>
+    <link rel="icon" href="../icon.png" type="image/png" />
+    <link rel="stylesheet" href="../libs/vazirmatn/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="../libs/fontawesome/css/all.min.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; 
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      body {
+        font-family: var(--font-family);
+        background: var(--gradient-water);
+        color: var(--text-color);
+        line-height: 1.6;
+        transition: var(--transition-slow);
+        min-height: 100vh;
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden; 
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font-family);
+        background: var(--gradient-water);
+        color: var(--text-color);
+        line-height: 1.6;
+        transition: var(--transition-slow);
+        min-height: 100vh;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+        position: relative;
+        width: 100%;
+        overflow-x: hidden; 
+      }
+      .header {
+        background: var(--header-bg);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 0;
+        box-shadow: var(--shadow-light);
+        width: 100%;
+        padding: 0;
+      }
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .logo i {
+        font-size: 2.2rem;
+        color: var(--primary-color);
+        transition: var(--transition);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+      .logo:hover i {
+        transform: rotate(-15deg);
+      }
+      .main-content {
+        flex: 1 1 auto;
+        padding: 20px;
+        overflow-y: auto;
+        overflow-x: hidden; 
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        min-height: 0;
+      }
+      @media (max-width: 768px) {
+.container {
+          padding-bottom: 60px; 
+          overflow-x: hidden;
+          width: 100%;
+        }
+.main-content {
+          padding: 15px 12px;
+          width: 100%;
+          overflow-x: hidden;
+        }
+}
+      @media (max-width: 360px) {
+.header-content {
+          padding: 10px;
+        }
+.logo span {
+          font-size: 1.2rem;
+        }
+.logo i {
+          font-size: 1.5rem;
+        }
+.form-group label {
+          font-size: 1rem;
+        }
+.form-group input,
+        .form-group select,
+        .form-group textarea {
+          padding: 12px 15px;
+          font-size: 1rem;
+        }
+}
+      .header {
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: var(--header-bg);
+        border-bottom: 1px solid var(--border-color);
+        width: 100%;
+        padding: 0;
+      }
+      @media (max-width: 768px) {
+.container {
+          padding-bottom: 60px;
+          min-height: 100dvh;
+        }
+.main-content {
+          padding: 15px 10px;
+          min-height: auto;
+        }
+.page.active {
+          min-height: auto;
+        }
+}
+      .page {
+        display: none;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: var(--transition-slow);
+        height: auto;
+        min-height: auto;
+      }
+      .page.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        animation: fadeInUp 0.6s ease;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        color: var(--text-color);
+        font-size: 1.1rem;
+      }
+      .form-group label i {
+        color: var(--primary-color);
+        width: 20px;
+        font-size: 1.2rem;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 15px 20px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background: var(--water-light);
+        color: var(--text-color);
+        font-family: var(--font-family);
+        transition: var(--transition);
+        font-size: 1.1rem;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(27, 154, 170, 0.2);
+        transform: translateY(-2px);
+      }
+      .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .form-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        animation: fadeInUp 1.2s ease;
+      }
+      .btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: var(--border-radius);
+        font-family: var(--font-family);
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+        font-size: 1.1rem;
+      }
+      .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: var(--shadow-light);
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+      .btn-primary:active {
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--text-color);
+        border: 2px solid var(--border-color);
+      }
+      .btn-secondary:hover {
+        background: rgba(52, 152, 219, 0.1);
+        border-color: var(--primary-color);
+        transform: translateY(-3px);
+      }
+      .menu-container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .menu-header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeInUp 0.6s ease;
+      }
+      .menu-header h2 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-size: 2.2rem;
+      }
+      .menu-header p {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+      }
+      .ripple-effect {
+        position: relative;
+        overflow: hidden;
+      }
+      .ripple-effect::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+      .ripple-effect:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+      }
+      @media (max-width: 768px) {
+.header-content {
+          padding: 12px 15px;
+        }
+.logo span {
+          font-size: 1.4rem;
+        }
+.logo i {
+          font-size: 1.8rem;
+        }
+}
+      @media (max-width: 768px) {
+.menu-header h2 {
+          font-size: 1.6rem;
+        }
+}
+      @media (max-width: 768px) {
+.container {
+          padding: 0;
+        }
+.main-content {
+          padding: 15px;
+        }
+.header-content {
+          flex-direction: row;
+          justify-content: space-between;
+          gap: 15px;
+          padding: 15px;
+        }
+.logo span {
+          font-size: 1.5rem;
+        }
+.form-actions {
+          flex-direction: column;
+        }
+.btn {
+          width: 100%;
+        }
+.menu-header h2 {
+          font-size: 1.8rem;
+        }
+}
+      @media (hover: none) {
+.btn:active {
+          transform: scale(0.98);
+        }
+.btn-primary:active {
+          transform: scale(0.98) translateY(0);
+        }
+.btn-secondary:active {
+          transform: scale(0.98) translateY(0);
+        }
+}
+      .folder-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-top: 10px;
+      }
+      .folder-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 22px 18px;
+        text-align: center;
+        transition: var(--transition);
+        cursor: pointer;
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .folder-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+        background: var(--card-hover);
+      }
+      .folder-card .folder-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.6rem;
+        margin-bottom: 14px;
+      }
+      .folder-card h4 {
+        color: var(--primary-color);
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+      }
+      .folder-card .folder-meta {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+      .folder-card.add-folder-card {
+        border: 2px dashed var(--border-color);
+        background: transparent;
+        justify-content: center;
+        min-height: 170px;
+      }
+      .folder-card.add-folder-card .folder-icon {
+        background: transparent;
+        color: var(--primary-color);
+        border: 2px dashed var(--primary-color);
+        font-size: 1.8rem;
+      }
+      .folder-card.add-folder-card h4 {
+        color: var(--primary-color);
+      }
+      .ay-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 20, 30, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 16px;
+      }
+      .ay-modal-overlay.active {
+        display: flex;
+      }
+      .ay-modal-box {
+        background: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        padding: 28px;
+        max-width: 420px;
+        width: 100%;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+      }
+      .ay-modal-box h3 {
+        color: var(--primary-color);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ay-modal-box .form-group {
+        margin-bottom: 16px;
+      }
+      .hv-desc {
+        background: var(--water-light);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 14px 16px;
+        margin-top: 14px;
+      }
+      .hv-desc-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        overflow-wrap: anywhere;
+      }
+      .hv-desc-title i {
+        color: var(--primary-color);
+      }
+      .hv-desc-body {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        line-height: 2;
+        font-size: 0.98rem;
+        text-align: start;
+        position: relative;
+      }
+      .hv-desc.collapsed .hv-desc-body {
+        max-height: 6.5em;
+        overflow: hidden;
+      }
+      .hv-desc.collapsed .hv-desc-body::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 2.6em;
+        background: linear-gradient(to bottom, transparent, var(--water-light));
+        pointer-events: none;
+      }
+      .hv-desc-toggle {
+        margin-top: 6px;
+        padding: 0;
+        border: none;
+        background: none;
+        color: var(--primary-color);
+        font-family: inherit;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      .hv-desc-toggle:hover {
+        text-decoration: underline;
+      }
+      .hv-speed-bar {
+        display: none;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .hv-speed-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: bold;
+        color: var(--text-color);
+      }
+      .hv-speed-label i {
+        color: var(--primary-color);
+      }
+      .hv-speed-btn {
+        min-width: 54px;
+        padding: 4px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: var(--water-light);
+        color: var(--primary-color);
+        font-family: inherit;
+        font-size: 0.95rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .hv-speed-btn:hover {
+        background: var(--water-dark);
+      }
+      .hv-speed-btn.active {
+        background: var(--gradient-primary);
+        border-color: var(--primary-dark);
+        color: #fff;
+      }
+      .hv-note textarea {
+        display: block;
+        width: 100%;
+        min-height: 110px;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        background: #fff;
+        color: var(--text-color);
+        font-family: inherit;
+        font-size: 0.98rem;
+        line-height: 2;
+        resize: vertical;
+        text-align: start;
+      }
+      .hv-note textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 136, 178, 0.18);
+      }
+      .hv-note-status {
+        margin-top: 6px;
+        min-height: 1.4em;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+      .hv-subject-card,
+      .hv-local-folder-card {
+        position: relative;
+      }
+      .hv-card-actions {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        display: flex;
+        gap: 6px;
+        opacity: 0;
+        transition: var(--transition);
+        z-index: 2;
+      }
+      .folder-card:hover .hv-card-actions {
+        opacity: 1;
+      }
+      @media (max-width: 768px) {
+.hv-card-actions {
+          opacity: 1;
+        }
+}
+      .hv-icon-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-light);
+        font-size: 0.85rem;
+        transition: var(--transition);
+      }
+      .hv-icon-btn:hover {
+        transform: scale(1.1);
+      }
+      .hv-icon-btn-danger {
+        color: var(--danger-color);
+      }
+      .hv-subject-image-wrap {
+        padding: 0;
+        overflow: hidden;
+        background: transparent;
+      }
+      .hv-subject-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        object-fit: cover;
+      }
+      .hv-subject-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hv-subject-header-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        background: var(--gradient-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 14px;
+        overflow: hidden;
+      }
+      .hv-subject-header-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hv-image-preview-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+      .hv-image-preview {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: var(--gradient-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .hv-image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hv-upload-btn {
+        padding: 10px 18px;
+        font-size: 0.95rem;
+      }
+      .hv-preset-icons {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+        gap: 8px;
+      }
+      .hv-preset-icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 2px solid var(--border-color);
+        background: transparent;
+        color: var(--text-color);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+      }
+      .hv-preset-icon-btn.active,
+      .hv-preset-icon-btn:hover {
+        border-color: var(--primary-color);
+        background: var(--gradient-primary);
+        color: #fff;
+      }
+      .hv-video-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .hv-video-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: var(--border-radius-sm);
+        background: var(--water-light);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .hv-video-item:hover {
+        background: var(--card-hover);
+        transform: translateX(-3px);
+      }
+      .hv-video-item i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+      }
+      .hv-main-video-wrap {
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .hv-main-audio-wrap {
+        background: var(--water-light);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 22px 18px;
+        text-align: center;
+      }
+      .hv-audio-cover {
+        width: 84px;
+        height: 84px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+      }
+      .hv-audio-title {
+        font-weight: 600;
+        margin-bottom: 14px;
+        word-break: break-word;
+      }
+      .hv-main-audio-wrap audio {
+        width: 100%;
+      }
+      .hv-playlist-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 16px 0 8px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+      .hv-playlist {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 340px;
+        overflow-y: auto;
+      }
+      .hv-playlist-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: var(--border-radius-sm);
+        background: var(--water-light);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .hv-playlist-item:hover {
+        background: var(--card-hover);
+      }
+      .hv-playlist-item.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 1px var(--primary-color) inset;
+      }
+      .hv-playlist-item.seen .hv-pl-name {
+        opacity: 0.65;
+      }
+      .hv-pl-type {
+        color: var(--primary-color);
+      }
+      .hv-pl-name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .hv-pl-state {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--success-color);
+        white-space: nowrap;
+      }
+      .hv-check {
+        position: relative;
+        display: inline-flex;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .hv-check input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .hv-check-box {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 2px solid var(--border-color);
+        background: var(--card-bg);
+        color: transparent;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+      }
+      .hv-check input:checked + .hv-check-box {
+        background: var(--success-color);
+        border-color: var(--success-color);
+        color: #fff;
+      }
+      .hv-check input:focus-visible + .hv-check-box {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+      .hv-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      .hv-status-seen {
+        color: var(--success-color);
+        background: rgba(46, 204, 113, 0.14);
+      }
+      .hv-status-progress {
+        color: var(--warning-color);
+        background: rgba(243, 156, 18, 0.16);
+      }
+      .hv-status-unseen {
+        color: var(--text-muted);
+        background: rgba(127, 127, 127, 0.14);
+      }
+      .hv-temp-note {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .text-muted {
+        color: var(--text-muted);
+        text-align: center;
+        padding: 20px 0;
+      }
+      .btn-danger {
+        background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        color: #fff;
+        box-shadow: var(--shadow-light);
+      }
+      .btn-danger:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+      .chart-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        padding: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-light);
+        margin-bottom: 24px;
+      }
+      .chart-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.15rem;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes ripple {
+        0% {
+          transform: scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <header class="header">
+        <div class="header-content">
+          <div class="logo" onclick="window.location.href = '../index.html'" style="cursor: pointer">
+            <i class="fas fa-graduation-cap"></i>
+            <span>آزمون یار</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- صفحه فیلم کمک آموزشی: لیست پوشه‌های درس -->
+        <section id="help-videos" class="page active">
+          <div class="menu-container">
+            <div class="menu-header">
+              <h2><i class="fas fa-play-circle"></i> فیلم کمک آموزشی</h2>
+              <p>
+                برای هر درس یک پوشه بسازید و سپس پوشه‌های ویدئویی همان درس را
+                از روی سیستم خودتان به آن اضافه کنید
+              </p>
+            </div>
+
+            <div class="folder-grid" id="hvSubjectsGrid"></div>
+
+            <div class="form-actions" style="margin-top: 30px">
+              <button
+                class="btn btn-secondary ripple-effect"
+                onclick="window.location.href = '../index.html'"
+              >
+                <i class="fas fa-arrow-right"></i>
+                بازگشت به منو
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- صفحه فیلم کمک آموزشی: پوشه‌های محلی یک درس -->
+        <section id="help-videos-subject" class="page">
+          <div class="menu-container">
+            <div class="menu-header hv-subject-header">
+              <div class="hv-subject-header-icon" id="hvSubjectHeaderIcon">
+                <i class="fas fa-book"></i>
+              </div>
+              <h2 id="hvSubjectHeaderTitle">نام درس</h2>
+              <p>
+                برای افزودن چند پوشه هم‌زمان (مثلاً ۲۰ پوشه)، از گزینه‌ی
+                «افزودن گروهی چند پوشه» استفاده کنید و پوشه‌ی والدی را که
+                همه‌ی آن پوشه‌ها داخلش هستند انتخاب کنید؛ فایل‌های ویدیویی، صوتی و
+                PDF داخل هر پوشه به‌طور جداگانه نمایش داده می‌شوند
+              </p>
+            </div>
+
+            <div id="hvVideoListWrap" style="display: none; margin-bottom: 30px">
+              <div class="chart-card">
+                <h3>
+                  <i class="fas fa-film"></i>
+                  <span id="hvActiveFolderName"></span>
+                </h3>
+                <div class="hv-main-video-wrap" id="hvMainVideoWrap">
+                  <video
+                    id="hvMainVideo"
+                    preload="metadata"
+                    playsinline
+                    disablePictureInPicture
+                    controls
+                    style="width: 100%; border-radius: 12px; max-height: 60vh"
+                  ></video>
+                </div>
+                <div
+                  class="hv-main-audio-wrap"
+                  id="hvMainAudioWrap"
+                  style="display: none"
+                >
+                  <div class="hv-audio-cover">
+                    <i class="fas fa-headphones"></i>
+                  </div>
+                  <div class="hv-audio-title" id="hvAudioTitle"></div>
+                  <audio id="hvMainAudio" controls preload="metadata"></audio>
+                </div>
+                <div class="hv-speed-bar" id="hvSpeedBar"></div>
+                <p class="text-muted" id="hvNoVideoMsg" style="display: none">
+                  هیچ فایل ویدیویی یا صوتی در این پوشه یافت نشد.
+                </p>
+                <div id="hvDescWrap"></div>
+                <div
+                  class="hv-playlist-summary"
+                  id="hvPlaylistSummary"
+                  style="display: none"
+                ></div>
+                <div class="hv-playlist" id="hvVideoSwitcher"></div>
+              </div>
+
+              <div class="chart-card" id="hvTextCard" style="display: none">
+                <h3>
+                  <i class="fas fa-note-sticky"></i>
+                  یادداشت‌های دیگر این پوشه
+                </h3>
+                <div id="hvTextList"></div>
+              </div>
+
+              <div class="chart-card" id="hvPdfCard" style="display: none">
+                <h3>
+                  <i class="fas fa-file-pdf"></i>
+                  جزوات این پوشه
+                </h3>
+                <div class="hv-video-list" id="hvPdfList"></div>
+              </div>
+
+            </div>
+
+            <div class="folder-grid" id="hvFoldersGrid"></div>
+
+            <div class="form-actions" style="margin-top: 30px">
+              <button
+                class="btn btn-danger ripple-effect"
+                onclick="hvDeleteCurrentSubject()"
+              >
+                <i class="fas fa-trash"></i>
+                حذف این پوشه درس
+              </button>
+              <button
+                class="btn btn-secondary ripple-effect"
+                onclick="navigateTo('help-videos')"
+              >
+                <i class="fas fa-arrow-right"></i>
+                بازگشت
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- مودال افزودن/ویرایش پوشه درس (فیلم کمک آموزشی) -->
+    <div class="ay-modal-overlay" id="hvSubjectModalOverlay">
+      <div class="ay-modal-box">
+        <h3>
+          <i class="fas fa-folder-plus"></i>
+          <span id="hvSubjectModalTitle">پوشه درس جدید</span>
+        </h3>
+        <div class="form-group">
+          <label><i class="fas fa-heading"></i> نام درس</label>
+          <input
+            type="text"
+            id="hvSubjectNameInput"
+            placeholder="مثلاً ریاضی"
+          />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-image"></i> تصویر پوشه</label>
+          <div class="hv-image-preview-row">
+            <div class="hv-image-preview" id="hvImagePreview">
+              <i class="fas fa-book"></i>
+            </div>
+            <label class="btn btn-secondary ripple-effect hv-upload-btn">
+              <i class="fas fa-upload"></i>
+              انتخاب عکس
+              <input
+                type="file"
+                accept="image/*"
+                id="hvImageInput"
+                style="display: none"
+                onchange="hvHandleImageUpload(event)"
+              />
+            </label>
+          </div>
+          <div class="hv-preset-icons" id="hvPresetIcons"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary ripple-effect" onclick="hvSaveSubject()">
+            <i class="fas fa-check"></i>
+            ذخیره
+          </button>
+          <button
+            class="btn btn-secondary ripple-effect"
+            onclick="hvCloseSubjectModal()"
+          >
+            <i class="fas fa-times"></i>
+            انصراف
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---------- توابع کمکی (در ایندکس هم وجود دارند) ----------
+      function navigateTo(pageId) {
+        if (pageId === "main-menu") {
+          window.location.href = "../index.html";
+          return;
+        }
+        document.querySelectorAll(".page").forEach((page) => {
+          page.classList.remove("active");
+        });
+        const target = document.getElementById(pageId);
+        if (target) target.classList.add("active");
+        window.scrollTo(0, 0);
+      }
+
+      function showNotification(message, type = "info") {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+        if (type === "success") {
+          notification.style.background =
+            "linear-gradient(135deg, #2ecc71, #27ae60)";
+        } else if (type === "error") {
+          notification.style.background =
+            "linear-gradient(135deg, #e74c3c, #c0392b)";
+        } else {
+          notification.style.background =
+            "linear-gradient(135deg, #3498db, #2980b9)";
+        }
+        document.body.appendChild(notification);
+        setTimeout(() => {
+          notification.style.opacity = "1";
+        }, 10);
+        setTimeout(() => {
+          notification.style.opacity = "0";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      // ============ فیلم کمک آموزشی: مدیریت پوشه‌های درس و ویدیوهای محلی ============
+      (function () {
+        const HV_DB_NAME = "helpVideosDB";
+        const HV_DB_VERSION = 2; // نسخه بالاتر تا اگر دیتابیس قدیمی بدون جدول درس‌ها وجود داشت، ساخته شود
+        let hvDb = null;
+
+        const HV_VIDEO_EXT = [
+          "mp4",
+          "mkv",
+          "webm",
+          "mov",
+          "avi",
+          "m4v",
+          "wmv",
+          "flv",
+          "3gp",
+        ];
+        const HV_AUDIO_EXT = [
+          "mp3",
+          "wav",
+          "m4a",
+          "aac",
+          "ogg",
+          "oga",
+          "opus",
+          "flac",
+          "wma",
+          "weba",
+          "amr",
+        ];
+        const HV_PDF_EXT = ["pdf"];
+        const HV_TEXT_EXT = ["txt", "md"];
+
+        function hvOpenDb() {
+          if (hvDb) return Promise.resolve(hvDb);
+          const need = ["subjects", "folders"];
+          const open = (version) =>
+            new Promise((resolve, reject) => {
+              const req =
+                version === undefined
+                  ? indexedDB.open(HV_DB_NAME)
+                  : indexedDB.open(HV_DB_NAME, version);
+              req.onupgradeneeded = function (e) {
+                const db = e.target.result;
+                need.forEach((n) => {
+                  if (!db.objectStoreNames.contains(n)) {
+                    db.createObjectStore(n, { keyPath: "id" });
+                  }
+                });
+              };
+              req.onsuccess = (e) => resolve(e.target.result);
+              req.onerror = () => reject(req.error || new Error("IndexedDB error"));
+              req.onblocked = () => reject(new Error("IndexedDB blocked"));
+            });
+          return open().then((db) => {
+            if (need.every((n) => db.objectStoreNames.contains(n))) {
+              hvDb = db;
+              return db;
+            }
+            const nextVersion = db.version + 1;
+            db.close();
+            return open(nextVersion).then((db2) => {
+              hvDb = db2;
+              return db2;
+            });
+          });
+        }
+
+        function hvTx(storeName, mode) {
+          return hvOpenDb().then((db) =>
+            db.transaction(storeName, mode).objectStore(storeName),
+          );
+        }
+
+        function hvGetAll(storeName) {
+          return hvTx(storeName, "readonly").then((store) => {
+            return new Promise((resolve, reject) => {
+              const req = store.getAll();
+              req.onsuccess = () => resolve(req.result || []);
+              req.onerror = (e) => reject(e);
+            });
+          });
+        }
+
+        function hvPut(storeName, value) {
+          return hvTx(storeName, "readwrite").then((store) => {
+            return new Promise((resolve, reject) => {
+              const req = store.put(value);
+              req.onsuccess = () => resolve(req.result);
+              req.onerror = (e) => reject(e);
+            });
+          });
+        }
+
+        function hvDelete(storeName, id) {
+          return hvTx(storeName, "readwrite").then((store) => {
+            return new Promise((resolve, reject) => {
+              const req = store.delete(id);
+              req.onsuccess = () => resolve();
+              req.onerror = (e) => reject(e);
+            });
+          });
+        }
+
+        function hvUid() {
+          return (
+            "hv_" +
+            Date.now().toString(36) +
+            "_" +
+            Math.random().toString(36).slice(2, 8)
+          );
+        }
+
+        // آیکون‌های پیش‌فرض قابل انتخاب برای پوشه درس (در صورت عدم آپلود عکس)
+        const HV_PRESET_ICONS = [
+          { icon: "fas fa-square-root-variable", label: "ریاضی" },
+          { icon: "fas fa-flask", label: "شیمی" },
+          { icon: "fas fa-atom", label: "فیزیک" },
+          { icon: "fas fa-dna", label: "زیست‌شناسی" },
+          { icon: "fas fa-book-quran", label: "دینی" },
+          { icon: "fas fa-language", label: "ادبیات" },
+          { icon: "fas fa-earth-americas", label: "جغرافیا" },
+          { icon: "fas fa-landmark", label: "تاریخ" },
+          { icon: "fas fa-globe", label: "زبان خارجه" },
+          { icon: "fas fa-book", label: "عمومی" },
+        ];
+
+        let hvEditingSubjectId = null;
+        let hvSelectedPreset = HV_PRESET_ICONS[9].icon;
+        let hvSelectedImageData = null; // dataURL در صورت آپلود عکس
+        let hvCurrentSubjectId = null;
+        const hvSessionFiles = {}; // folderId -> File[] برای مرورگرهای بدون File System Access API
+
+        function hvIsVideoFile(name) {
+          const ext = (name.split(".").pop() || "").toLowerCase();
+          return HV_VIDEO_EXT.includes(ext);
+        }
+
+        function hvIsAudioFile(name) {
+          const ext = (name.split(".").pop() || "").toLowerCase();
+          return HV_AUDIO_EXT.includes(ext);
+        }
+
+        // ویدیو یا صوت
+        function hvIsMediaFile(name) {
+          return hvIsVideoFile(name) || hvIsAudioFile(name);
+        }
+
+        function hvEsc(str) {
+          return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function hvFa(n) {
+          return Number(n).toLocaleString("fa-IR");
+        }
+
+        // ---------- وضعیت مشاهده (تیک «دیده شد») ----------
+        // watched: نام فایل‌های تیک‌خورده، mediaNames: نام همه‌ی فایل‌های
+        // ویدیویی/صوتی پوشه (هر بار که پوشه باز می‌شود به‌روز می‌شود)
+        function hvFolderProgress(f) {
+          const watched = f.watched || [];
+          const names = f.mediaNames || null;
+          const total = names ? names.length : 0;
+          const done = names
+            ? watched.filter((n) => names.includes(n)).length
+            : watched.length;
+          let status = "unseen";
+          if (done > 0) status = total > 0 && done >= total ? "seen" : "progress";
+          return { status: status, done: done, total: total };
+        }
+
+        function hvStatusBadgeHtml(status) {
+          if (status === "seen")
+            return '<span class="hv-status hv-status-seen"><i class="fas fa-circle-check"></i> مشاهده شده</span>';
+          if (status === "progress")
+            return '<span class="hv-status hv-status-progress"><i class="fas fa-circle-half-stroke"></i> در حال مشاهده</span>';
+          return '<span class="hv-status hv-status-unseen"><i class="far fa-circle"></i> مشاهده نشده</span>';
+        }
+
+        let hvUpdateQueue = Promise.resolve();
+        function hvUpdateFolder(id, fn) {
+          const run = async () => {
+            const folders = await hvGetAll("folders");
+            const rec = folders.find((x) => x.id === id);
+            if (!rec) return null;
+            fn(rec);
+            await hvPut("folders", rec);
+            return rec;
+          };
+          const p = hvUpdateQueue.then(run, run);
+          hvUpdateQueue = p.catch(() => {});
+          return p;
+        }
+
+        function hvIsPdfFile(name) {
+          const ext = (name.split(".").pop() || "").toLowerCase();
+          return HV_PDF_EXT.includes(ext);
+        }
+
+        function hvIsTextFile(name) {
+          const ext = (name.split(".").pop() || "").toLowerCase();
+          return HV_TEXT_EXT.includes(ext);
+        }
+
+        // مرتب‌سازی الفبایی/عددی (فارسی و انگلیسی) بر اساس نام
+        function hvSortByName(list, nameKey) {
+          const getName = nameKey ? (x) => x[nameKey] : (x) => x;
+          return list.slice().sort((a, b) =>
+            getName(a).localeCompare(getName(b), ["fa", "en"], {
+              numeric: true,
+              sensitivity: "base",
+            }),
+          );
+        }
+
+        // ---------- رندر لیست پوشه‌های درس ----------
+        function hvRenderSubjectVisual(subject) {
+          if (subject.image) {
+            return (
+              '<div class="folder-icon hv-subject-image-wrap"><img src="' +
+              subject.image +
+              '" class="hv-subject-image" alt="' +
+              subject.name +
+              '"/></div>'
+            );
+          }
+          return (
+            '<div class="folder-icon"><i class="' +
+            (subject.icon || "fas fa-book") +
+            '"></i></div>'
+          );
+        }
+
+        window.hvRenderSubjects = function () {
+          hvGetAll("subjects").catch((err) => {
+            console.error("helpVideosDB error:", err);
+            if (typeof showNotification === "function") {
+              showNotification("خطا در دسترسی به حافظه‌ی مرورگر", "error");
+            }
+            return [];
+          }).then((subjects) => {
+            const grid = document.getElementById("hvSubjectsGrid");
+            if (!grid) return;
+            const sortedSubjects = hvSortByName(subjects, "name");
+            let html = "";
+            sortedSubjects.forEach((s) => {
+              html +=
+                '<div class="folder-card hv-subject-card" onclick="hvOpenSubject(\'' +
+                s.id +
+                '\')">' +
+                '<div class="hv-card-actions" onclick="event.stopPropagation()">' +
+                '<button class="hv-icon-btn" title="ویرایش" onclick="hvOpenSubjectModal(\'' +
+                s.id +
+                '\')"><i class="fas fa-pen"></i></button>' +
+                '<button class="hv-icon-btn hv-icon-btn-danger" title="حذف پوشه" onclick="hvDeleteSubjectConfirm(\'' +
+                s.id +
+                '\')"><i class="fas fa-trash"></i></button>' +
+                "</div>" +
+                hvRenderSubjectVisual(s) +
+                "<h4>" +
+                s.name +
+                "</h4>" +
+                '<div class="folder-meta">درس</div>' +
+                "</div>";
+            });
+            html +=
+              '<div class="folder-card add-folder-card" onclick="hvOpenSubjectModal()">' +
+              '<div class="folder-icon"><i class="fas fa-plus"></i></div>' +
+              "<h4>افزودن پوشه درس</h4>" +
+              "</div>";
+            grid.innerHTML = html;
+          });
+        };
+
+        // ---------- مودال افزودن/ویرایش پوشه درس ----------
+        window.hvOpenSubjectModal = function (subjectId) {
+          hvEditingSubjectId = subjectId || null;
+          hvSelectedImageData = null;
+          hvSelectedPreset = HV_PRESET_ICONS[9].icon;
+          document.getElementById("hvSubjectNameInput").value = "";
+          document.getElementById("hvSubjectModalTitle").textContent =
+            subjectId ? "ویرایش پوشه درس" : "پوشه درس جدید";
+
+          const finish = function () {
+            hvRenderPresetIcons();
+            hvUpdateImagePreview();
+            document
+              .getElementById("hvSubjectModalOverlay")
+              .classList.add("active");
+          };
+
+          if (subjectId) {
+            hvGetAll("subjects").then((subjects) => {
+              const s = subjects.find((x) => x.id === subjectId);
+              if (s) {
+                document.getElementById("hvSubjectNameInput").value = s.name;
+                if (s.image) {
+                  hvSelectedImageData = s.image;
+                } else if (s.icon) {
+                  hvSelectedPreset = s.icon;
+                }
+              }
+              finish();
+            });
+          } else {
+            finish();
+          }
+        };
+
+        window.hvCloseSubjectModal = function () {
+          document
+            .getElementById("hvSubjectModalOverlay")
+            .classList.remove("active");
+        };
+
+        function hvRenderPresetIcons() {
+          const wrap = document.getElementById("hvPresetIcons");
+          if (!wrap) return;
+          wrap.innerHTML = HV_PRESET_ICONS.map((p) => {
+            const active =
+              !hvSelectedImageData && hvSelectedPreset === p.icon
+                ? "active"
+                : "";
+            return (
+              '<button type="button" class="hv-preset-icon-btn ' +
+              active +
+              '" title="' +
+              p.label +
+              "\" onclick=\"hvChoosePreset('" +
+              p.icon +
+              '\')"><i class="' +
+              p.icon +
+              '"></i></button>'
+            );
+          }).join("");
+        }
+
+        window.hvChoosePreset = function (icon) {
+          hvSelectedPreset = icon;
+          hvSelectedImageData = null;
+          hvRenderPresetIcons();
+          hvUpdateImagePreview();
+        };
+
+        function hvUpdateImagePreview() {
+          const box = document.getElementById("hvImagePreview");
+          if (!box) return;
+          if (hvSelectedImageData) {
+            box.innerHTML =
+              '<img src="' + hvSelectedImageData + '" alt="پیش‌نمایش" />';
+          } else {
+            box.innerHTML = '<i class="' + hvSelectedPreset + '"></i>';
+          }
+        }
+
+        window.hvHandleImageUpload = function (event) {
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            // فشرده‌سازی ساده تصویر برای جلوگیری از حجم زیاد
+            const img = new Image();
+            img.onload = function () {
+              const canvas = document.createElement("canvas");
+              const maxSize = 240;
+              let w = img.width,
+                h = img.height;
+              if (w > h && w > maxSize) {
+                h = Math.round((h * maxSize) / w);
+                w = maxSize;
+              } else if (h > maxSize) {
+                w = Math.round((w * maxSize) / h);
+                h = maxSize;
+              }
+              canvas.width = w;
+              canvas.height = h;
+              canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+              hvSelectedImageData = canvas.toDataURL("image/jpeg", 0.85);
+              hvUpdateImagePreview();
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        };
+
+        window.hvSaveSubject = function () {
+          const name = document
+            .getElementById("hvSubjectNameInput")
+            .value.trim();
+          if (!name) {
+            showNotification("لطفاً نام درس را وارد کنید", "error");
+            return;
+          }
+          const subject = {
+            id: hvEditingSubjectId || hvUid(),
+            name: name,
+            image: hvSelectedImageData || null,
+            icon: hvSelectedImageData ? null : hvSelectedPreset,
+          };
+          hvPut("subjects", subject).then(() => {
+            hvCloseSubjectModal();
+            hvRenderSubjects();
+            showNotification(
+              hvEditingSubjectId ? "پوشه درس ویرایش شد" : "پوشه درس اضافه شد",
+              "success",
+            );
+          });
+        };
+
+        window.hvDeleteSubjectConfirm = function (subjectId) {
+          if (
+            !confirm(
+              "آیا از حذف این پوشه درس مطمئن هستید؟ تمام پوشه‌های محلی متصل به آن نیز حذف می‌شوند.",
+            )
+          )
+            return;
+          hvGetAll("folders").then((folders) => {
+            const related = folders.filter((f) => f.subjectId === subjectId);
+            Promise.all(related.map((f) => hvDelete("folders", f.id))).then(
+              () => {
+                hvDelete("subjects", subjectId).then(() => {
+                  hvRenderSubjects();
+                  showNotification("پوشه درس حذف شد", "success");
+                });
+              },
+            );
+          });
+        };
+
+        window.hvDeleteCurrentSubject = function () {
+          if (!hvCurrentSubjectId) return;
+          const id = hvCurrentSubjectId;
+          if (
+            !confirm(
+              "آیا از حذف این پوشه درس مطمئن هستید؟ تمام پوشه‌های محلی متصل به آن نیز حذف می‌شوند.",
+            )
+          )
+            return;
+          hvGetAll("folders").then((folders) => {
+            const related = folders.filter((f) => f.subjectId === id);
+            Promise.all(related.map((f) => hvDelete("folders", f.id))).then(
+              () => {
+                hvDelete("subjects", id).then(() => {
+                  hvRenderSubjects();
+                  showNotification("پوشه درس حذف شد", "success");
+                  navigateTo("help-videos");
+                });
+              },
+            );
+          });
+        };
+
+        // ---------- صفحه یک درس: پوشه‌های محلی ----------
+        window.hvOpenSubject = function (subjectId) {
+          hvCurrentSubjectId = subjectId;
+          hvGetAll("subjects").then((subjects) => {
+            const s = subjects.find((x) => x.id === subjectId);
+            if (!s) return;
+            document.getElementById("hvSubjectHeaderTitle").textContent =
+              s.name;
+            document.getElementById("hvSubjectHeaderIcon").innerHTML = s.image
+              ? '<img src="' +
+                s.image +
+                '" class="hv-subject-image" alt="' +
+                s.name +
+                '"/>'
+              : '<i class="' + (s.icon || "fas fa-book") + '"></i>';
+            hvStopMainVideo();
+            document.getElementById("hvVideoListWrap").style.display = "none";
+            navigateTo("help-videos-subject");
+            hvRenderFolders();
+          });
+        };
+
+        function hvRenderFolders() {
+          hvGetAll("folders").then((folders) => {
+            const list = hvSortByName(
+              folders.filter((f) => f.subjectId === hvCurrentSubjectId),
+              "name",
+            );
+            const grid = document.getElementById("hvFoldersGrid");
+            if (!grid) return;
+            let html = "";
+            list.forEach((f) => {
+              html +=
+                '<div class="folder-card hv-local-folder-card" onclick="hvOpenFolder(\'' +
+                f.id +
+                '\')">' +
+                '<div class="hv-card-actions" onclick="event.stopPropagation()">' +
+                (f.needsReconnect ? '<button class="hv-icon-btn" title="اتصال دوباره پوشه" onclick="hvReattachFolder(\'' + f.id + '\')"><i class="fas fa-link"></i></button>' : "") +
+                '<button class="hv-icon-btn hv-icon-btn-danger" title="حذف پوشه" onclick="hvDeleteFolder(\'' +
+                f.id +
+                '\')"><i class="fas fa-trash"></i></button>' +
+                "</div>" +
+                '<div class="folder-icon"><i class="fas fa-folder-open"></i></div>' +
+                "<h4>" +
+                f.name +
+                "</h4>" +
+                '<div class="folder-meta">' +
+                (function () {
+                  const p = hvFolderProgress(f);
+                  let h = hvStatusBadgeHtml(p.status);
+                  if (p.status === "progress" && p.total > 0) {
+                    h +=
+                      ' <span class="hv-temp-note">(' +
+                      hvFa(p.done) +
+                      " از " +
+                      hvFa(p.total) +
+                      ")</span>";
+                  }
+                  if (f.needsReconnect) {
+                    h += '<div class="hv-temp-note">رسانه از دستگاه دیگر منتقل شده؛ نیاز به اتصال دوباره</div>';
+                  } else if (f.sessionOnly) {
+                    h += '<div class="hv-temp-note">موقت (نیاز به انتخاب مجدد)</div>';
+                  }
+                  return h;
+                })() +
+                "</div>" +
+                "</div>";
+            });
+            html +=
+              '<div class="folder-card add-folder-card" onclick="hvAddLocalFolder()">' +
+              '<div class="folder-icon"><i class="fas fa-folder-plus"></i></div>' +
+              "<h4>افزودن یک پوشه</h4>" +
+              "</div>";
+            html +=
+              '<div class="folder-card add-folder-card" onclick="hvAddLocalFoldersBulk()">' +
+              '<div class="folder-icon"><i class="fas fa-folder-tree"></i></div>' +
+              "<h4>افزودن گروهی چند پوشه</h4>" +
+              '<div class="folder-meta">یک پوشه‌ی والد را انتخاب کنید</div>' +
+              "</div>";
+            grid.innerHTML = html;
+          });
+        }
+
+        // ---------- افزودن یک یا چند پوشه محلی ----------
+        // هر بار که کاربر یک پوشه را انتخاب می‌کند، از او پرسیده می‌شود که آیا
+        // می‌خواهد پوشه‌ی دیگری هم اضافه کند یا نه؛ به این ترتیب می‌توان چند
+        // پوشه را پشت سر هم، بدون بستن این صفحه، اضافه کرد.
+        window.hvAddLocalFolder = async function () {
+          if (!hvCurrentSubjectId) return;
+          await hvPickOneFolder();
+        };
+
+        // پوشه‌ی واردشده از دستگاه دیگر را دوباره وصل می‌کند و سابقه‌ی مشاهده را حفظ می‌کند.
+        window.hvReattachFolder = async function (folderId) {
+          const folders = await hvGetAll("folders");
+          const old = folders.find((x) => x.id === folderId);
+          if (!old) return;
+          if (window.showDirectoryPicker) {
+            try {
+              const handle = await window.showDirectoryPicker();
+              old.name = handle.name;
+              old.handle = handle;
+              old.sessionOnly = false;
+              old.needsReconnect = false;
+              await hvPut("folders", old);
+              hvRenderFolders();
+              await hvOpenFolder(folderId);
+              showNotification("رسانه متصل شد؛ سابقه‌ی مشاهده حفظ شد", "success");
+            } catch (err) { /* کاربر انتخاب را لغو کرد */ }
+            return;
+          }
+          const input = hvFallbackDirInput();
+          input.dataset.reattachFolderId = folderId;
+          input.click();
+        };
+
+        async function hvPickOneFolder() {
+          if (window.showDirectoryPicker) {
+            try {
+              const handle = await window.showDirectoryPicker();
+              const folder = {
+                id: hvUid(),
+                subjectId: hvCurrentSubjectId,
+                name: handle.name,
+                handle: handle,
+                sessionOnly: false,
+              };
+              await hvPut("folders", folder);
+              hvRenderFolders();
+              showNotification('پوشه «' + handle.name + '» اضافه شد', "success");
+              if (
+                confirm(
+                  "پوشه «" +
+                    handle.name +
+                    "» اضافه شد. می‌خواهید پوشه‌ی دیگری هم اضافه کنید؟",
+                )
+              ) {
+                await hvPickOneFolder();
+              }
+            } catch (err) {
+              // کاربر انتخاب پوشه را لغو کرده است
+            }
+            return;
+          }
+
+          // مرورگرهایی که از File System Access API پشتیبانی نمی‌کنند
+          hvFallbackDirInput().click();
+        }
+
+        // ---------- افزودن گروهی چند پوشه در یک اقدام ----------
+        // کاربر یک «پوشه‌ی والد» را انتخاب می‌کند (مثلاً پوشه‌ای که ۲۰ زیرپوشه‌ی
+        // درسی داخلش است) و تمام زیرپوشه‌های آن به‌صورت خودکار و همزمان اضافه
+        // می‌شوند؛ نیازی به تکرار عمل انتخاب برای هر پوشه نیست.
+        window.hvAddLocalFoldersBulk = async function () {
+          if (!hvCurrentSubjectId) return;
+
+          if (window.showDirectoryPicker) {
+            try {
+              const parentHandle = await window.showDirectoryPicker();
+              const subDirs = [];
+              for await (const entry of parentHandle.values()) {
+                if (entry.kind === "directory") {
+                  subDirs.push(entry);
+                }
+              }
+              if (!subDirs.length) {
+                showNotification(
+                  "پوشه‌ی انتخاب‌شده هیچ زیرپوشه‌ای نداشت. برای افزودن خود این پوشه از گزینه «افزودن یک پوشه» استفاده کنید.",
+                  "error",
+                );
+                return;
+              }
+              for (const dirHandle of subDirs) {
+                const folder = {
+                  id: hvUid(),
+                  subjectId: hvCurrentSubjectId,
+                  name: dirHandle.name,
+                  handle: dirHandle,
+                  sessionOnly: false,
+                };
+                await hvPut("folders", folder);
+              }
+              hvRenderFolders();
+              showNotification(
+                subDirs.length + " پوشه با موفقیت اضافه شد",
+                "success",
+              );
+            } catch (err) {
+              // کاربر انتخاب را لغو کرده است
+            }
+            return;
+          }
+
+          // مرورگرهایی که از File System Access API پشتیبانی نمی‌کنند
+          hvFallbackBulkDirInput().click();
+        };
+
+        function hvFallbackBulkDirInput() {
+          let input = document.getElementById("hvFallbackBulkDirInput");
+          if (!input) {
+            input = document.createElement("input");
+            input.type = "file";
+            input.id = "hvFallbackBulkDirInput";
+            input.webkitdirectory = true;
+            input.multiple = true;
+            input.style.display = "none";
+            document.body.appendChild(input);
+            input.addEventListener("change", hvHandleFallbackBulkFolder);
+          }
+          return input;
+        }
+
+        function hvHandleFallbackBulkFolder(event) {
+          const files = Array.from(event.target.files || []);
+          event.target.value = "";
+          if (!files.length) return;
+
+          // گروه‌بندی فایل‌ها بر اساس زیرپوشه‌ی مستقیمشان داخل پوشه‌ی والد
+          const groups = {};
+          const rootLooseFiles = [];
+          const rootName = files[0].webkitRelativePath.split("/")[0];
+
+          files.forEach((file) => {
+            const parts = file.webkitRelativePath.split("/");
+            if (parts.length >= 3) {
+              const sub = parts[1];
+              if (!groups[sub]) groups[sub] = [];
+              groups[sub].push(file);
+            } else {
+              rootLooseFiles.push(file);
+            }
+          });
+
+          const subNames = Object.keys(groups);
+
+          if (!subNames.length) {
+            // پوشه‌ی والد زیرپوشه‌ای نداشت؛ خود همان پوشه را اضافه می‌کنیم
+            const videoFiles = rootLooseFiles.filter((f) =>
+              hvIsMediaFile(f.name),
+            );
+            const pdfFiles = rootLooseFiles.filter((f) => hvIsPdfFile(f.name));
+            const textFiles = rootLooseFiles.filter((f) =>
+              hvIsTextFile(f.name),
+            );
+            const folder = {
+              id: hvUid(),
+              subjectId: hvCurrentSubjectId,
+              name: rootName,
+              handle: null,
+              sessionOnly: true,
+            };
+            hvSessionFiles[folder.id] = { videos: videoFiles, pdfs: pdfFiles, texts: textFiles };
+            hvPut("folders", folder).then(() => {
+              hvRenderFolders();
+              showNotification(
+                "این پوشه زیرپوشه‌ای نداشت، همان یک پوشه اضافه شد",
+                "info",
+              );
+            });
+            return;
+          }
+
+          const puts = subNames.map((name) => {
+            const groupFiles = groups[name];
+            const videoFiles = groupFiles.filter((f) => hvIsMediaFile(f.name));
+            const pdfFiles = groupFiles.filter((f) => hvIsPdfFile(f.name));
+            const textFiles = groupFiles.filter((f) => hvIsTextFile(f.name));
+            const folder = {
+              id: hvUid(),
+              subjectId: hvCurrentSubjectId,
+              name: name,
+              handle: null,
+              sessionOnly: true,
+            };
+            hvSessionFiles[folder.id] = { videos: videoFiles, pdfs: pdfFiles, texts: textFiles };
+            return hvPut("folders", folder);
+          });
+
+          Promise.all(puts).then(() => {
+            hvRenderFolders();
+            showNotification(
+              subNames.length +
+                " پوشه اضافه شد. توجه: این مرورگر امکان نگهداری دائمی پوشه‌ها را ندارد و باید بعد از هر بار ورود مجدد، پوشه‌ی والد را دوباره انتخاب کنید.",
+              "info",
+            );
+          });
+        }
+
+        function hvFallbackDirInput() {
+          let input = document.getElementById("hvFallbackDirInput");
+          if (!input) {
+            input = document.createElement("input");
+            input.type = "file";
+            input.id = "hvFallbackDirInput";
+            input.webkitdirectory = true;
+            input.multiple = true;
+            input.style.display = "none";
+            document.body.appendChild(input);
+            input.addEventListener("change", hvHandleFallbackFolder);
+          }
+          return input;
+        }
+
+        function hvHandleFallbackFolder(event) {
+          const input = event.target;
+          const reattachId = input.dataset.reattachFolderId || "";
+          input.dataset.reattachFolderId = "";
+          const files = Array.from(input.files || []);
+          input.value = "";
+          if (!files.length) return;
+          const folderName = files[0].webkitRelativePath.split("/")[0];
+          const videoFiles = files.filter((f) => hvIsMediaFile(f.name));
+          const pdfFiles = files.filter((f) => hvIsPdfFile(f.name));
+          const textFiles = files.filter((f) => hvIsTextFile(f.name));
+          if (reattachId) {
+            hvGetAll("folders").then((all) => {
+              const old = all.find((x) => x.id === reattachId);
+              if (!old) return;
+              old.name = folderName;
+              old.handle = null;
+              old.sessionOnly = true;
+              old.needsReconnect = false;
+              hvSessionFiles[reattachId] = { videos: videoFiles, pdfs: pdfFiles, texts: textFiles };
+              hvPut("folders", old).then(() => {
+                hvRenderFolders();
+                hvOpenFolder(reattachId);
+                showNotification("رسانه متصل شد؛ سابقه‌ی مشاهده حفظ شد", "success");
+              });
+            });
+            return;
+          }
+          const folder = {
+            id: hvUid(),
+            subjectId: hvCurrentSubjectId,
+            name: folderName,
+            handle: null,
+            sessionOnly: true,
+          };
+          hvSessionFiles[folder.id] = { videos: videoFiles, pdfs: pdfFiles, texts: textFiles };
+          hvPut("folders", folder).then(() => {
+            hvRenderFolders();
+            showNotification(
+              "پوشه «" +
+                folderName +
+                "» اضافه شد. توجه: این مرورگر امکان نگهداری دائمی پوشه را ندارد و باید بعد از هر بار ورود مجدد، آن را دوباره انتخاب کنید.",
+              "info",
+            );
+            if (
+              confirm(
+                "پوشه «" +
+                  folderName +
+                  "» اضافه شد. می‌خواهید پوشه‌ی دیگری هم اضافه کنید؟",
+              )
+            ) {
+              hvFallbackDirInput().click();
+            }
+          });
+        }
+
+        window.hvDeleteFolder = function (folderId) {
+          if (!confirm("آیا از حذف این پوشه مطمئن هستید؟")) return;
+          hvDelete("folders", folderId).then(() => {
+            delete hvSessionFiles[folderId];
+            hvRenderFolders();
+            hvStopMainVideo();
+            document.getElementById("hvVideoListWrap").style.display = "none";
+            showNotification("پوشه حذف شد", "success");
+          });
+        };
+
+        // ---------- باز کردن یک پوشه محلی و نمایش فهرست ویدیوها ----------
+        let hvCurrentVideoEntries = [];
+        let hvCurrentPdfEntries = [];
+        let hvCurrentTextEntries = [];
+        let hvCurrentVideoIdx = -1;
+        let hvCurrentFolderId = null;
+        let hvWatchedSet = new Set();
+
+        window.hvOpenFolder = async function (folderId) {
+          const folders = await hvGetAll("folders");
+          const f = folders.find((x) => x.id === folderId);
+          if (!f) return;
+
+          document.getElementById("hvActiveFolderName").textContent = f.name;
+          document.getElementById("hvVideoListWrap").style.display = "block";
+          const switcherEl = document.getElementById("hvVideoSwitcher");
+          const mainVideoWrap = document.getElementById("hvMainVideoWrap");
+          const mainVideo = document.getElementById("hvMainVideo");
+          const noVideoMsg = document.getElementById("hvNoVideoMsg");
+          const pdfCard = document.getElementById("hvPdfCard");
+          const pdfListEl = document.getElementById("hvPdfList");
+
+          hvStopMainVideo();
+          switcherEl.innerHTML = "";
+          pdfCard.style.display = "none";
+          pdfListEl.innerHTML = "";
+          hvResetDesc();
+          hvCurrentTextEntries = [];
+          mainVideoWrap.style.display = "none";
+          noVideoMsg.style.display = "block";
+          noVideoMsg.textContent = "در حال بارگذاری فهرست فایل‌ها...";
+          hvCurrentVideoEntries = [];
+          hvCurrentPdfEntries = [];
+          hvCurrentVideoIdx = -1;
+          hvCurrentFolderId = folderId;
+          hvCurrentFolderRec = f;
+          hvWatchedSet = new Set(f.watched || []);
+          hvNotes = Object.assign({}, f.notes || {});
+          document.getElementById("hvSpeedBar").style.display = "none";
+          document.getElementById("hvMainAudioWrap").style.display = "none";
+          document.getElementById("hvPlaylistSummary").style.display = "none";
+
+          let videoEntries = [];
+          let pdfEntries = [];
+          let textEntries = [];
+
+          if (f.needsReconnect && !f.handle && !hvSessionFiles[folderId]) {
+            noVideoMsg.textContent = "اطلاعات این پوشه منتقل شده و سابقه‌ی مشاهده حفظ است، اما فایل‌های رسانه روی این دستگاه نیستند. از دکمه‌ی اتصال دوباره روی کارت پوشه استفاده کنید.";
+            return;
+          }
+
+          if (f.sessionOnly) {
+            const bucket = hvSessionFiles[folderId];
+            const videos = (bucket && bucket.videos) || [];
+            const pdfs = (bucket && bucket.pdfs) || [];
+            const texts = (bucket && bucket.texts) || [];
+            if (!videos.length && !pdfs.length && !texts.length) {
+              noVideoMsg.textContent =
+                "این پوشه موقتی است و فایل‌های آن از حافظه پاک شده‌اند. لطفاً پوشه را حذف و دوباره اضافه کنید.";
+              return;
+            }
+            videoEntries = videos.map((file) => ({
+              name: file.name,
+              isAudio: hvIsAudioFile(file.name),
+              getFile: async () => file,
+            }));
+            pdfEntries = pdfs.map((file) => ({
+              name: file.name,
+              getFile: async () => file,
+            }));
+            textEntries = texts.map((file) => ({
+              name: file.name,
+              getFile: async () => file,
+            }));
+          } else {
+            try {
+              let perm = await f.handle.queryPermission({ mode: "read" });
+              if (perm !== "granted") {
+                perm = await f.handle.requestPermission({ mode: "read" });
+              }
+              if (perm !== "granted") {
+                noVideoMsg.textContent = "دسترسی به این پوشه داده نشد.";
+                return;
+              }
+              for await (const entry of f.handle.values()) {
+                if (entry.kind !== "file") continue;
+                if (hvIsMediaFile(entry.name)) {
+                  videoEntries.push({
+                    name: entry.name,
+                    isAudio: hvIsAudioFile(entry.name),
+                    getFile: () => entry.getFile(),
+                  });
+                } else if (hvIsPdfFile(entry.name)) {
+                  pdfEntries.push({
+                    name: entry.name,
+                    getFile: () => entry.getFile(),
+                  });
+                } else if (hvIsTextFile(entry.name)) {
+                  textEntries.push({
+                    name: entry.name,
+                    handle: entry,
+                    getFile: () => entry.getFile(),
+                  });
+                }
+              }
+            } catch (err) {
+              noVideoMsg.textContent =
+                "خطا در خواندن پوشه. ممکن است پوشه جابه‌جا یا حذف شده باشد.";
+              return;
+            }
+          }
+
+          videoEntries = hvSortByName(videoEntries, "name");
+          pdfEntries = hvSortByName(pdfEntries, "name");
+          textEntries = hvSortByName(textEntries, "name");
+          hvCurrentVideoEntries = videoEntries;
+          hvCurrentPdfEntries = pdfEntries;
+          hvCurrentTextEntries = textEntries;
+
+          // ذخیره‌ی نام فایل‌های پوشه تا وضعیت مشاهده روی کارت پوشه قابل محاسبه باشد
+          const mediaNames = videoEntries.map((v) => v.name);
+          hvUpdateFolder(folderId, (r) => {
+            r.mediaNames = mediaNames;
+          }).then(hvRenderFolders);
+
+          // خواندن فایل‌های متنی و وصل کردن هر کدام به ویدیوی هم‌نامش
+          await hvLoadTexts(folderId, textEntries, videoEntries);
+          if (hvCurrentFolderId !== folderId) return;
+
+          if (!videoEntries.length) {
+            noVideoMsg.textContent =
+              "هیچ فایل ویدیویی یا صوتی در این پوشه یافت نشد.";
+          } else {
+            noVideoMsg.style.display = "none";
+            await hvSelectVideo(0);
+          }
+
+          if (pdfEntries.length) {
+            pdfCard.style.display = "block";
+            pdfListEl.innerHTML = pdfEntries
+              .map(
+                (p, idx) =>
+                  '<div class="hv-video-item" onclick="hvOpenPdf(' +
+                  idx +
+                  ')"><i class="fas fa-file-pdf"></i><span>' +
+                  p.name +
+                  "</span></div>",
+              )
+              .join("");
+          }
+
+          hvRenderUnmatchedTexts();
+        };
+
+        // کلید مقایسه‌ی نام: بدون پسوند، بدون تفاوت حروف و ی/ک عربی
+        function hvNameKey(name) {
+          return String(name)
+            .replace(/\.[^.]+$/, "")
+            .normalize("NFC")
+            .replace(/ي/g, "ی")
+            .replace(/ك/g, "ک")
+            .replace(/[\u200c_\-\s]+/g, " ")
+            .trim()
+            .toLowerCase();
+        }
+
+        function hvBaseName(name) {
+          return String(name).replace(/\.[^.]+$/, "");
+        }
+
+        let hvTextMap = {};
+        let hvUnmatchedTexts = [];
+        let hvFileNotes = {}; // کلید نام ویدیو -> یادداشتِ نوشته‌شده داخل فایل متنی
+        let hvTextTargets = {}; // کلید نام ویدیو -> فایل متنی‌ای که یادداشت در آن نوشته می‌شود
+        let hvCurrentFolderRec = null;
+
+        function hvResetDesc() {
+          hvTextMap = {};
+          hvUnmatchedTexts = [];
+          hvFileNotes = {};
+          hvTextTargets = {};
+          const wrap = document.getElementById("hvDescWrap");
+          if (wrap) wrap.innerHTML = "";
+          const card = document.getElementById("hvTextCard");
+          if (card) card.style.display = "none";
+          const list = document.getElementById("hvTextList");
+          if (list) list.innerHTML = "";
+        }
+
+        async function hvLoadTexts(folderId, textEntries, videoEntries) {
+          const videoKeys = new Set(videoEntries.map((v) => hvNameKey(v.name)));
+          const map = {};
+          const fileNotes = {};
+          const targets = {};
+          const unmatched = [];
+          for (const t of textEntries) {
+            let text = "";
+            try {
+              text = await hvReadTextFile(await t.getFile());
+            } catch (err) {
+              continue;
+            }
+            const key = hvNameKey(t.name);
+            if (videoKeys.has(key)) {
+              const parts = hvSplitNote(text);
+              // اولین فایل هم‌نام، مقصد نوشتن یادداشت است
+              if (!targets[key]) {
+                targets[key] = t;
+                if (parts.hasNote) fileNotes[key] = parts.note;
+              }
+              if (parts.desc.trim()) {
+                map[key] = map[key] ? map[key] + "\n\n" + parts.desc : parts.desc;
+              }
+            } else {
+              unmatched.push({ name: t.name, text: text });
+            }
+          }
+          if (hvCurrentFolderId !== folderId) return;
+          hvTextMap = map;
+          hvFileNotes = fileNotes;
+          hvTextTargets = targets;
+          hvUnmatchedTexts = unmatched;
+        }
+
+        // ساخت کادر توضیحات (با دکمه‌ی نمایش بیشتر برای متن‌های بلند)
+        function hvBuildDescBox(title, text) {
+          const box = document.createElement("div");
+          box.className = "hv-desc";
+
+          const head = document.createElement("div");
+          head.className = "hv-desc-title";
+          head.innerHTML = '<i class="fas fa-align-right"></i><span></span>';
+          head.querySelector("span").textContent = title;
+
+          const body = document.createElement("div");
+          body.className = "hv-desc-body";
+          body.setAttribute("dir", "auto");
+          body.textContent = text.trim() ? text.trim() : "(این فایل خالی است)";
+
+          box.appendChild(head);
+          box.appendChild(body);
+
+          if (text.split("\n").length > 4 || text.length > 260) {
+            box.classList.add("collapsed");
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "hv-desc-toggle";
+            btn.textContent = "نمایش بیشتر";
+            btn.addEventListener("click", () => {
+              const collapsed = box.classList.toggle("collapsed");
+              btn.textContent = collapsed ? "نمایش بیشتر" : "نمایش کمتر";
+            });
+            box.appendChild(btn);
+          }
+          return box;
+        }
+
+        // توضیحات ویدیوی در حال پخش را زیر پخش‌کننده نشان می‌دهد
+        function hvRenderDesc(entry) {
+          const wrap = document.getElementById("hvDescWrap");
+          if (!wrap) return;
+          wrap.innerHTML = "";
+          const text = hvTextMap[hvNameKey(entry.name)];
+          if (text !== undefined) {
+            wrap.appendChild(hvBuildDescBox(hvBaseName(entry.name), text));
+          }
+          wrap.appendChild(hvBuildNoteBox(entry));
+        }
+
+        // ---------- یادداشت شخصی برای هر فایل ----------
+        // در حافظه‌ی مرورگر (روی رکورد همین پوشه) ذخیره می‌شود؛ فایل متنی اصلی تغییر نمی‌کند
+        let hvNotes = {};
+
+        // یادداشت در انتهای همان فایل متنی، بعد از این خط جداکننده نوشته می‌شود
+        const HV_NOTE_MARK = "=== یادداشت من ===";
+
+        function hvSplitNote(text) {
+          const i = text.lastIndexOf(HV_NOTE_MARK);
+          if (i < 0) return { desc: text, note: "", hasNote: false };
+          return {
+            desc: text.slice(0, i).replace(/\s+$/, ""),
+            note: text
+              .slice(i + HV_NOTE_MARK.length)
+              .replace(/^[ \t]*\r?\n/, "")
+              .replace(/\s+$/, ""),
+            hasNote: true,
+          };
+        }
+
+        let hvNoteQueue = Promise.resolve();
+
+        async function hvEnsureWrite(handle) {
+          try {
+            if (!handle || !handle.queryPermission) return false;
+            let perm = await handle.queryPermission({ mode: "readwrite" });
+            if (perm !== "granted") {
+              perm = await handle.requestPermission({ mode: "readwrite" });
+            }
+            return perm === "granted";
+          } catch (e) {
+            return false;
+          }
+        }
+
+        // یادداشت را داخل فایل متنی می‌نویسد (اگر فایل نبود، می‌سازد) و نام فایل را برمی‌گرداند
+        async function hvWriteNoteFile(dirHandle, key, entry, note, targets) {
+          let t = targets[key];
+          let cur = "";
+          if (t) cur = await hvReadTextFile(await t.handle.getFile());
+          const parts = hvSplitNote(cur);
+          const eol = cur.indexOf("\r\n") >= 0 ? "\r\n" : "\n";
+          const body = note.replace(/\r?\n/g, eol).replace(/\s+$/, "");
+          let out = parts.desc;
+          if (body.trim()) {
+            out = (out ? out + eol + eol : "") + HV_NOTE_MARK + eol + body;
+          }
+          if (out) out += eol;
+          if (!t) {
+            if (!body.trim()) return null;
+            const fh = await dirHandle.getFileHandle(
+              hvBaseName(entry.name) + ".txt",
+              { create: true },
+            );
+            t = { name: fh.name, handle: fh, getFile: () => fh.getFile() };
+            targets[key] = t;
+          }
+          const w = await t.handle.createWritable();
+          await w.write(out);
+          await w.close();
+          return t.name;
+        }
+
+        async function hvSaveNote(ctx, entry, note) {
+          const key = hvNameKey(entry.name);
+          const rec = ctx.rec;
+          let reason = "session";
+          if (rec && !rec.sessionOnly && rec.handle) {
+            reason = "denied";
+            if (await hvEnsureWrite(rec.handle)) {
+              try {
+                const name = await hvWriteNoteFile(
+                  rec.handle, key, entry, note, ctx.targets,
+                );
+                ctx.fileNotes[key] = note.replace(/\s+$/, "");
+                delete ctx.notes[entry.name];
+                await hvUpdateFolder(rec.id, (r) => {
+                  if (r.notes) delete r.notes[entry.name];
+                });
+                return { where: "file", name: name };
+              } catch (err) {
+                console.error(err);
+                reason = "error";
+              }
+            }
+          }
+          // نشد در فایل بنویسیم: حداقل در حافظه‌ی مرورگر نگه داشته شود
+          const keep = note.trim() || ctx.fileNotes[key];
+          if (keep) ctx.notes[entry.name] = note;
+          else delete ctx.notes[entry.name];
+          await hvUpdateFolder(rec.id, (r) => {
+            r.notes = r.notes || {};
+            if (keep) r.notes[entry.name] = note;
+            else delete r.notes[entry.name];
+          });
+          return { where: "browser", reason: reason };
+        }
+
+        function hvBuildNoteBox(entry) {
+          const key = hvNameKey(entry.name);
+          const rec = hvCurrentFolderRec;
+          const ctx = {
+            rec: rec,
+            targets: hvTextTargets,
+            fileNotes: hvFileNotes,
+            notes: hvNotes,
+          };
+          const canFile = !!(rec && !rec.sessionOnly && rec.handle);
+
+          const box = document.createElement("div");
+          box.className = "hv-desc hv-note";
+
+          const head = document.createElement("div");
+          head.className = "hv-desc-title";
+          head.innerHTML = '<i class="fas fa-pen-to-square"></i><span>یادداشت من</span>';
+
+          const ta = document.createElement("textarea");
+          ta.setAttribute("dir", "auto");
+          ta.placeholder = "هر چیزی که می‌خواهید درباره‌ی این فایل بنویسید...";
+          ta.value =
+            entry.name in ctx.notes
+              ? ctx.notes[entry.name]
+              : key in ctx.fileNotes
+                ? ctx.fileNotes[key]
+                : "";
+
+          const status = document.createElement("div");
+          status.className = "hv-note-status";
+          if (!canFile) {
+            status.textContent =
+              "این پوشه موقتی است؛ یادداشت فقط در مرورگر ذخیره می‌شود.";
+          } else if (ctx.targets[key]) {
+            status.textContent =
+              "یادداشت داخل فایل «" + ctx.targets[key].name + "» نوشته می‌شود.";
+          } else {
+            status.textContent =
+              "با نوشتن، فایل «" + hvBaseName(entry.name) + ".txt» در همین پوشه ساخته می‌شود.";
+          }
+
+          let timer = null;
+          const save = () => {
+            timer = null;
+            const val = ta.value;
+            status.textContent = "در حال ذخیره...";
+            hvNoteQueue = hvNoteQueue
+              .then(() => hvSaveNote(ctx, entry, val))
+              .then(
+                (res) => {
+                  if (res.where === "file") {
+                    status.textContent = res.name
+                      ? "ذخیره شد در فایل «" + res.name + "»"
+                      : "ذخیره شد";
+                  } else if (res.reason === "session") {
+                    status.textContent =
+                      "این پوشه موقتی است؛ یادداشت فقط در مرورگر ذخیره شد.";
+                  } else if (res.reason === "denied") {
+                    status.textContent =
+                      "اجازه‌ی نوشتن در پوشه داده نشد؛ یادداشت فقط در مرورگر ذخیره شد.";
+                  } else {
+                    status.textContent =
+                      "نوشتن در فایل ممکن نشد؛ یادداشت فقط در مرورگر ذخیره شد.";
+                  }
+                },
+                () => {
+                  status.textContent = "خطا در ذخیره‌ی یادداشت";
+                },
+              );
+          };
+
+          // اجازه‌ی نوشتن باید با کلیک کاربر گرفته شود؛ برای همین هنگام کلیک روی کادر می‌پرسیم
+          let askedPerm = false;
+          ta.addEventListener("focus", () => {
+            if (!canFile || askedPerm) return;
+            askedPerm = true;
+            hvEnsureWrite(rec.handle).then((ok) => {
+              if (!ok) {
+                status.textContent =
+                  "اجازه‌ی نوشتن داده نشد؛ یادداشت فقط در مرورگر ذخیره می‌شود.";
+              }
+            });
+          });
+          ta.addEventListener("input", () => {
+            status.textContent = "در حال ذخیره...";
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(save, 600);
+          });
+          ta.addEventListener("blur", () => {
+            if (timer) {
+              clearTimeout(timer);
+              save();
+            }
+          });
+
+          box.appendChild(head);
+          box.appendChild(ta);
+          box.appendChild(status);
+          return box;
+        }
+
+        // ---------- سرعت پخش ویدیو و صوت ----------
+        const HV_SPEEDS = [0.75, 1, 1.25, 1.5, 2];
+        let hvPlaybackRate = 1;
+        try {
+          const saved = parseFloat(localStorage.getItem("hvPlaybackRate"));
+          if (saved > 0 && saved <= 4) hvPlaybackRate = saved;
+        } catch (e) {}
+
+        function hvSpeedLabel(r) {
+          return Number(r).toLocaleString("fa-IR") + "×";
+        }
+
+        function hvApplyRate(el) {
+          if (!el) return;
+          el.defaultPlaybackRate = hvPlaybackRate;
+          el.playbackRate = hvPlaybackRate;
+        }
+
+        function hvRenderSpeedBar() {
+          const bar = document.getElementById("hvSpeedBar");
+          if (!bar) return;
+          const speeds = HV_SPEEDS.includes(hvPlaybackRate)
+            ? HV_SPEEDS
+            : HV_SPEEDS.concat(hvPlaybackRate).sort((a, b) => a - b);
+          bar.innerHTML =
+            '<span class="hv-speed-label"><i class="fas fa-gauge-high"></i> سرعت پخش:</span>' +
+            speeds
+              .map(
+                (r) =>
+                  '<button type="button" class="hv-speed-btn' +
+                  (r === hvPlaybackRate ? " active" : "") +
+                  '" onclick="hvSetSpeed(' +
+                  r +
+                  ')">' +
+                  hvSpeedLabel(r) +
+                  "</button>",
+              )
+              .join("");
+        }
+
+        window.hvSetSpeed = function (rate) {
+          hvPlaybackRate = rate;
+          try {
+            localStorage.setItem("hvPlaybackRate", String(rate));
+          } catch (e) {}
+          ["hvMainVideo", "hvMainAudio"].forEach((id) =>
+            hvApplyRate(document.getElementById(id)),
+          );
+          hvRenderSpeedBar();
+        };
+
+        // اگر کاربر سرعت را از منوی خود پخش‌کننده عوض کرد، دکمه‌ها هم‌گام شوند
+        function hvOnRateChange(e) {
+          const el = e.target;
+          if (!el.getAttribute("src")) return;
+          const r = el.playbackRate;
+          if (!(r > 0) || r === hvPlaybackRate) return;
+          hvPlaybackRate = r;
+          try {
+            localStorage.setItem("hvPlaybackRate", String(r));
+          } catch (err) {}
+          ["hvMainVideo", "hvMainAudio"].forEach((id) => {
+            const other = document.getElementById(id);
+            if (other) other.defaultPlaybackRate = r;
+          });
+          hvRenderSpeedBar();
+        }
+
+        // فایل‌های متنی که هم‌نام هیچ ویدیویی نیستند
+        function hvRenderUnmatchedTexts() {
+          const card = document.getElementById("hvTextCard");
+          const list = document.getElementById("hvTextList");
+          if (!card || !list) return;
+          list.innerHTML = "";
+          if (!hvUnmatchedTexts.length) {
+            card.style.display = "none";
+            return;
+          }
+          hvUnmatchedTexts.forEach((t) => {
+            list.appendChild(hvBuildDescBox(hvBaseName(t.name), t.text));
+          });
+          card.style.display = "block";
+        }
+
+        // انتخاب یکی از فایل‌های پوشه (ویدیو یا صوت) برای پخش در پخش‌کننده‌ی بالای صفحه
+        window.hvSelectVideo = async function (idx) {
+          const entry = hvCurrentVideoEntries[idx];
+          if (!entry) return;
+          try {
+            const file = await entry.getFile();
+            const url = URL.createObjectURL(file);
+            hvStopMainVideo();
+            const mainVideo = document.getElementById("hvMainVideo");
+            const mainVideoWrap = document.getElementById("hvMainVideoWrap");
+            const mainAudio = document.getElementById("hvMainAudio");
+            const mainAudioWrap = document.getElementById("hvMainAudioWrap");
+            if (entry.isAudio) {
+              mainVideoWrap.style.display = "none";
+              mainAudioWrap.style.display = "block";
+              document.getElementById("hvAudioTitle").textContent = entry.name;
+              mainAudio.src = url;
+            } else {
+              mainAudioWrap.style.display = "none";
+              mainVideoWrap.style.display = "block";
+              mainVideo.src = url;
+            }
+            hvApplyRate(entry.isAudio ? mainAudio : mainVideo);
+            hvRenderSpeedBar();
+            document.getElementById("hvSpeedBar").style.display = "flex";
+            hvCurrentVideoIdx = idx;
+            hvRenderDesc(entry);
+            hvRenderPlaylist();
+          } catch (err) {
+            showNotification("خطا در باز کردن فایل", "error");
+          }
+        };
+
+        function hvStopMainVideo() {
+          ["hvMainVideo", "hvMainAudio"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.pause();
+            if (el.src) URL.revokeObjectURL(el.src);
+            el.removeAttribute("src");
+            el.load();
+          });
+        }
+
+        // ---------- فهرست فایل‌ها با تیک «مشاهده شد» ----------
+        function hvRenderPlaylist() {
+          const listEl = document.getElementById("hvVideoSwitcher");
+          const sumEl = document.getElementById("hvPlaylistSummary");
+          const entries = hvCurrentVideoEntries;
+          if (!entries.length) {
+            listEl.innerHTML = "";
+            sumEl.style.display = "none";
+            return;
+          }
+          const done = entries.filter((e) => hvWatchedSet.has(e.name)).length;
+          const status =
+            done === 0 ? "unseen" : done >= entries.length ? "seen" : "progress";
+          sumEl.style.display = "flex";
+          sumEl.innerHTML =
+            "<span>" +
+            hvFa(done) +
+            " از " +
+            hvFa(entries.length) +
+            " فایل مشاهده شده</span>" +
+            hvStatusBadgeHtml(status);
+
+          listEl.innerHTML = entries
+            .map((v, idx) => {
+              const seen = hvWatchedSet.has(v.name);
+              return (
+                '<div class="hv-playlist-item' +
+                (idx === hvCurrentVideoIdx ? " active" : "") +
+                (seen ? " seen" : "") +
+                '" onclick="hvSelectVideo(' +
+                idx +
+                ')">' +
+                '<label class="hv-check" title="علامت‌گذاری به‌عنوان مشاهده‌شده" onclick="event.stopPropagation()">' +
+                '<input type="checkbox" ' +
+                (seen ? "checked " : "") +
+                'onchange="hvToggleWatched(' +
+                idx +
+                ', this.checked)" />' +
+                '<span class="hv-check-box"><i class="fas fa-check"></i></span>' +
+                "</label>" +
+                '<i class="hv-pl-type ' +
+                (v.isAudio ? "fas fa-headphones" : "fas fa-circle-play") +
+                '"></i>' +
+                '<span class="hv-pl-name">' +
+                hvEsc(v.name) +
+                "</span>" +
+                '<span class="hv-pl-state">' +
+                (seen ? "دیده شد" : "") +
+                "</span>" +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        function hvSetWatched(name, checked) {
+          if (checked) hvWatchedSet.add(name);
+          else hvWatchedSet.delete(name);
+          hvRenderPlaylist();
+          const folderId = hvCurrentFolderId;
+          const arr = Array.from(hvWatchedSet);
+          hvUpdateFolder(folderId, (r) => {
+            r.watched = arr;
+          }).then(hvRenderFolders);
+        }
+
+        window.hvToggleWatched = function (idx, checked) {
+          const entry = hvCurrentVideoEntries[idx];
+          if (!entry) return;
+          hvSetWatched(entry.name, checked);
+        };
+
+        // وقتی پخش یک فایل تمام شد، خودکار تیک «دیده شد» می‌خورد
+        function hvOnMediaEnded() {
+          const entry = hvCurrentVideoEntries[hvCurrentVideoIdx];
+          if (entry && !hvWatchedSet.has(entry.name)) {
+            hvSetWatched(entry.name, true);
+          }
+        }
+
+        window.hvOpenPdf = async function (idx) {
+          const entry = hvCurrentPdfEntries[idx];
+          if (!entry) return;
+          try {
+            const file = await entry.getFile();
+            const url = URL.createObjectURL(file);
+            window.open(url, "_blank");
+            setTimeout(function () { URL.revokeObjectURL(url); }, 120000);
+          } catch (err) {
+            showNotification("خطا در باز کردن فایل PDF", "error");
+          }
+        };
+
+        function hvEscapeHtml(str) {
+          return String(str).replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+        }
+
+        // خواندن متن با تشخیص انکدینگ (UTF-8 / UTF-16 / ویندوز-۱۲۵۶ فارسی)
+        async function hvReadTextFile(file) {
+          const buf = await file.arrayBuffer();
+          const bytes = new Uint8Array(buf);
+          if (bytes[0] === 0xff && bytes[1] === 0xfe)
+            return new TextDecoder("utf-16le").decode(buf);
+          if (bytes[0] === 0xfe && bytes[1] === 0xff)
+            return new TextDecoder("utf-16be").decode(buf);
+          try {
+            return new TextDecoder("utf-8", { fatal: true }).decode(buf);
+          } catch (e) {
+            try {
+              return new TextDecoder("windows-1256").decode(buf);
+            } catch (e2) {
+              return new TextDecoder("utf-8").decode(buf);
+            }
+          }
+        }
+
+        // مقداردهی اولیه هنگام بارگذاری صفحه
+        document.addEventListener("DOMContentLoaded", function () {
+          hvRenderPresetIcons();
+          hvRenderSubjects();
+          ["hvMainVideo", "hvMainAudio"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener("ended", hvOnMediaEnded);
+            el.addEventListener("ratechange", hvOnRateChange);
+            el.addEventListener("loadedmetadata", () => hvApplyRate(el));
+            el.defaultPlaybackRate = hvPlaybackRate;
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

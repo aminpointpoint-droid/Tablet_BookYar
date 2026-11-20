@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+    <title>کارنامه هوشمند - موتور ساخت کارنامه</title>
+    <link rel="icon" href="../icon.png" type="image/png" />
+    <link rel="stylesheet" href="../libs/vazirmatn/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="../libs/fontawesome/css/all.min.css" />
+    <script src="../libs/chart.umd.js"></script>
+    <style>
+      html,
+      body {
+        height: auto;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); }
+      body {
+        background: var(--gradient-water);
+        color: var(--text-color);
+        line-height: 1.6;
+        transition: var(--transition-slow);
+        min-height: 100vh;
+        overflow-x: hidden;
+        backdrop-filter: blur(10px);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      .background-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none; }
+      .bubble { position: absolute; border-radius: 50%; background: var(--gradient-primary); opacity: 0.1; animation: float 15s infinite ease-in-out; }
+      .bubble:nth-child(1){width:80px;height:80px;top:10%;left:10%;animation-delay:0s;animation-duration:20s;}
+      .bubble:nth-child(2){width:120px;height:120px;top:20%;right:15%;animation-delay:2s;animation-duration:18s;}
+      .bubble:nth-child(3){width:60px;height:60px;bottom:30%;left:20%;animation-delay:4s;animation-duration:22s;}
+      .bubble:nth-child(4){width:100px;height:100px;bottom:20%;right:25%;animation-delay:6s;animation-duration:16s;}
+      .bubble:nth-child(5){width:70px;height:70px;top:50%;left:50%;animation-delay:8s;animation-duration:19s;}
+      .bubble-small { position: absolute; border-radius: 50%; background: var(--secondary-color); opacity: 0.15; animation: floatSmall 12s infinite ease-in-out; }
+      .bubble-small:nth-child(6){width:30px;height:30px;top:15%;right:30%;animation-delay:1s;animation-duration:15s;}
+      .bubble-small:nth-child(7){width:40px;height:40px;bottom:40%;left:35%;animation-delay:3s;animation-duration:17s;}
+      .bubble-small:nth-child(8){width:25px;height:25px;top:65%;right:40%;animation-delay:5s;animation-duration:14s;}
+      .particle { position: absolute; border-radius: 50%; background: var(--primary-light); opacity: 0.2; animation: particleFloat 20s infinite linear; }
+      .particle:nth-child(9){width:10px;height:10px;top:25%;left:20%;animation-delay:0s;animation-duration:25s;}
+      .particle:nth-child(10){width:15px;height:15px;bottom:15%;right:25%;animation-delay:7s;animation-duration:22s;}
+      .wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 15%; background: var(--water-dark); opacity: 0.1; border-radius: 50%; animation: waveAnimation 15s infinite linear; transform-origin: center bottom; }
+      .wave:nth-child(11){animation-delay:0s;animation-duration:12s;opacity:0.15;}
+      .wave:nth-child(12){animation-delay:3s;animation-duration:10s;opacity:0.1;}
+      @keyframes float { 0%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-20px) rotate(10deg);} 100%{transform:translateY(0) rotate(0deg);} }
+      @keyframes floatSmall { 0%{transform:translateY(0) rotate(0deg) scale(1);} 50%{transform:translateY(-15px) rotate(5deg) scale(1.1);} 100%{transform:translateY(0) rotate(0deg) scale(1);} }
+      @keyframes particleFloat { 0%{transform:translateY(0) translateX(0) rotate(0deg);} 25%{transform:translateY(-30px) translateX(20px) rotate(90deg);} 50%{transform:translateY(-50px) translateX(-20px) rotate(180deg);} 75%{transform:translateY(-30px) translateX(10px) rotate(270deg);} 100%{transform:translateY(0) translateX(0) rotate(360deg);} }
+      @keyframes waveAnimation { 0%{transform:translateX(0) rotate(0deg);} 50%{transform:translateX(-25%) rotate(2deg);} 100%{transform:translateX(-50%) rotate(0deg);} }
+      @keyframes fadeInUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+      @keyframes slideInUp { from{opacity:0;transform:translateY(50px);} to{opacity:1;transform:translateY(0);} }
+      @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+      @keyframes chartGrow { from{opacity:0;transform:scale(0.8);} to{opacity:1;transform:scale(1);} }
+      @keyframes pulse { 0%{transform:scale(1);box-shadow:var(--shadow-light);} 50%{transform:scale(1.05);box-shadow:0 0 20px rgba(27,154,170,0.3);} 100%{transform:scale(1);box-shadow:var(--shadow-light);} }
+      .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 1001; }
+      .progress-bar { height: 100%; background: var(--gradient-primary); width: 0%; transition: width 0.4s ease; }
+      .container { max-width: 1200px; margin: 20px auto; background: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow); overflow: hidden; width: 100%; position: relative; flex-shrink: 0; }
+      .header { background: var(--header-bg); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-light); width: 100%; }
+      .header-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
+      .logo { display: flex; align-items: center; gap: 12px; font-size: 1.6rem; font-weight: 700; color: var(--primary-color); text-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+      .logo i { font-size: 2rem; color: var(--primary-color); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); transition: var(--transition); }
+      .logo:hover i { transform: rotate(-15deg); }
+      .header-controls { display: flex; align-items: center; gap: 15px; }
+      .home-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border-color); background: var(--gradient-glass); backdrop-filter: blur(10px); color: var(--primary-color); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; box-shadow: var(--shadow-light); transition: var(--transition); text-decoration: none; }
+      .home-circle-btn:hover { background: var(--gradient-primary); color: #fff; border-color: var(--primary-color); transform: translateY(-2px) scale(1.05); box-shadow: var(--shadow); }
+      .mobile-back-btn { display: none; position: fixed; bottom: 24px; left: 24px; width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--border-color); background: var(--gradient-primary); color: #fff; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow); z-index: 900; transition: var(--transition); }
+      .mobile-back-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-light); }
+      .main-content { flex: 1; padding: 20px 0; }
+      .page { display: none; }
+      .page.active { display: block; opacity: 1; transform: translateY(0); animation: fadeInUp 0.6s ease; }
+      .form-container { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow-light); margin: 0 20px 30px; border: 1px solid var(--border-color); position: relative; }
+      .form-container h2 { color: var(--primary-color); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+      .form-container p { color: var(--text-muted); margin-bottom: 20px; }
+      .form-group { margin-bottom: 20px; position: relative; }
+      .form-group label { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: bold; color: var(--text-color); }
+      .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); font-size: 1rem; transition: var(--transition); background-color: var(--water-light); color: var(--text-color); font-family: var(--font-family); }
+      .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(0,105,148,0.3); }
+      .form-group textarea { min-height: 100px; resize: vertical; direction: ltr; text-align: right; font-family: var(--font-family), monospace; }
+      .form-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+      .hint-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; }
+      .btn { padding: 12px 24px; border: none; border-radius: var(--border-radius-sm); font-family: var(--font-family); font-weight: 500; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); }
+      .btn-primary { background: var(--gradient-primary); color: #fff; box-shadow: var(--shadow-light); }
+      .btn-secondary { background: linear-gradient(90deg,#6c757d 0%,#495057 100%); color: #fff; }
+      .btn-success { background: linear-gradient(90deg, var(--success-color) 0%, #27ae60 100%); color: #fff; }
+      .btn-danger { background: linear-gradient(90deg, var(--danger-color) 0%, #c0392b 100%); color: #fff; }
+      .btn-sm { padding: 8px 14px; font-size: 0.9rem; }
+      .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+      .btn:active { transform: translateY(-1px); }
+      .form-actions { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 25px; justify-content: center; }
+      .empty-state { text-align: center; padding: 60px 30px; }
+      .empty-state i { font-size: 4rem; color: var(--primary-light); margin-bottom: 20px; }
+      .empty-state h2 { color: var(--primary-color); margin-bottom: 10px; }
+      .empty-state p { color: var(--text-muted); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+      .result-container { background: var(--card-bg); border-radius: var(--border-radius); padding: 30px; margin: 0 20px 30px; border: 1px solid var(--border-color); box-shadow: var(--shadow-light); }
+      .result-header { text-align: center; margin-bottom: 30px; }
+      .result-score { font-size: 3rem; font-weight: bold; color: var(--primary-color); margin: 15px 0; }
+      .result-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+      .result-detail-card { background: rgba(0,105,148,0.05); border-radius: var(--border-radius); padding: 20px; text-align: center; }
+      .result-detail-card h4 { color: var(--primary-color); margin-bottom: 10px; font-size: 0.95rem; }
+      .result-detail-card p { font-size: 1.5rem; font-weight: bold; color: var(--text-color); }
+      .input-group { margin: 0 20px 30px; position: relative; }
+      .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color); }
+      .input-group textarea { width: 100%; padding: 15px; border: 2px solid var(--border-color); border-radius: var(--border-radius); font-family: var(--font-family), monospace; resize: vertical; min-height: 100px; background: var(--card-bg); color: var(--text-color); direction: ltr; text-align: right; }
+      .copy-icon-btn { position: absolute; left: 15px; top: 40px; background: var(--primary-light); color: #fff; border: none; border-radius: var(--border-radius-sm); padding: 8px 12px; cursor: pointer; transition: var(--transition); }
+      .copy-icon-btn:hover { background: var(--primary-color); }
+      .subjects-table-wrap { overflow-x: auto; margin-bottom: 15px; }
+      .subjects-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+      .subjects-table th { background: var(--gradient-primary); color: #fff; padding: 10px; font-size: 0.9rem; text-align: center; }
+      .subjects-table td { padding: 8px; border-bottom: 1px solid var(--border-color); }
+      .subjects-table input, .subjects-table select { width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background: var(--water-light); color: var(--text-color); font-family: var(--font-family); }
+      .subjects-table .remove-row-btn { background: var(--danger-color); color: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
+      .engine-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--gradient-primary); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-bottom: 15px; }
+      .report-container { background: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow); max-width: 1200px; margin: 0 20px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); overflow: hidden; }
+      .report-header { background: var(--gradient-primary); padding: 30px; color: #fff; }
+      .report-header-content h2 { margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-size: 1.8rem; }
+      .student-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+      .info-item { display: flex; flex-direction: column; }
+      .info-item .label { font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; }
+      .info-item .value { font-size: 1.05rem; font-weight: bold; }
+      .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; padding: 30px; }
+      .stat-card { padding: 22px; border-radius: var(--border-radius); text-align: center; box-shadow: var(--shadow-light); transition: var(--transition); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; color: #fff; }
+      .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+      .stat-card.correct { background: linear-gradient(135deg, var(--success-color), #27ae60); }
+      .stat-card.wrong { background: linear-gradient(135deg, var(--danger-color), #c62828); }
+      .stat-card.empty { background: linear-gradient(135deg, var(--warning-color), #ef6c00); }
+      .stat-card.score { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); }
+      .stat-card.potential { background: linear-gradient(135deg, #9c27b0, #6a1b9a); }
+      .stat-icon { font-size: 1.8rem; margin-bottom: 12px; }
+      .stat-card .number { font-size: 2.2rem; font-weight: bold; display: block; margin-bottom: 5px; }
+      .stat-card .label { font-size: 1rem; }
+      .report-section { padding: 0 30px 30px; }
+      .report-section h3 { color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 1.35rem; }
+      .subject-type-section { margin-bottom: 30px; }
+      .subject-type-header { background: var(--gradient-primary); color: #fff; padding: 15px 20px; border-radius: var(--border-radius) var(--border-radius) 0 0; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; }
+      .subject-type-content { background: var(--card-bg); padding: 20px; border-radius: 0 0 var(--border-radius) var(--border-radius); box-shadow: var(--shadow-light); }
+      .comparison-table { width: 100%; border-collapse: collapse; box-shadow: var(--shadow-light); border-radius: var(--border-radius); overflow: hidden; }
+      .comparison-table th { background: var(--gradient-primary); color: #fff; padding: 12px; text-align: center; font-weight: 500; }
+      .comparison-table td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border-color); }
+      .comparison-table tr:nth-child(even) { background-color: rgba(27,154,170,0.1); }
+      .comparison-table tr:hover { background-color: rgba(27,154,170,0.2); }
+      .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 10px; direction: ltr; }
+      .chart-container { background: var(--gradient-glass); padding: 22px; border-radius: var(--border-radius); box-shadow: var(--shadow-light); border: 1px solid var(--border-color); animation: chartGrow 1.2s ease-out; }
+      .chart-container:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+      .chart-title { text-align: center; margin-bottom: 15px; color: var(--primary-color); font-size: 1.1rem; }
+      .questions-analysis { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+      .question-filter { background: var(--gradient-glass); padding: 18px; border-radius: var(--border-radius); box-shadow: var(--shadow-light); border: 1px solid var(--border-color); position: sticky; top: 100px; max-height: 420px; overflow-y: auto; z-index: 10; }
+      .filter-options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+      .filter-btn { padding: 8px 14px; border: 1px solid var(--border-color); background: var(--water-light); border-radius: var(--border-radius-sm); cursor: pointer; transition: var(--transition); color: var(--text-color); }
+      .filter-btn.active, .filter-btn:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+      .questions-visualization { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 12px; direction: ltr; }
+      .question-box { padding: 10px; border-radius: var(--border-radius-sm); text-align: center; box-shadow: var(--shadow-light); position: relative; display: flex; flex-direction: column; gap: 4px; transition: var(--transition); cursor: pointer; }
+      .question-box:hover { transform: translateY(-3px) scale(1.05); box-shadow: var(--shadow); z-index: 10; }
+      .question-box.correct { background: rgba(76,175,80,0.2); border: 1px solid var(--success-color); }
+      .question-box.wrong { background: rgba(244,67,54,0.2); border: 1px solid var(--danger-color); }
+      .question-box.empty { background: rgba(255,152,0,0.2); border: 1px solid var(--warning-color); }
+      .question-box.selected { outline: 2px solid var(--primary-color); }
+      .question-number { font-weight: bold; color: var(--text-color); font-size: 0.85rem; }
+      .question-answer { font-size: 1.1rem; font-weight: bold; }
+      .question-key { font-size: 0.9rem; color: var(--text-muted); opacity: 0.85; }
+      .status-icon { position: absolute; top: 4px; left: 4px; font-size: 0.8rem; }
+      .question-details { background: var(--gradient-glass); padding: 18px; border-radius: var(--border-radius); box-shadow: var(--shadow-light); border: 1px solid var(--border-color); }
+      .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+      .detail-content { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .detail-item { display: flex; flex-direction: column; gap: 5px; }
+      .detail-label { font-size: 0.85rem; color: var(--text-muted); }
+      .detail-value { font-size: 1.05rem; font-weight: bold; }
+      .detail-value.correct { color: var(--success-color); }
+      .detail-value.wrong { color: var(--danger-color); }
+      .detail-value.empty { color: var(--warning-color); }
+      .notification { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); z-index: 10000; transform: translateX(100%); transition: transform 0.3s ease, opacity 0.3s ease; max-width: 350px; display: flex; align-items: center; gap: 10px; opacity: 0; color: #fff; }
+      .notification.show { transform: translateX(0); opacity: 1; }
+      .notification.success { background: var(--success-color); }
+      .notification.error { background: var(--danger-color); }
+      .notification.info { background: var(--primary-color); }
+      .notification.warning { background: var(--warning-color); }
+      .footer { text-align: center; padding: 20px; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 10px; font-size: 0.85rem; }
+      @media (max-width: 1024px) {
+.questions-analysis { grid-template-columns: 1fr; }
+.question-filter { position: static; max-height: none; }
+.charts-grid { grid-template-columns: 1fr; }
+}
+      @media (max-width: 768px) {
+.header-content { padding: 10px 15px; }
+.logo span { font-size: 1.1rem; }
+.form-container, .result-container, .input-group { margin: 0 12px 20px; padding: 20px; }
+.form-row { grid-template-columns: 1fr; }
+.form-actions { flex-direction: column; }
+.btn { width: 100%; }
+.summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
+.stat-card { padding: 14px; }
+.report-container { margin: 0 12px; }
+}
+    
+      /* ===== اصلاح اسکرول کارنامه + کادر تحلیل سوال به سوال ===== */
+      html { height: auto !important; min-height: 100%; overflow-y: auto; }
+      body { height: auto !important; min-height: 100vh; overflow: visible; overflow-x: clip; }
+      .container, .report-container, main, section.page { flex-shrink: 0; }
+      .questions-analysis {
+        padding: 18px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-lg, 20px);
+        background: var(--gradient-glass);
+        box-shadow: var(--shadow-light);
+      }
+      .questions-visualization {
+        max-height: 460px;
+        overflow-y: auto;
+        align-content: start;
+        padding: 12px;
+        border: 1px dashed var(--border-color);
+        border-radius: var(--border-radius, 12px);
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-color) transparent;
+      }
+    
+      /* ===== روند آزمون (کارنامه) ===== */
+      #ayTrendSection .ay-trend-frame {
+        padding: 18px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-lg, 20px);
+        background: var(--gradient-glass);
+        box-shadow: var(--shadow-light);
+      }
+      #ayTrendSection .ay-trend-controls {
+        display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+        justify-content: flex-start; margin: 0 0 14px; padding: 0;
+      }
+      #ayTrendSection .ay-trend-controls label { color: var(--text-color); font-weight: 700; }
+      #ayTrendSection .ay-trend-controls select {
+        padding: 8px 12px; border-radius: 10px; font-family: inherit; font-size: 0.95rem;
+        border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color);
+        min-width: 180px; max-width: 100%;
+      }
+      #ayTrendSection .ay-trend-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+      #ayTrendSection .ay-chip {
+        padding: 8px 14px; border-radius: 999px; font-size: 0.9rem; font-weight: 700;
+        border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color);
+      }
+      #ayTrendSection .ay-chip.up { color: var(--success-color); border-color: var(--success-color); }
+      #ayTrendSection .ay-chip.down { color: var(--danger-color); border-color: var(--danger-color); }
+      #ayTrendSection .ay-trend-canvas-wrap { position: relative; width: 100%; height: 340px; }
+      #ayTrendSection #ayTrendChart { display: block; }
+      #ayTrendSection .ay-trend-note { margin-top: 12px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.9; }
+    </style>
+  
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+  <body>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+    <div class="background-effects">
+      <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+      <div class="bubble-small"></div><div class="bubble-small"></div><div class="bubble-small"></div>
+      <div class="particle"></div><div class="particle"></div>
+      <div class="wave"></div><div class="wave"></div>
+    </div>
+
+    <div class="container">
+      <header class="header">
+        <div class="header-content">
+          <div class="logo" onclick="window.location.href='../index.html'">
+            <i class="fas fa-chart-line"></i>
+            <span>موتور کارنامه هوشمند</span>
+          </div>
+          <div class="header-controls">
+            <a href="../index.html" class="home-circle-btn" title="بازگشت به صفحه اصلی">
+              <i class="fas fa-home"></i>
+            </a>
+            <div class="theme-picker" id="themePicker"></div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <!-- ===== حالت خالی: هیچ داده‌ای پیدا نشد ===== -->
+        <div id="emptyState" class="page">
+          <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h2>هنوز کارنامه‌ای ساخته نشده</h2>
+            <p>می‌تونی یک آزمون رو در برگه‌یار یا دیجیتال‌یار کامل کنی تا کارنامه خودکار ساخته بشه، یا همین‌جا با موتور ساخت کارنامه، دستی یک کارنامه بسازی.</p>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="scrollToBuilder()"><i class="fas fa-magic"></i> ساخت دستی کارنامه</button>
+              <a class="btn btn-secondary" href="../Digital_yar/DigitalYar.html"><i class="fas fa-laptop"></i> دیجیتال‌یار</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== خلاصه سریع (از دیجیتال‌یار) ===== -->
+        <div id="summarySection" class="page">
+          <div class="result-container">
+            <div class="result-header">
+              <h3 id="summaryExamName">آزمون دستی</h3>
+              <div class="result-score" id="answered-count">0</div>
+              <p>سوال پاسخ داده شده</p>
+            </div>
+            <div class="result-details">
+              <div class="result-detail-card"><h4>کل سوالات</h4><p id="total-questions">0</p></div>
+              <div class="result-detail-card"><h4>سوالات بی‌پاسخ</h4><p id="unanswered-count">0</p></div>
+              <div class="result-detail-card"><h4>زمان صرف‌شده</h4><p id="time-spent">00:00:00</p></div>
+              <div class="result-detail-card"><h4>درصد پاسخ‌گویی</h4><p id="answer-percentage">0%</p></div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="student-answers">پاسخ‌های شما:</label>
+            <button class="copy-icon-btn" onclick="copyStudentAnswers()" title="کپی"><i class="fas fa-copy"></i></button>
+            <textarea id="student-answers" placeholder="پاسخی برای نمایش موجود نیست" readonly></textarea>
+          </div>
+
+          <div class="form-actions" style="margin: 0 20px 30px;">
+            <button class="btn btn-primary" onclick="copyStudentAnswers()"><i class="fas fa-copy"></i> کپی پاسخ‌ها</button>
+            <button class="btn btn-success" onclick="scrollToBuilder()"><i class="fas fa-chart-line"></i> ساخت کارنامه تحلیلی کامل</button>
+            <button class="btn btn-secondary" onclick="window.location.href='../Digital_yar/DigitalYar.html'"><i class="fas fa-arrow-right"></i> بازگشت به دیجیتال‌یار</button>
+          </div>
+        </div>
+
+        <!-- ===== موتور ساخت کارنامه ===== -->
+        <div id="builderSection" class="page">
+          <div class="form-container">
+            <span class="engine-badge"><i class="fas fa-cogs"></i> موتور ساخت کارنامه</span>
+            <h2><i class="fas fa-magic"></i> ساخت / ویرایش کارنامه تحلیلی</h2>
+            <p>با وارد کردن پاسخنامه (کلید صحیح) و تعریف دروس، یک کارنامه تحلیلی کامل با نمودار و تحلیل سوال‌به‌سوال بساز. این بخش از هر داده‌ای (چه از برگه‌یار، چه از دیجیتال‌یار، چه کاملاً دستی) استفاده می‌کند.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label><i class="fas fa-signature"></i> نام آزمون</label>
+                <input type="text" id="builderExamName" placeholder="مثلاً: آزمون جامع شماره ۱" />
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-list-ol"></i> تعداد کل سوالات</label>
+                <input type="number" id="builderTotal" min="1" placeholder="مثلاً: 100" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-user-edit"></i> پاسخ‌های دانش‌آموز</label>
+              <textarea id="builderStudentAnswers" placeholder="مثلاً: 1,2,0,4,3,... (0 یعنی نزده)"></textarea>
+              <p class="hint-text">اعداد را با کاما، فاصله یا خط جدید از هم جدا کن. عدد ۰ به معنای «نزده» است.</p>
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-key"></i> پاسخنامه (کلید صحیح)</label>
+              <textarea id="builderCorrectAnswers" placeholder="مثلاً: 1,3,2,4,1,..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-book"></i> تعریف دروس</label>
+              <div class="subjects-table-wrap">
+                <table class="subjects-table">
+                  <thead>
+                    <tr>
+                      <th>نام درس</th>
+                      <th>نوع</th>
+                      <th>از سوال</th>
+                      <th>تا سوال</th>
+                      <th>مباحث (اختیاری)</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="subjectsTableBody"></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="addSubjectRow()"><i class="fas fa-plus"></i> افزودن درس</button>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="buildAndRenderReport()"><i class="fas fa-chart-line"></i> ساخت کارنامه</button>
+              <button class="btn btn-secondary" onclick="resetBuilder()"><i class="fas fa-eraser"></i> پاک‌سازی فرم</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== کارنامه تحلیلی کامل ===== -->
+        <section id="report" class="page">
+          <div class="report-container">
+            <div class="report-header">
+              <div class="report-header-content">
+                <h2><i class="fas fa-chart-line"></i> کارنامه تحلیلی</h2>
+                <div class="student-info">
+                  <div class="info-item"><span class="label">نام دانش‌آموز</span><span class="value" id="reportStudentName">نام دانش‌آموز</span></div>
+                  <div class="info-item"><span class="label">نام آزمون</span><span class="value" id="reportExamName">آزمون هوشمند</span></div>
+                  <div class="info-item"><span class="label">تاریخ صدور کارنامه</span><span class="value" id="reportIssueDate">-</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="summary-grid">
+              <div class="stat-card correct"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><span class="number" id="statCorrect">0</span><span class="label">پاسخ صحیح</span></div>
+              <div class="stat-card wrong"><div class="stat-icon"><i class="fas fa-times-circle"></i></div><span class="number" id="statWrong">0</span><span class="label">پاسخ غلط</span></div>
+              <div class="stat-card empty"><div class="stat-icon"><i class="far fa-circle"></i></div><span class="number" id="statEmpty">0</span><span class="label">نزده</span></div>
+              <div class="stat-card score"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><span class="number" id="statScore">0%</span><span class="label">درصد اصلی</span></div>
+              <div class="stat-card potential"><div class="stat-icon"><i class="fas fa-rocket"></i></div><span class="number" id="statPotential">0%</span><span class="label">درصد بالقوه</span></div>
+            </div>
+
+            <div class="report-section">
+              <h3><i class="fas fa-book-open"></i> تحلیل دروس</h3>
+              <div id="subjectsContainer"></div>
+            </div>
+
+            <div class="report-section" id="ayTrendSection">
+              <h3><i class="fas fa-chart-line"></i> روند آزمون</h3>
+              <div class="ay-trend-frame">
+                <div class="ay-trend-controls form-actions">
+                  <label for="ayTrendSeries">نمایش روند:</label>
+                  <select id="ayTrendSeries"></select>
+                </div>
+                <div class="ay-trend-chips" id="ayTrendChips"></div>
+                <div class="ay-trend-canvas-wrap"><canvas id="ayTrendChart" height="260"></canvas></div>
+                <p class="ay-trend-note" id="ayTrendNote"></p>
+              </div>
+            </div>
+
+            <div class="report-section charts-grid">
+              <div class="chart-container"><h3 class="chart-title">نمودار درصد دروس</h3><canvas id="barChart" height="250"></canvas></div>
+              <div class="chart-container"><h3 class="chart-title">توزیع پاسخ‌ها</h3><canvas id="pieChart" height="250"></canvas></div>
+            </div>
+
+            <div class="report-section">
+              <h3><i class="fas fa-question-circle"></i> تحلیل سوال به سوال</h3>
+              <div class="questions-analysis">
+                <div class="question-filter">
+                  <h4>فیلتر سوالات:</h4>
+                  <div class="filter-options">
+                    <button class="filter-btn active" data-filter="all">همه</button>
+                    <button class="filter-btn" data-filter="correct">صحیح</button>
+                    <button class="filter-btn" data-filter="wrong">غلط</button>
+                    <button class="filter-btn" data-filter="empty">نزده</button>
+                  </div>
+                  <p>برای مشاهده جزئیات هر سوال، روی آن کلیک کنید</p>
+                  <div class="question-details" id="questionDetail">
+                    <div class="detail-header"><h4>جزئیات سوال</h4><span>شماره سوال: <span id="detailNumber">-</span></span></div>
+                    <div class="detail-content">
+                      <div class="detail-item"><span class="detail-label">وضعیت:</span><span class="detail-value" id="detailStatus">-</span></div>
+                      <div class="detail-item"><span class="detail-label">پاسخ شما:</span><span class="detail-value" id="detailUserAnswer">-</span></div>
+                      <div class="detail-item"><span class="detail-label">پاسخ صحیح:</span><span class="detail-value" id="detailCorrectAnswer">-</span></div>
+                      <div class="detail-item"><span class="detail-label">درس:</span><span class="detail-value" id="detailSubject">-</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="questions-visualization" id="questionsGrid"></div>
+              </div>
+            </div>
+
+            <div class="form-actions" style="padding-bottom: 30px;">
+              <button class="btn btn-primary" onclick="saveReportHTML()"><i class="fas fa-file-code"></i> ذخیره HTML</button>
+              <button class="btn btn-secondary" onclick="window.location.href='../index.html'"><i class="fas fa-arrow-right"></i> بازگشت به صفحه اصلی</button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div class="footer">
+        <p>موتور ساخت کارنامه | ساخته شده با ❤️ | پشتیبانی: support.azmoonyar@gmail.com | نسخه ۵.۰.۰</p>
+      </div>
+    </div>
+
+    <script src="../exam-folder-store.js"></script>
+    <script>
+      /* ==========================================================================
+         موتور کارنامه (Karnameh Engine)
+         این فایل به‌صورت خودکار خروجی دیجیتال‌یار را می‌خواند و کارنامه می‌سازد:
+         ۱) اگر داده‌ی تحلیلی کامل و آماده (bargehYarExamData) موجود باشد => نمایش مستقیم کارنامه.
+         ۲) اگر خروجی مستقیم دیجیتال‌یار (dy_examSession + studentAnswers) موجود باشد =>
+            پاسخ صحیح و اطلاعات دروس از همان فایل کلیدی که هنگام ساخت آزمون آپلود شده
+            استخراج می‌شود و کارنامه به‌طور کامل و خودکار ساخته می‌شود (بدون ورود دستی).
+         ۳) اگر فقط خلاصه‌ی ساده (بدون کلید) موجود باشد => نمایش خلاصه + فرم دستی برای
+            وارد کردن کلید و ساخت کارنامه تحلیلی.
+         ۴) اگر هیچ داده‌ای نبود => فرم موتور ساخت کارنامه به‌صورت کاملاً دستی.
+         ========================================================================== */
+
+      let examData = { userAnswers: [], correctAnswers: [], metadata: [], totalQuestions: 0, subjectMap: {}, examName: "" };
+      let subjectRowCounter = 0;
+
+      function showPage(id) {
+        ["emptyState", "summarySection", "builderSection", "report"].forEach((pid) => {
+          const el = document.getElementById(pid);
+          if (!el) return;
+          if (pid === id) {
+            el.classList.add("active");
+          } else {
+            el.classList.remove("active");
+          }
+        });
+      }
+
+      function scrollToBuilder() {
+        showBuilderVisible(true);
+        document.getElementById("builderSection").classList.add("active");
+        document.getElementById("builderSection").scrollIntoView({ behavior: "smooth" });
+      }
+
+      function showBuilderVisible(visible) {
+        // در حالت خلاصه، هم summary و هم builder را همزمان نشان می‌دهیم
+        document.getElementById("builderSection").style.display = visible ? "block" : "none";
+      }
+
+      /* ===================== تشخیص و بارگذاری داده ===================== */
+      let loadedExamRecord = null;
+
+      function detectAndLoad() {
+        // اولویت ۰: آزمون ذخیره‌شده در «پوشه آزمون‌ها» (از طریق آدرس ?examId=...)
+        const params = new URLSearchParams(window.location.search);
+        const examId = params.get("examId");
+        if (examId && window.ExamFolderStore) {
+          ExamFolderStore.getExam(examId).then((exam) => {
+            if (!exam || exam.status !== "graded") {
+              showNotification(
+                "این آزمون هنوز کلید ندارد یا پیدا نشد. لطفاً از «پوشه آزمون‌ها» ابتدا کلید را اضافه کنید.",
+                "warning"
+              );
+              setTimeout(() => {
+                window.location.href = "../Exam_Folders.html";
+              }, 2200);
+              return;
+            }
+            loadedExamRecord = exam;
+            examData = normalizeExamData({
+              userAnswers: exam.userAnswers,
+              correctAnswers: exam.correctAnswers,
+              metadata: exam.metadata,
+              totalQuestions: exam.totalQuestions,
+              examName: exam.name,
+            });
+            showBuilderVisible(false);
+            showPage("report");
+            generateReport();
+          });
+          return;
+        }
+
+        // اولویت ۱: داده‌ی تحلیلی کامل و آماده (مثلاً کارنامه‌ای که قبلاً ساخته شده)
+        const fullRaw = localStorage.getItem("bargehYarExamData");
+        if (fullRaw) {
+          try {
+            const parsed = JSON.parse(fullRaw);
+            if (parsed && parsed.totalQuestions > 0 && Array.isArray(parsed.correctAnswers) && parsed.correctAnswers.length > 0) {
+              examData = normalizeExamData(parsed);
+              showBuilderVisible(false);
+              showPage("report");
+              generateReport();
+              return;
+            }
+          } catch (e) {
+            /* داده خراب بود، ادامه به حالت بعدی */
+          }
+        }
+
+        // اولویت ۲: خروجی مستقیم دیجیتال‌یار (session ساخت آزمون + پاسخ‌های دانش‌آموز)
+        // چون فایل کلید در همان مرحله‌ی ساخت آزمون آپلود شده، پاسخ صحیح و اطلاعات دروس
+        // از قبل داخل session موجوده و نیازی به وارد کردن دستی کلید نیست.
+        const dySessionRaw = localStorage.getItem("dy_examSession");
+        const studentAnswersRaw = localStorage.getItem("studentAnswers");
+        if (dySessionRaw && studentAnswersRaw) {
+          try {
+            const session = JSON.parse(dySessionRaw);
+            const built = buildExamDataFromDigitalYar(session, studentAnswersRaw);
+            if (built && built.totalQuestions > 0 && built.correctAnswers.length > 0) {
+              examData = normalizeExamData(built);
+              // ذخیره به شکل استاندارد برای دفعات بعدی و برای ویرایش دستی احتمالی
+              localStorage.setItem("bargehYarExamData", JSON.stringify(examData));
+              showBuilderVisible(false);
+              showPage("report");
+              generateReport();
+              return;
+            }
+          } catch (e) {
+            /* داده session خراب یا ناقص بود، ادامه به حالت بعدی */
+          }
+        }
+
+        // اولویت ۳: حالت قدیمی/ساده (فقط کد پاسخ‌های دانش‌آموز، بدون کلید) => فرم دستی
+        const totalQuestions = parseInt(localStorage.getItem("examTotalQuestions") || "0");
+        const studentAnswers = localStorage.getItem("studentAnswers") || "";
+        const answeredCount = parseInt(localStorage.getItem("examAnsweredCount") || "0");
+        const unansweredCount = parseInt(localStorage.getItem("examUnansweredCount") || (totalQuestions - answeredCount).toString());
+        const timeSpent = localStorage.getItem("examTimeSpent") || "00:00:00";
+        const answerPercentage = localStorage.getItem("examAnswerPercentage") || "0";
+        const examName = localStorage.getItem("examName") || "آزمون دستی";
+
+        if (totalQuestions > 0 || studentAnswers) {
+          document.getElementById("summaryExamName").textContent = examName;
+          document.getElementById("total-questions").textContent = totalQuestions;
+          document.getElementById("answered-count").textContent = answeredCount;
+          document.getElementById("unanswered-count").textContent = unansweredCount;
+          document.getElementById("time-spent").textContent = timeSpent;
+          document.getElementById("answer-percentage").textContent = `${answerPercentage}%`;
+          document.getElementById("student-answers").value = studentAnswers;
+
+          prefillBuilder({
+            examName: examName,
+            total: totalQuestions || parseAnswers(studentAnswers).length,
+            studentAnswers: studentAnswers,
+            correctAnswers: "",
+            metadata: [],
+          });
+
+          showBuilderVisible(true);
+          showPage("summarySection");
+          return;
+        }
+
+        prefillBuilder({ examName: "", total: "", studentAnswers: "", correctAnswers: "", metadata: [] });
+        showBuilderVisible(true);
+        showPage("emptyState");
+      }
+
+      // ===================== پل تبدیل خروجی دیجیتال‌یار به فرمت کارنامه =====================
+      // session از localStorage["dy_examSession"] می‌آید (همان چیزی که DigitalYar.html ساخته)
+      // studentAnswersStr رشته‌ی پاسخ دانش‌آموز است (هر رقم برای یک سوال؛ ۰ یعنی بی‌پاسخ)
+      function buildExamDataFromDigitalYar(session, studentAnswersStr) {
+        if (!session || !session.answerKey) return null;
+
+        const answerKey = session.answerKey;
+        const totalQuestions =
+          (session.questions && session.questions.length) || answerKey.totalQuestions || 0;
+
+        if (!totalQuestions) return null;
+
+        // پاسخ‌های صحیح (از فایل کلید آپلودشده هنگام ساخت آزمون)
+        const correctAnswers = [];
+        for (let i = 0; i < totalQuestions; i++) {
+          const rawChar =
+            Array.isArray(answerKey.answers) && answerKey.answers[i] !== undefined
+              ? answerKey.answers[i]
+              : "0";
+          const num = parseInt(rawChar);
+          correctAnswers.push(isNaN(num) ? 0 : num);
+        }
+
+        // پاسخ‌های دانش‌آموز
+        const cleanAnswers = String(studentAnswersStr || "");
+        const userAnswers = [];
+        for (let i = 0; i < totalQuestions; i++) {
+          const num = parseInt(cleanAnswers[i]);
+          userAnswers.push(isNaN(num) ? 0 : num);
+        }
+
+        // دروس: فرمت دیجیتال‌یار {subject, type, start, end, chapters(رشته)} را
+        // به فرمت کارنامه {name, type, start(عدد), end(عدد), chapters(آرایه)} تبدیل می‌کنیم
+        const rawSubjects = Array.isArray(answerKey.subjects) ? answerKey.subjects : [];
+        let metadata = rawSubjects
+          .map((s) => {
+            const chapters = s.chapters
+              ? String(s.chapters)
+                  .split(/[،,]+/)
+                  .map((c) => c.trim())
+                  .filter(Boolean)
+              : [];
+            return {
+              name: s.subject || s.name || "نامشخص",
+              type: s.type === "تخصصی" ? "تخصصی" : "عمومی",
+              start: parseInt(s.start) || 1,
+              end: parseInt(s.end) || totalQuestions,
+              chapters: chapters,
+            };
+          })
+          .filter((s) => s.name && s.end >= s.start);
+
+        if (metadata.length === 0) {
+          metadata = [{ name: "کل سوالات", type: "عمومی", start: 1, end: totalQuestions, chapters: [] }];
+        }
+
+        const subjectMap = {};
+        metadata.forEach((s) => {
+          for (let i = s.start; i <= s.end && i <= totalQuestions; i++) {
+            subjectMap[i] = s.name;
+          }
+        });
+
+        return {
+          userAnswers: userAnswers,
+          correctAnswers: correctAnswers,
+          metadata: metadata,
+          totalQuestions: totalQuestions,
+          subjectMap: subjectMap,
+          examName: session.examName || "آزمون دیجیتال‌یار",
+        };
+      }
+
+      function normalizeExamData(data) {
+        return {
+          userAnswers: Array.isArray(data.userAnswers) ? data.userAnswers : [],
+          correctAnswers: Array.isArray(data.correctAnswers) ? data.correctAnswers : [],
+          metadata: Array.isArray(data.metadata) ? data.metadata : [],
+          totalQuestions: data.totalQuestions || 0,
+          subjectMap: data.subjectMap || {},
+          examName: data.examName || "",
+        };
+      }
+
+      /* ===================== موتور ساخت کارنامه (Builder) ===================== */
+      function addSubjectRow(subject) {
+        subjectRowCounter++;
+        const id = "subjRow" + subjectRowCounter;
+        const tbody = document.getElementById("subjectsTableBody");
+        const tr = document.createElement("tr");
+        tr.id = id;
+        const name = subject && subject.name ? subject.name : "";
+        const type = subject && subject.type ? subject.type : "عمومی";
+        const start = subject && subject.start ? subject.start : "";
+        const end = subject && subject.end ? subject.end : "";
+        const chapters = subject && subject.chapters ? subject.chapters.join("، ") : "";
+
+        tr.innerHTML = `
+          <td><input type="text" class="subj-name" value="${escapeHtml(name)}" placeholder="مثلاً: ریاضی" /></td>
+          <td>
+            <select class="subj-type">
+              <option value="عمومی" ${type === "عمومی" ? "selected" : ""}>عمومی</option>
+              <option value="تخصصی" ${type === "تخصصی" ? "selected" : ""}>تخصصی</option>
+            </select>
+          </td>
+          <td><input type="number" class="subj-start" min="1" value="${start}" /></td>
+          <td><input type="number" class="subj-end" min="1" value="${end}" /></td>
+          <td><input type="text" class="subj-chapters" value="${escapeHtml(chapters)}" placeholder="با ، جدا کن" /></td>
+          <td><button type="button" class="remove-row-btn" onclick="document.getElementById('${id}').remove()" title="حذف"><i class="fas fa-times"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      }
+
+      function parseAnswers(text) {
+        if (!text) return [];
+        return text
+          .split(/[^0-9]+/)
+          .filter((t) => t.length > 0)
+          .map(Number);
+      }
+
+      function prefillBuilder(cfg) {
+        document.getElementById("builderExamName").value = cfg.examName || "";
+        document.getElementById("builderTotal").value = cfg.total || "";
+        document.getElementById("builderStudentAnswers").value = cfg.studentAnswers || "";
+        document.getElementById("builderCorrectAnswers").value = cfg.correctAnswers || "";
+
+        document.getElementById("subjectsTableBody").innerHTML = "";
+        if (cfg.metadata && cfg.metadata.length > 0) {
+          cfg.metadata.forEach((s) => addSubjectRow(s));
+        } else {
+          addSubjectRow();
+        }
+      }
+
+      function resetBuilder() {
+        prefillBuilder({ examName: "", total: "", studentAnswers: "", correctAnswers: "", metadata: [] });
+        showNotification("فرم پاک‌سازی شد", "info");
+      }
+
+      function collectSubjectsFromForm() {
+        const rows = document.querySelectorAll("#subjectsTableBody tr");
+        const subjects = [];
+        rows.forEach((row) => {
+          const name = row.querySelector(".subj-name").value.trim();
+          const type = row.querySelector(".subj-type").value;
+          const start = parseInt(row.querySelector(".subj-start").value);
+          const end = parseInt(row.querySelector(".subj-end").value);
+          const chaptersRaw = row.querySelector(".subj-chapters").value.trim();
+          if (!name || !start || !end || end < start) return;
+          const chapters = chaptersRaw ? chaptersRaw.split(/[،,]+/).map((c) => c.trim()).filter(Boolean) : [];
+          subjects.push({ name, type, start, end, chapters });
+        });
+        return subjects;
+      }
+
+      function buildAndRenderReport() {
+        const examName = document.getElementById("builderExamName").value.trim() || "آزمون هوشمند";
+        let totalQuestions = parseInt(document.getElementById("builderTotal").value) || 0;
+        const userAnswers = parseAnswers(document.getElementById("builderStudentAnswers").value);
+        const correctAnswers = parseAnswers(document.getElementById("builderCorrectAnswers").value);
+
+        if (correctAnswers.length === 0) {
+          showNotification("برای ساخت کارنامه تحلیلی، پاسخنامه (کلید صحیح) را وارد کن.", "error");
+          return;
+        }
+
+        let subjects = collectSubjectsFromForm();
+
+        if (!totalQuestions) {
+          totalQuestions = Math.max(userAnswers.length, correctAnswers.length, subjects.reduce((m, s) => Math.max(m, s.end), 0));
+        }
+
+        if (subjects.length === 0) {
+          subjects = [{ name: "کل سوالات", type: "عمومی", start: 1, end: totalQuestions, chapters: [] }];
+        }
+
+        while (userAnswers.length < totalQuestions) userAnswers.push(0);
+        while (correctAnswers.length < totalQuestions) correctAnswers.push(0);
+
+        const subjectMap = {};
+        subjects.forEach((s) => {
+          for (let i = s.start; i <= s.end && i <= totalQuestions; i++) {
+            subjectMap[i] = s.name;
+          }
+        });
+
+        examData = {
+          userAnswers: userAnswers.slice(0, totalQuestions),
+          correctAnswers: correctAnswers.slice(0, totalQuestions),
+          metadata: subjects,
+          totalQuestions: totalQuestions,
+          subjectMap: subjectMap,
+          examName: examName,
+        };
+
+        localStorage.setItem("bargehYarExamData", JSON.stringify(examData));
+
+        showBuilderVisible(false);
+        showPage("report");
+        generateReport();
+        showNotification("کارنامه با موفقیت ساخته شد", "success");
+        document.getElementById("report").scrollIntoView({ behavior: "smooth" });
+      }
+
+      /* ===================== وضعیت / تم / رویدادهای عمومی ===================== */
+
+      function initApp() {
+        const backButton = document.createElement("button");
+        backButton.id = "mobileBackButton";
+        backButton.className = "mobile-back-btn";
+        backButton.innerHTML = '<i class="fas fa-arrow-right"></i>';
+        backButton.onclick = () => window.history.back();
+        document.body.appendChild(backButton);
+        backButton.style.display = "flex";
+
+        setupEventListeners();
+        setupScrollEffects();
+        enhanceAnimations();
+
+        detectAndLoad();
+      }
+
+      function enhanceAnimations() {
+        document.querySelectorAll(".btn").forEach((btn) => {
+          btn.addEventListener("mouseenter", () => (btn.style.animation = "pulse 1s infinite"));
+          btn.addEventListener("mouseleave", () => (btn.style.animation = ""));
+        });
+      }
+
+      function setupEventListeners() {
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            filterQuestions(this.dataset.filter);
+          });
+        });
+      }
+
+      function setupScrollEffects() {
+        window.addEventListener("scroll", updateProgressBar);
+        window.addEventListener("scroll", () => {
+          const scrolled = window.pageYOffset;
+          document.querySelectorAll(".bubble").forEach((bubble, index) => {
+            const speed = 0.5 + index * 0.1;
+            bubble.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.05}deg)`;
+          });
+        });
+      }
+
+      function updateProgressBar() {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        document.getElementById("progressBar").style.width = scrolled + "%";
+      }
+
+      function showNotification(message, type = "info") {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `<i class="fas fa-${type === "error" ? "exclamation-circle" : type === "success" ? "check-circle" : type === "warning" ? "exclamation-triangle" : "info-circle"}"></i><span>${message}</span>`;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.classList.add("show"), 100);
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => notification.remove(), 500);
+        }, 3000);
+      }
+
+      function copyStudentAnswers() {
+        const studentAnswers = document.getElementById("student-answers").value;
+        if (!studentAnswers) {
+          showNotification("هیچ پاسخی برای کپی کردن وجود ندارد.", "error");
+          return;
+        }
+        navigator.clipboard
+          .writeText(studentAnswers)
+          .then(() => showNotification("پاسخ‌های دانش‌آموز کپی شد!", "success"))
+          .catch((err) => showNotification("خطا در کپی پاسخ‌ها: " + err.message, "error"));
+      }
+
+      /* ===================== موتور تولید گزارش تحلیلی ===================== */
+      function generateReport() {
+        const { userAnswers, correctAnswers, totalQuestions, metadata, examName } = examData;
+
+        const userName = localStorage.getItem("studentName") || "نامشخص";
+        document.getElementById("reportStudentName").textContent = userName;
+        document.getElementById("reportExamName").textContent = examName || "آزمون هوشمند";
+
+        const today = new Date();
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        document.getElementById("reportIssueDate").textContent = today.toLocaleDateString("fa-IR", options);
+
+        let correct = 0, wrong = 0, empty = 0;
+        for (let i = 0; i < totalQuestions; i++) {
+          if (userAnswers[i] === 0 || userAnswers[i] === undefined) empty++;
+          else if (userAnswers[i] === correctAnswers[i]) correct++;
+          else wrong++;
+        }
+
+        const mainPercentage = totalQuestions ? (((correct * 3 - wrong) / (totalQuestions * 3)) * 100).toFixed(1) : "0.0";
+        const potentialPercentage = totalQuestions ? (((correct * 3) / (totalQuestions * 3)) * 100).toFixed(1) : "0.0";
+
+        document.getElementById("statCorrect").textContent = correct;
+        document.getElementById("statWrong").textContent = wrong;
+        document.getElementById("statEmpty").textContent = empty;
+        document.getElementById("statScore").textContent = mainPercentage + "%";
+        document.getElementById("statPotential").textContent = potentialPercentage + "%";
+
+        const subjectsContainer = document.getElementById("subjectsContainer");
+        subjectsContainer.innerHTML = "";
+
+        const generalSubjects = metadata.filter((s) => s.type === "عمومی");
+        const specializedSubjects = metadata.filter((s) => s.type === "تخصصی");
+
+        function renderSubjectGroup(title, icon, subjects, withChapters) {
+          if (subjects.length === 0) return;
+          const section = document.createElement("div");
+          section.className = "subject-type-section";
+          const headerCols = withChapters
+            ? "<th>درس</th><th>مباحث</th><th>تعداد سوال</th><th>صحیح</th><th>غلط</th><th>نزده</th><th>درصد اصلی</th><th>درصد بالقوه</th>"
+            : "<th>درس</th><th>تعداد سوال</th><th>صحیح</th><th>غلط</th><th>نزده</th><th>درصد اصلی</th><th>درصد بالقوه</th>";
+          section.innerHTML = `
+            <div class="subject-type-header"><i class="fas fa-${icon}"></i> ${title}</div>
+            <div class="subject-type-content">
+              <table class="comparison-table"><thead><tr>${headerCols}</tr></thead><tbody></tbody></table>
+            </div>`;
+          subjectsContainer.appendChild(section);
+          const tbody = section.querySelector("tbody");
+          subjects.forEach((subject) => {
+            const result = calculateSubjectResult(subject);
+            const mainPercent = result.total ? (((result.correct * 3 - result.wrong) / (result.total * 3)) * 100).toFixed(1) : "0.0";
+            const potentialPercent = result.total ? (((result.correct * 3) / (result.total * 3)) * 100).toFixed(1) : "0.0";
+            const row = document.createElement("tr");
+            row.innerHTML = withChapters
+              ? `<td>${subject.name}</td><td>${subject.chapters && subject.chapters.length ? subject.chapters.join(", ") : "-"}</td><td>${result.total}</td><td>${result.correct}</td><td>${result.wrong}</td><td>${result.empty}</td><td>${mainPercent}%</td><td>${potentialPercent}%</td>`
+              : `<td>${subject.name}</td><td>${result.total}</td><td>${result.correct}</td><td>${result.wrong}</td><td>${result.empty}</td><td>${mainPercent}%</td><td>${potentialPercent}%</td>`;
+            tbody.appendChild(row);
+          });
+        }
+
+        renderSubjectGroup("دروس عمومی", "book", generalSubjects, false);
+        renderSubjectGroup("دروس تخصصی", "calculator", specializedSubjects, true);
+
+        renderCharts(metadata);
+        renderQuestionBoxes();
+      }
+
+      function renderCharts(metadata) {
+        const barCtx = document.getElementById("barChart").getContext("2d");
+        if (window.barChartInstance) window.barChartInstance.destroy();
+
+        const subjectNames = metadata.map((s) => s.name + (s.chapters && s.chapters.length ? " (" + s.chapters.join(",") + ")" : ""));
+        const mainPercentages = metadata.map((s) => {
+          const r = calculateSubjectResult(s);
+          return r.total ? (((r.correct * 3 - r.wrong) / (r.total * 3)) * 100).toFixed(1) : 0;
+        });
+        const potentialPercentages = metadata.map((s) => {
+          const r = calculateSubjectResult(s);
+          return r.total ? (((r.correct * 3) / (r.total * 3)) * 100).toFixed(1) : 0;
+        });
+
+        window.barChartInstance = new Chart(barCtx, {
+          type: "bar",
+          data: {
+            labels: subjectNames,
+            datasets: [
+              { label: "درصد اصلی", data: mainPercentages, backgroundColor: "#006994" },
+              { label: "درصد بالقوه", data: potentialPercentages, backgroundColor: "#8A2BE2" },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: "درصد" } } },
+            animation: { duration: 1500, easing: "easeOutQuart" },
+          },
+        });
+
+        const { userAnswers, correctAnswers, totalQuestions } = examData;
+        let correct = 0, wrong = 0, empty = 0;
+        for (let i = 0; i < totalQuestions; i++) {
+          if (userAnswers[i] === 0 || userAnswers[i] === undefined) empty++;
+          else if (userAnswers[i] === correctAnswers[i]) correct++;
+          else wrong++;
+        }
+
+        const pieCtx = document.getElementById("pieChart").getContext("2d");
+        if (window.pieChartInstance) window.pieChartInstance.destroy();
+        window.pieChartInstance = new Chart(pieCtx, {
+          type: "pie",
+          data: {
+            labels: ["صحیح", "غلط", "نزده"],
+            datasets: [{ data: [correct, wrong, empty], backgroundColor: ["#4CAF50", "#F44336", "#FF9800"] }],
+          },
+          options: { responsive: true, plugins: { legend: { position: "bottom" } }, animation: { animateScale: true, duration: 1500 } },
+        });
+      }
+
+      function calculateSubjectResult(subject) {
+        const { userAnswers, correctAnswers } = examData;
+        let correct = 0, wrong = 0, empty = 0;
+        for (let i = subject.start - 1; i < subject.end; i++) {
+          if (i >= userAnswers.length) break;
+          if (userAnswers[i] === 0 || userAnswers[i] === undefined) empty++;
+          else if (userAnswers[i] === correctAnswers[i]) correct++;
+          else wrong++;
+        }
+        return { correct, wrong, empty, total: correct + wrong + empty };
+      }
+
+      function renderQuestionBoxes() {
+        const { userAnswers, correctAnswers, totalQuestions, subjectMap } = examData;
+        const grid = document.getElementById("questionsGrid");
+        grid.innerHTML = "";
+
+        for (let i = 1; i <= totalQuestions; i++) {
+          const index = i - 1;
+          let status, userAnswer, correctAnswer, icon;
+
+          if (userAnswers[index] === 0 || userAnswers[index] === undefined) {
+            status = "empty"; userAnswer = "-"; correctAnswer = correctAnswers[index]; icon = '<i class="far fa-circle status-icon"></i>';
+          } else if (userAnswers[index] === correctAnswers[index]) {
+            status = "correct"; userAnswer = userAnswers[index]; correctAnswer = correctAnswers[index]; icon = '<i class="fas fa-check-circle status-icon"></i>';
+          } else {
+            status = "wrong"; userAnswer = userAnswers[index]; correctAnswer = correctAnswers[index]; icon = '<i class="fas fa-times-circle status-icon"></i>';
+          }
+
+          const subject = subjectMap[i] || "نامشخص";
+          const box = document.createElement("div");
+          box.className = `question-box ${status}`;
+          box.dataset.index = index;
+          box.dataset.status = status;
+          box.dataset.subject = subject;
+          box.innerHTML = `${icon}<div class="question-number">${i}</div><div class="question-answer">${userAnswer}</div><div class="question-key">✓${correctAnswer}</div>`;
+          box.addEventListener("click", function () { showQuestionDetails(this.dataset.index); });
+          grid.appendChild(box);
+        }
+      }
+
+      function showQuestionDetails(index) {
+        const { userAnswers, correctAnswers, subjectMap } = examData;
+        const questionNum = parseInt(index) + 1;
+        const userAnswer = userAnswers[index];
+        const correctAnswer = correctAnswers[index];
+        const subject = subjectMap[questionNum] || "نامشخص";
+
+        let status, statusText;
+        if (userAnswer === 0 || userAnswer === undefined) { status = "empty"; statusText = "نزده"; }
+        else if (userAnswer === correctAnswer) { status = "correct"; statusText = "صحیح"; }
+        else { status = "wrong"; statusText = "غلط"; }
+
+        document.getElementById("detailNumber").textContent = questionNum;
+        document.getElementById("detailStatus").textContent = statusText;
+        document.getElementById("detailStatus").className = "detail-value " + status;
+        document.getElementById("detailUserAnswer").textContent = userAnswer === 0 || userAnswer === undefined ? "-" : userAnswer;
+        document.getElementById("detailCorrectAnswer").textContent = correctAnswer;
+        document.getElementById("detailSubject").textContent = subject;
+
+        document.querySelectorAll(".question-box").forEach((box) => box.classList.remove("selected"));
+        const target = document.querySelector(`.question-box[data-index="${index}"]`);
+        if (target) target.classList.add("selected");
+      }
+
+      function filterQuestions(filter) {
+        document.querySelectorAll(".question-box").forEach((box) => {
+          box.style.display = filter === "all" || box.dataset.status === filter ? "flex" : "none";
+        });
+      }
+
+      // ذخیره کارنامه به‌صورت یک فایل HTML مستقل (جایگزین PDF)
+      function saveReportHTML() {
+        try {
+          const report = document.getElementById("report");
+          const clone = report.cloneNode(true);
+          clone.classList.add("active");
+
+          // نمودارها (canvas) را به تصویر تبدیل کن تا در فایل ذخیره‌شده دیده شوند
+          const liveCanvases = report.querySelectorAll("canvas");
+          clone.querySelectorAll("canvas").forEach((c, i) => {
+            const live = liveCanvases[i];
+            const img = document.createElement("img");
+            img.src = live.toDataURL("image/png");
+            img.alt = "نمودار";
+            const w = live.getBoundingClientRect().width;
+            img.style.cssText =
+              "display:block;max-width:100%;height:auto;" + (w ? "width:" + Math.round(w) + "px;" : "width:100%;");
+            c.parentNode.replaceChild(img, c);
+          });
+
+          // دکمه‌ها در فایل نهایی لازم نیستند
+          clone.querySelectorAll(".form-actions").forEach((el) => el.remove());
+
+          const styles = Array.from(document.querySelectorAll("style"))
+            .map((st) => st.textContent)
+            .join("\n");
+          const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+            .map((l) => '<link rel="stylesheet" href="' + l.href + '" />')
+            .join("\n");
+          const theme = document.body.getAttribute("data-theme") || "ocean";
+
+          const html =
+            '<!DOCTYPE html>\n<html lang="fa" dir="rtl">\n<head>\n<meta charset="UTF-8" />\n' +
+            '<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n' +
+            "<title>" + (document.title || "کارنامه") + "</title>\n" +
+            links + "\n<style>\n" + styles + "\n</style>\n</head>\n" +
+            '<body data-theme="' + theme + '">\n<main class="main-content">\n' +
+            clone.outerHTML + "\n</main>\n</body>\n</html>";
+
+          const now = new Date();
+          const p = (n) => n.toString().padStart(2, "0");
+          const fileName =
+            "کارنامه_آزمون_" + now.getFullYear() + p(now.getMonth() + 1) + p(now.getDate()) +
+            "_" + p(now.getHours()) + p(now.getMinutes()) + ".html";
+
+          const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          showNotification("کارنامه به‌صورت HTML ذخیره شد", "success");
+        } catch (err) {
+          console.error(err);
+          showNotification("ذخیره HTML با خطا مواجه شد", "error");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", initApp);
+    </script>
+
+    <script>
+      /* ===== رنگ خوانا برای نمودارها + روند آزمون‌های پوشه ===== */
+      (function () {
+        "use strict";
+        var trendChart = null, seriesKey = "__all", cache = null;
+
+        function css(n) { try { return getComputedStyle(document.body).getPropertyValue(n).trim(); } catch (e) { return ""; } }
+        function fa(n) { return String(n).replace(/[0-9]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹"[d]; }); }
+        function num1(v) { return (Math.round(v * 10) / 10).toString(); }
+
+        /* --- رنگ و خوانایی متن نمودارها (راهنما، محورها، عنوان‌ها) --- */
+        function applyChartDefaults() {
+          if (!window.Chart || !Chart.defaults) return;
+          var txt = css("--text-color") || "#333";
+          try {
+            Chart.defaults.color = txt;
+            Chart.defaults.borderColor = "rgba(128,128,128,0.30)";
+            if (Chart.defaults.font) { Chart.defaults.font.size = 13; Chart.defaults.font.weight = "600"; }
+            if (Chart.defaults.plugins && Chart.defaults.plugins.legend && Chart.defaults.plugins.legend.labels) {
+              Chart.defaults.plugins.legend.labels.color = txt;
+            }
+          } catch (e) {}
+        }
+
+        /* --- آمار یک آزمون (فرمول: هر ۳ غلط = ۱ درست) --- */
+        function stats(ex) {
+          var ua = ex.userAnswers || [], ca = ex.correctAnswers || [];
+          var total = Math.min(Number(ex.totalQuestions) || ca.length, ca.length);
+          function rng(s, e) {
+            var c = 0, w = 0, m = 0;
+            for (var i = s - 1; i < e && i < total; i++) {
+              var u = Number(ua[i]) || 0;
+              if (!u) m++; else if (u === Number(ca[i])) c++; else w++;
+            }
+            return { c: c, w: w, m: m, t: c + w + m };
+          }
+          function pct(r) { return r.t ? ((r.c * 3 - r.w) / (r.t * 3)) * 100 : null; }
+          var all = rng(1, total); all.pct = pct(all);
+          var subj = {};
+          (Array.isArray(ex.metadata) ? ex.metadata : []).forEach(function (s) {
+            var nm = String(s.name || s.subject || "").trim();
+            if (!nm) return;
+            var r = rng(parseInt(s.start) || 1, parseInt(s.end) || total);
+            if (!r.t) return;
+            if (subj[nm]) { subj[nm].c += r.c; subj[nm].w += r.w; subj[nm].m += r.m; subj[nm].t += r.t; }
+            else subj[nm] = r;
+          });
+          Object.keys(subj).forEach(function (k) { subj[k].pct = pct(subj[k]); });
+          return { all: all, subj: subj };
+        }
+
+        /* --- خواندن آزمون‌های پوشه --- */
+        function loadHistory() {
+          var S = window.ExamFolderStore;
+          if (!S) return Promise.resolve([]);
+          var rec = (typeof loadedExamRecord !== "undefined") ? loadedExamRecord : null;
+          var p;
+          if (rec && rec.folderId) p = S.listExams(rec.folderId);
+          else p = S.getSettings()
+            .then(function (s) { return s && s.defaultFolderId ? S.listExams(s.defaultFolderId) : S.listAllExams(); })
+            .catch(function () { return S.listAllExams(); });
+          return p.then(function (list) {
+            return (list || []).filter(function (e) {
+              return e && e.status === "graded" && Array.isArray(e.userAnswers) && Array.isArray(e.correctAnswers);
+            });
+          }).catch(function () { return []; });
+        }
+
+        function sameAnswers(a, b) {
+          return JSON.stringify(a.userAnswers || []) === JSON.stringify(b.userAnswers || []) &&
+                 JSON.stringify(a.correctAnswers || []) === JSON.stringify(b.correctAnswers || []);
+        }
+
+        function buildItems(history) {
+          var rec = (typeof loadedExamRecord !== "undefined") ? loadedExamRecord : null;
+          var items = history.slice().sort(function (a, b) { return (a.createdAt || 0) - (b.createdAt || 0); })
+            .map(function (e, i) { return { ex: e, label: e.name || e.examName || ("آزمون " + fa(i + 1)), current: !!(rec && rec.id === e.id) }; });
+          if (!items.some(function (x) { return x.current; })) {
+            var cur = { userAnswers: examData.userAnswers, correctAnswers: examData.correctAnswers, metadata: examData.metadata,
+                        totalQuestions: examData.totalQuestions, name: examData.examName || (rec && rec.name) || "این آزمون" };
+            var dup = items.filter(function (x) { return sameAnswers(x.ex, cur); })[0];
+            if (dup) dup.current = true;
+            else items.push({ ex: cur, label: cur.name, current: true });
+          }
+          // برچسب‌های تکراری را با شماره جدا کن
+          var seen = {};
+          items.forEach(function (x) { seen[x.label] = (seen[x.label] || 0) + 1; });
+          var idx = {};
+          items.forEach(function (x) {
+            if (seen[x.label] > 1) { idx[x.label] = (idx[x.label] || 0) + 1; x.label = x.label + " (" + fa(idx[x.label]) + ")"; }
+          });
+          items.forEach(function (x) { x.st = stats(x.ex); });
+          return items;
+        }
+
+        function fillSelect(items) {
+          var sel = document.getElementById("ayTrendSeries");
+          var names = [];
+          items.forEach(function (x) { Object.keys(x.st.subj).forEach(function (n) { if (names.indexOf(n) < 0) names.push(n); }); });
+          if (seriesKey !== "__all" && names.indexOf(seriesKey) < 0) seriesKey = "__all";
+          sel.innerHTML = "";
+          var o = document.createElement("option"); o.value = "__all"; o.textContent = "درصد کل آزمون"; sel.appendChild(o);
+          names.forEach(function (n) { var op = document.createElement("option"); op.value = n; op.textContent = "درس: " + n; sel.appendChild(op); });
+          sel.value = seriesKey;
+          sel.onchange = function () { seriesKey = sel.value; if (cache) draw(cache); };
+        }
+
+        function pctOf(x) {
+          var r = seriesKey === "__all" ? x.st.all : x.st.subj[seriesKey];
+          return r && r.pct != null ? Math.round(r.pct * 10) / 10 : null;
+        }
+
+        function chip(text, cls) { return '<span class="ay-chip ' + (cls || "") + '">' + text + "</span>"; }
+
+        function draw(items) {
+          var note = document.getElementById("ayTrendNote");
+          var chips = document.getElementById("ayTrendChips");
+          var wrap = document.querySelector("#ayTrendSection .ay-trend-canvas-wrap");
+          var ctl = document.querySelector("#ayTrendSection .ay-trend-controls");
+          if (trendChart) { trendChart.destroy(); trendChart = null; }
+
+          if (items.length < 2) {
+            wrap.style.display = "none"; ctl.style.display = "none"; chips.innerHTML = "";
+            note.textContent = "هنوز آزمون قبلیِ دارای کارنامه در این پوشه نیست. بعد از ثبت آزمون‌های بعدی، روند پیشرفت شما اینجا نمایش داده می‌شود.";
+            return;
+          }
+          wrap.style.display = ""; ctl.style.display = "";
+
+          var values = items.map(pctOf);
+          var valid = values.filter(function (v) { return v != null; });
+          var avg = valid.length ? valid.reduce(function (a, b) { return a + b; }, 0) / valid.length : null;
+          var ci = 0; items.forEach(function (x, i) { if (x.current) ci = i; });
+
+          // تغییر نسبت به آزمونِ قبلیِ دارای مقدار
+          var prev = null;
+          for (var i = ci - 1; i >= 0; i--) { if (values[i] != null) { prev = values[i]; break; } }
+          var html = chip("تعداد آزمون‌ها: " + fa(items.length));
+          if (values[ci] != null) html += chip("این آزمون: " + fa(num1(values[ci])) + "٪");
+          if (avg != null) html += chip("میانگین: " + fa(num1(avg)) + "٪");
+          if (valid.length) html += chip("بهترین: " + fa(num1(Math.max.apply(null, valid))) + "٪");
+          if (values[ci] != null && prev != null) {
+            var d = Math.round((values[ci] - prev) * 10) / 10;
+            html += chip((d > 0 ? "▲ " : d < 0 ? "▼ " : "• ") + "تغییر نسبت به آزمون قبل: " + fa(num1(Math.abs(d))) + "٪", d > 0 ? "up" : d < 0 ? "down" : "");
+          }
+          chips.innerHTML = html;
+          note.textContent = "دایرهٔ بزرگ‌تر، همین آزمون است. درصدها با فرمول کارنامه (هر ۳ غلط = ۱ درست) محاسبه شده‌اند.";
+
+          var primary = css("--primary-color") || "#006994";
+          var accent = css("--secondary-color") || "#e67e22";
+          var title = seriesKey === "__all" ? "درصد کل" : "درصد " + seriesKey;
+          var ctx = document.getElementById("ayTrendChart").getContext("2d");
+          applyChartDefaults();
+          trendChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: items.map(function (x) { return x.label; }),
+              datasets: [
+                { label: title, data: values, borderColor: primary, backgroundColor: primary, tension: 0.25, spanGaps: true, borderWidth: 3,
+                  pointRadius: items.map(function (x) { return x.current ? 9 : 5; }),
+                  pointHoverRadius: 11,
+                  pointBackgroundColor: items.map(function (x) { return x.current ? accent : primary; }),
+                  pointBorderColor: items.map(function (x) { return x.current ? "#fff" : primary; }),
+                  pointBorderWidth: items.map(function (x) { return x.current ? 3 : 1; }) },
+                { label: "میانگین", data: items.map(function () { return avg == null ? null : Math.round(avg * 10) / 10; }),
+                  borderColor: accent, borderDash: [6, 6], pointRadius: 0, borderWidth: 2, fill: false }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "bottom" },
+                tooltip: {
+                  rtl: true, titleAlign: "right", bodyAlign: "right",
+                  callbacks: {
+                    label: function (c) { return c.dataset.label + ": " + (c.parsed.y == null ? "—" : c.parsed.y + "٪"); },
+                    afterLabel: function (c) {
+                      if (c.datasetIndex !== 0) return "";
+                      var x = items[c.dataIndex], r = seriesKey === "__all" ? x.st.all : x.st.subj[seriesKey];
+                      return r ? "صحیح " + r.c + " | غلط " + r.w + " | نزده " + r.m : "";
+                    }
+                  }
+                }
+              },
+              scales: { y: { suggestedMin: 0, suggestedMax: 100, title: { display: true, text: "درصد" } },
+                        x: { ticks: { maxRotation: 35, minRotation: 0, autoSkip: true } } }
+            }
+          });
+          fitSoon();
+        }
+
+        /* اندازهٔ نمودار را بعد از چیدمان نهایی صفحه دوباره تنظیم کن (رفع کوچک بودن در بار اول) */
+        var fitRO = null;
+        function fit() { if (trendChart) { try { trendChart.resize(); } catch (e) {} } }
+        function fitSoon() {
+          if (window.requestAnimationFrame) requestAnimationFrame(fit);
+          setTimeout(fit, 250); setTimeout(fit, 900);
+          var w = document.querySelector("#ayTrendSection .ay-trend-canvas-wrap");
+          if (w && window.ResizeObserver && !fitRO) { fitRO = new ResizeObserver(fit); fitRO.observe(w); }
+        }
+        window.addEventListener("load", function () { setTimeout(fit, 100); });
+        window.addEventListener("resize", fit);
+
+        function renderTrend() {
+          if (!document.getElementById("ayTrendSection") || !window.Chart) return;
+          loadHistory().then(function (history) {
+            cache = buildItems(history);
+            fillSelect(cache);
+            draw(cache);
+          });
+        }
+
+        /* --- وصل شدن به تولید کارنامه --- */
+        var orig = window.generateReport;
+        if (typeof orig === "function") {
+          window.generateReport = function () {
+            applyChartDefaults();
+            var r = orig.apply(this, arguments);
+            try { renderTrend(); } catch (e) { console.warn("trend:", e); }
+            return r;
+          };
+        }
+
+        /* با عوض شدن تم، رنگ نمودارها هم به‌روز شود */
+        var themeTimer = null;
+        document.addEventListener("themechange", function () {
+          clearTimeout(themeTimer);
+          themeTimer = setTimeout(function () {
+            try {
+              var rep = document.getElementById("report");
+              if (rep && rep.classList.contains("active") && examData && examData.totalQuestions) window.generateReport();
+            } catch (e) {}
+          }, 150);
+        });
+      })();
+    </script>
+  </body>
+</html>

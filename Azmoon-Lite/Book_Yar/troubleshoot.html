@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+<title>عیب‌یابی آزمون‌ها</title>
+<style>
+:root{--bg:var(--water-color);--card:var(--water-light);--tx:var(--text-color);--mut:var(--text-muted);--pr:var(--primary-color);--bd:var(--border-color);--ok:#1b9e5a;--bad:#d64045;--skip:#e0a100;--cw:240px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font-family:Vazirmatn,Tahoma,"Segoe UI",sans-serif;line-height:1.7;font-size:14px}
+button,select,input{font:inherit;color:var(--tx)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);border-bottom:1px solid var(--bd);padding:8px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.top h1{font-size:16px;margin:0;margin-inline-end:auto}
+.stat{border:1px solid var(--bd);background:transparent;border-radius:10px;padding:2px 12px;cursor:pointer;display:flex;gap:6px;align-items:center}
+.stat b{font-size:15px}.stat.on{color:#fff}
+.stat.t.on{background:var(--pr);border-color:var(--pr)}.stat.correct.on{background:var(--ok);border-color:var(--ok)}.stat.wrong.on{background:var(--bad);border-color:var(--bad)}.stat.skipped.on{background:var(--skip);border-color:var(--skip)}
+.btn{border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:5px 12px;cursor:pointer}
+.btn.pr{background:var(--pr);border-color:var(--pr);color:#fff}.btn[disabled]{opacity:.45;cursor:not-allowed}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:14px;padding:14px;max-width:1500px;margin:0 auto}
+aside{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;align-self:start;position:sticky;top:64px;max-height:calc(100vh - 80px);overflow:auto}
+aside h3{margin:12px 0 6px;font-size:12px;color:var(--mut)}aside h3:first-child{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--bd);background:transparent;border-radius:999px;padding:2px 12px;cursor:pointer;font-size:13px}
+.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}
+.exams{max-height:210px;overflow:auto;display:grid;gap:2px;margin-top:6px}
+.exams label{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;padding:3px 4px;border-radius:6px;cursor:pointer}
+.exams label:hover{background:rgba(0,150,199,.08)}.exams label.dis{opacity:.45}
+input[type=text],input[type=search],select{width:100%;border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:5px 10px}
+.tool{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.tool .sp{margin-inline-end:auto;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--cw),1fr));gap:12px}
+.grid.one{grid-template-columns:minmax(0,860px);justify-content:center}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;position:relative;border-top:4px solid var(--bd)}
+.stat.saved.on{background:#ffc933;border-color:#f2b705;color:#3d2f00}
+.q.new{border-top-color:var(--bd)}.tag.new{background:#7b8a93}
+.q .sv{position:absolute;top:8px;inset-inline-end:8px;z-index:2;width:30px;height:30px;padding:0;border-radius:8px;border:1px solid var(--bd);background:rgba(255,255,255,.92);color:#6b7a83;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.q .sv:hover{border-color:#f2b705;color:#c98f00}
+.sv svg path{fill:none}.sv.on{background:#ffc933;border-color:#f2b705;color:#3d2f00}.sv.on svg path{fill:currentColor}
+#lb .bar .btn.on{background:#ffc933;border-color:#f2b705;color:#3d2f00}
+.q.correct{border-top-color:var(--ok)}.q.wrong{border-top-color:var(--bad)}.q.skipped{border-top-color:var(--skip)}
+.q.picked{outline:3px solid var(--pr)}
+.q .img{min-height:110px;background:rgba(0,0,0,.035);display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;cursor:zoom-in}
+.q .img img{width:100%;display:block;background:#fff}
+.q .ck{position:absolute;top:8px;inset-inline-start:8px;background:rgba(255,255,255,.92);border-radius:6px;padding:2px 5px;display:flex;z-index:2}
+.q .m{padding:8px 11px}.q .m b{display:block}
+.tag{display:inline-block;border-radius:999px;padding:0 10px;font-size:12px;color:#fff;margin-inline-end:6px}
+.tag.correct{background:var(--ok)}.tag.wrong{background:var(--bad)}.tag.skipped{background:var(--skip)}
+.mut{color:var(--mut);font-size:12px}.tree label{display:flex;gap:6px;font-size:12.5px;padding:2px 4px;cursor:pointer}.tree .tp{margin-inline-start:22px;color:var(--mut)}
+.grp{grid-column:1/-1;margin:10px 0 0;font-size:14px;border-bottom:2px solid var(--bd);padding-bottom:2px}
+.empty{text-align:center;color:var(--mut);padding:40px;grid-column:1/-1}
+#fbtn{display:none}
+#lb{position:fixed;inset:0;background:rgba(5,12,16,.93);z-index:50;display:none;flex-direction:column;color:#fff}
+#lb.on{display:flex}
+#lb .bar{display:flex;gap:8px;align-items:center;padding:10px 14px;flex-wrap:wrap;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+#lb .bar .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+#lb .info{margin-inline-end:auto}
+#lb .stage{flex:1;overflow:auto;display:flex;padding:8px;position:relative}
+#lb .stage img{margin:auto;max-width:100%;max-height:100%;background:#fff;cursor:zoom-in}
+#lb .nav{position:absolute;top:50%;transform:translateY(-50%);font-size:26px;background:rgba(0,0,0,.45);border:0;color:#fff;border-radius:50%;width:46px;height:46px;cursor:pointer;z-index:3}
+#lb .prev{right:10px}#lb .next{left:10px}
+@media (max-width:860px){
+ .layout{grid-template-columns:1fr;padding:10px}
+ aside{display:none;position:fixed;inset:0;z-index:30;max-height:none;top:0;border-radius:0;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+ aside.open{display:block}#fbtn{display:inline-block}
+}
+</style>
+
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+<body>
+<div class="top">
+  <h1>عیب‌یابی آزمون‌ها</h1>
+  <button class="stat t on" id="sT"><span>کل</span><b>۰</b></button>
+  <button class="stat correct" id="sC"><span>درست</span><b>۰</b></button>
+  <button class="stat wrong on" id="sW"><span>غلط</span><b>۰</b></button>
+  <button class="stat skipped on" id="sS"><span>نزده</span><b>۰</b></button>
+  <button class="stat saved" id="sV" style="display:none" title="فقط سوال‌های ذخیره‌شده"><span>ذخیره‌شده</span><b>۰</b></button>
+  <button class="btn" id="fbtn">فیلترها</button>
+</div>
+<div class="layout" id="app">
+  <aside id="side">
+    <div id="secGlobal"><h3>منبع سوال‌ها</h3>
+    <div class="chips" id="srcC"></div>
+    <div id="exBox" style="display:none">
+      <input type="search" id="exQ" placeholder="جست‌وجوی آزمون…" style="margin-top:8px">
+      <div class="chips" style="margin-top:6px"><button class="chip" id="exAll">انتخاب همه</button><button class="chip" id="exNone">هیچ‌کدام</button></div>
+      <div class="exams" id="exams"></div>
+    </div>
+    <h3>کتاب‌ها (هیچ‌کدام = همه)</h3><div class="chips" id="bookC"></div></div>
+    <div id="secBook" style="display:none"><h3>فصل‌ها و مباحث (هیچ‌کدام = همه)</h3><div class="tree" id="chTree"></div></div>
+    <h3>مرتب‌سازی</h3>
+    <select id="sort"><option value="book">کتاب و شماره سوال</option><option value="wrong">بیشترین غلط</option><option value="recent">جدیدترین پاسخ</option><option value="exam">نام آزمون</option></select>
+    <h3>حداقل تعداد غلط</h3>
+    <select id="minw"><option value="0">بدون محدودیت</option><option value="2">۲ بار یا بیشتر</option><option value="3">۳ بار یا بیشتر</option></select>
+    <h3>شماره سوال</h3><input type="search" id="find" placeholder="مثلاً ۱۲">
+    <button class="btn" id="reset" style="margin-top:12px;width:100%">پاک کردن فیلترها</button>
+    <button class="btn" id="fclose" style="margin-top:8px;width:100%;display:none">نمایش نتیجه</button>
+  </aside>
+  <main>
+    <div id="msg" class="empty">در حال دریافت اطلاعات از مرکز آزمون…</div>
+    <div class="tool" id="tool" style="display:none">
+      <span class="sp" id="sum"></span>
+      <label class="mut">اندازه <input type="range" id="cw" min="160" max="520" step="20" style="width:110px;vertical-align:middle"></label>
+      <button class="btn" id="vw">یک ستون بزرگ</button>
+      <button class="btn" id="selAll">انتخاب همه</button>
+      <button class="btn pr" id="goP">تمرین</button>
+      <button class="btn" id="goE">آزمون</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div id="more" style="height:1px"></div>
+  </main>
+</div>
+<div id="lb">
+  <div class="bar">
+    <div class="info" id="lbi"></div>
+    <button class="btn" id="zo">−</button><button class="btn" id="zf">متناسب</button><button class="btn" id="zi">+</button>
+    <button class="btn" id="lbv" style="display:none">ذخیره</button><button class="btn" id="lbs">انتخاب</button><button class="btn" id="lbx">بستن ✕</button>
+  </div>
+  <div class="stage" id="stage"><button class="nav prev" id="lbp">›</button><button class="nav next" id="lbn">‹</button><img id="lbImg" alt=""></div>
+</div>
+<script>
+(function () {
+  var $ = function (i) { return document.getElementById(i); };
+  var D = null, imgs = {}, asked = {}, base = [], cur = [], CH = 30, shown = CH;
+  var BK = false, S = { saved: false, chs: {}, tps: {}, src: "all", exams: {}, books: {}, st: { wrong: 1, skipped: 1 }, sort: "book", minw: 0, find: "", sel: {} };
+  var cfg = { cw: 240, view: "grid" };
+  try { Object.assign(cfg, JSON.parse(localStorage.getItem("ts_cfg") || "{}")); } catch (e) {}
+  function save() { try { localStorage.setItem("ts_cfg", JSON.stringify(cfg)); } catch (e) {} }
+  var fa = function (n) { try { return Number(n).toLocaleString("fa-IR"); } catch (e) { return String(n); } };
+  var STN = { correct: "درست", wrong: "غلط", skipped: "نزده", "new": "بدون سابقه" };
+  var SV = {}, HAS_SV = false;
+  var SVG = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+  var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var keyOf = function (o) { return o.b + "_" + o.q; };
+  function headOf(o, bn) {
+    if (!BK) return bn[o.b] || "کتاب";
+    var c = (D.chapters || [])[o.ci];
+    return c ? c.title + (o.ti >= 0 ? " — " + c.topics[o.ti].title : "") : "بدون فصل";
+  }
+
+  function ask() { if (window.opener) window.opener.postMessage({ type: "ts_ready" }, "*"); }
+  if (!window.opener) $("msg").textContent = "این صفحه باید از «مرکز آزمون» (دکمه عیب‌یابی) باز شود.";
+  else { ask(); var tr = 0, tm = setInterval(function () { if (D || ++tr > 4) return clearInterval(tm); ask(); }, 1500); }
+
+  window.addEventListener("message", function (e) {
+    var d = e.data; if (!d) return;
+    if (d.type === "ts_data") { D = d; init(); }
+    else if (d.type === "ts_saved_state") {
+      if (d.full && Array.isArray(d.keys)) { SV = {}; d.keys.forEach(function (k) { SV[k] = 1; }); HAS_SV = true; svUi(); return; }
+      if (d.bookId == null || d.q == null) return;
+      var sk = d.bookId + "_" + d.q;
+      if (d.saved) SV[sk] = 1; else delete SV[sk];
+      svUi(sk);
+      if (d.ok === false) $("sum").textContent = "ذخیره انجام نشد؛ دوباره تلاش کنید.";
+    }
+    else if (d.type === "ts_image") {
+      imgs[d.key] = d.src;
+      document.querySelectorAll('.img[data-k="' + d.key + '"]').forEach(function (el) { el.innerHTML = '<img alt="" src="' + d.src + '">'; });
+      if (lbOn() && keyOf(cur[li]) === d.key) lbShow();
+    }
+  });
+
+  var qk = [], qt = 0;
+  function want(k) {
+    if (imgs[k] || asked[k] || !window.opener) return; asked[k] = 1; qk.push(k); clearTimeout(qt);
+    qt = setTimeout(function () { window.opener.postMessage({ type: "ts_images", keys: qk.splice(0) }, "*"); }, 60);
+  }
+  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); want(e.target.getAttribute("data-k")); } });
+  }, { rootMargin: "500px" }) : null;
+  var more = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+    if (es[0].isIntersecting && shown < cur.length) { shown += CH; draw(false); }
+  }, { rootMargin: "600px" }) : null;
+
+  function chip(t, on, fn, cls) {
+    var b = document.createElement("button"); b.className = "chip" + (on ? " on" : ""); b.textContent = t; b.onclick = fn; return b;
+  }
+  function refresh() { shown = CH; controls(); render(); }
+
+  function init() {
+    $("msg").style.display = "none"; $("tool").style.display = "flex";
+    D.results = D.results || []; D.attempts = D.attempts || [];
+    BK = D.mode === "book";
+    HAS_SV = Array.isArray(D.saved); SV = {};
+    if (HAS_SV) D.saved.forEach(function (k) { SV[k] = 1; });
+    $("lbv").style.display = HAS_SV ? "" : "none";
+    if (BK) {
+      $("secGlobal").style.display = "none"; $("secBook").style.display = "block";
+      var bnm = D.books[0] ? D.books[0].name : "کتاب";
+      document.querySelector(".top h1").textContent = "عیب‌یابی — " + bnm; document.title = "عیب‌یابی — " + bnm;
+      $("sort").innerHTML = '<option value="chapter">فصل و مبحث</option><option value="book">شماره سوال</option><option value="wrong">بیشترین غلط</option><option value="recent">جدیدترین پاسخ</option>';
+      S.sort = "chapter";
+    } else if (D.init && D.init.bookId) S.books[D.init.bookId] = 1;
+    D.results.sort(function (a, b) { return b.finishedAt - a.finishedAt; });
+    $("sort").onchange = function () { S.sort = this.value; refresh(); };
+    $("minw").onchange = function () { S.minw = +this.value; refresh(); };
+    $("find").oninput = function () { S.find = this.value.replace(/[۰-۹]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); }).trim(); refresh(); };
+    $("exQ").oninput = controls;
+    $("exAll").onclick = function () { D.results.forEach(function (r) { if (r.details && r.details.length) S.exams[r.id] = 1; }); refresh(); };
+    $("exNone").onclick = function () { S.exams = {}; refresh(); };
+    $("reset").onclick = function () { S.saved = false; S.exams = {}; S.books = {}; S.chs = {}; S.tps = {}; S.st = { wrong: 1, skipped: 1 }; S.minw = 0; S.find = ""; $("find").value = ""; $("minw").value = 0; refresh(); };
+    [["sC", "correct"], ["sW", "wrong"], ["sS", "skipped"]].forEach(function (p) {
+      $(p[0]).onclick = function () { S.saved = false; if (S.st[p[1]]) delete S.st[p[1]]; else S.st[p[1]] = 1; refresh(); };
+    });
+    $("sT").onclick = function () { S.saved = false; S.st = { correct: 1, wrong: 1, skipped: 1 }; refresh(); };
+    $("sV").onclick = function () { S.saved = !S.saved; refresh(); };
+    $("cw").value = cfg.cw; $("cw").oninput = function () { cfg.cw = +this.value; save(); applyView(); };
+    $("vw").onclick = function () { cfg.view = cfg.view === "one" ? "grid" : "one"; save(); applyView(); };
+    $("selAll").onclick = function () {
+      var all = cur.length && cur.every(function (o) { return S.sel[keyOf(o)]; });
+      cur.forEach(function (o) { if (all) delete S.sel[keyOf(o)]; else S.sel[keyOf(o)] = 1; }); render(); draw(false);
+    };
+    $("goP").onclick = function () { launch("practice"); };
+    $("goE").onclick = function () { launch("exam"); };
+    $("fbtn").onclick = function () { $("side").classList.add("open"); $("fclose").style.display = "block"; };
+    $("fclose").onclick = function () { $("side").classList.remove("open"); };
+    initLb(); applyView(); refresh();
+  }
+  function applyView() {
+    document.documentElement.style.setProperty("--cw", cfg.cw + "px");
+    $("grid").className = "grid" + (cfg.view === "one" ? " one" : "");
+    $("vw").textContent = cfg.view === "one" ? "نمای شبکه‌ای" : "یک ستون بزرگ";
+  }
+
+  function controls() {
+    var sc = $("srcC"); sc.innerHTML = "";
+    sc.appendChild(chip("همه (آخرین وضعیت هر سوال)", S.src === "all", function () { S.src = "all"; refresh(); }));
+    sc.appendChild(chip("آزمون‌های انتخابی", S.src === "exams", function () { S.src = "exams"; refresh(); }));
+    $("exBox").style.display = S.src === "exams" ? "block" : "none";
+    var ex = $("exams"); ex.innerHTML = ""; var qq = $("exQ").value.trim();
+    D.results.forEach(function (r) {
+      if (qq && r.examName.indexOf(qq) < 0) return;
+      var has = !!(r.details && r.details.length), l = document.createElement("label"); l.className = has ? "" : "dis";
+      var c = document.createElement("input"); c.type = "checkbox"; c.disabled = !has; c.checked = !!S.exams[r.id];
+      c.onchange = function () { if (c.checked) S.exams[r.id] = 1; else delete S.exams[r.id]; shown = CH; render(); };
+      var dt = ""; try { dt = new Date(r.finishedAt).toLocaleDateString("fa-IR"); } catch (e) {}
+      var sp = document.createElement("span");
+      sp.textContent = r.examName + " — " + dt + (r.percentage != null ? " — " + fa(r.percentage) + "٪" : "") + (has ? (r.rebuilt ? " (از تاریخچه)" : "") : " (جزئیات سوال‌ها در دسترس نیست)");
+      l.appendChild(c); l.appendChild(sp); ex.appendChild(l);
+    });
+    if (BK) {
+      var tr = $("chTree"); tr.innerHTML = "";
+      var cb = function (txt, on, fn, cls) {
+        var l = document.createElement("label"); if (cls) l.className = cls;
+        var c = document.createElement("input"); c.type = "checkbox"; c.checked = on; c.onchange = function () { fn(c.checked); shown = CH; render(); };
+        l.appendChild(c); l.appendChild(document.createTextNode(txt)); return l;
+      };
+      (D.chapters || []).forEach(function (c, ci) {
+        tr.appendChild(cb(c.title + " (" + fa(c.start) + " تا " + fa(c.end) + ")", !!S.chs[ci], function (on) { if (on) S.chs[ci] = 1; else delete S.chs[ci]; }));
+        c.topics.forEach(function (tp, tj) {
+          tr.appendChild(cb(tp.title, !!S.tps[ci + "." + tj], function (on) { if (on) S.tps[ci + "." + tj] = 1; else delete S.tps[ci + "." + tj]; }, "tp"));
+        });
+      });
+    }
+    var bc = $("bookC"); bc.innerHTML = "";
+    D.books.forEach(function (b) {
+      bc.appendChild(chip(b.name || "کتاب", !!S.books[b.id], function () { if (S.books[b.id]) delete S.books[b.id]; else S.books[b.id] = 1; refresh(); }));
+    });
+  }
+
+  function collect() {
+    var m = {};
+    function add(b, q, s, a, at, ex, ok, wr, sk) {
+      var k = b + "_" + q, o = m[k];
+      if (!o) o = m[k] = { b: b, q: q, s: s, a: a, at: -1, ex: "", ok: 0, wr: 0, sk: 0 };
+      o.ok += ok; o.wr += wr; o.sk += sk;
+      if (at >= o.at) { o.s = s; o.a = a; o.at = at; o.ex = ex; }
+    }
+    if (S.src === "all" || BK) D.attempts.forEach(function (x) { if (x.lastStatus) add(x.bookId, x.q, x.lastStatus, x.lastAnswer, x.lastAt, "", x.correctCount, x.wrongCount, x.skipCount); });
+    else D.results.forEach(function (r) {
+      if (!S.exams[r.id] || !r.details) return;
+      r.details.forEach(function (x) { add(x.b, x.q, x.s, x.a, r.finishedAt, r.examName, x.s === "correct" ? 1 : 0, x.s === "wrong" ? 1 : 0, x.s === "skipped" ? 1 : 0); });
+    });
+    if (S.saved && HAS_SV) Object.keys(SV).forEach(function (k) {
+      if (m[k]) return; var i = k.lastIndexOf("_"); if (i < 0) return;
+      m[k] = { b: k.slice(0, i), q: parseInt(k.slice(i + 1), 10), s: "new", a: 0, at: -1, ex: "", ok: 0, wr: 0, sk: 0 };
+    });
+    var hasB = Object.keys(S.books).length > 0, order = {};
+    D.books.forEach(function (b, i) { order[b.id] = i; });
+    var chs = D.chapters || [];
+    var chOf = function (q) { for (var i = 0; i < chs.length; i++) if (q >= chs[i].start && q <= chs[i].end) return i; return -1; };
+    var tpOf = function (ci, q) { if (ci < 0) return -1; var tt = chs[ci].topics; for (var j = 0; j < tt.length; j++) if (q >= tt[j].start && q <= tt[j].end) return j; return -1; };
+    var selC = Object.keys(S.chs).length + Object.keys(S.tps).length;
+    var out = Object.keys(m).map(function (k) { return m[k]; }).filter(function (o) {
+      if (BK) {
+        o.ci = chOf(o.q); o.ti = tpOf(o.ci, o.q);
+        if (selC && !(o.ci >= 0 && (S.chs[o.ci] || (o.ti >= 0 && S.tps[o.ci + "." + o.ti])))) return false;
+      }
+      if (S.saved && !SV[keyOf(o)]) return false;
+      return order[o.b] !== undefined && (!hasB || S.books[o.b]) && o.wr >= S.minw && (!S.find || String(o.q).indexOf(S.find) === 0);
+    });
+    out.sort(function (a, b) {
+      if (S.sort === "chapter") return ((a.ci < 0 ? 1e6 : a.ci) - (b.ci < 0 ? 1e6 : b.ci)) || a.q - b.q;
+      if (S.sort === "wrong") return b.wr - a.wr || order[a.b] - order[b.b] || a.q - b.q;
+      if (S.sort === "recent") return b.at - a.at;
+      if (S.sort === "exam") return (a.ex || "").localeCompare(b.ex || "", "fa") || order[a.b] - order[b.b] || a.q - b.q;
+      return order[a.b] - order[b.b] || a.q - b.q;
+    });
+    return out;
+  }
+
+  function render() {
+    base = collect();
+    var n = { correct: 0, wrong: 0, skipped: 0 };
+    base.forEach(function (o) { if (n[o.s] !== undefined) n[o.s]++; });
+    $("sT").lastChild.textContent = fa(base.length); $("sC").lastChild.textContent = fa(n.correct);
+    $("sW").lastChild.textContent = fa(n.wrong); $("sS").lastChild.textContent = fa(n.skipped);
+    ["sC", "sW", "sS"].forEach(function (id, i) { $(id).classList.toggle("on", !S.saved && !!S.st[["correct", "wrong", "skipped"][i]]); });
+    $("sT").classList.toggle("on", !S.saved && !!(S.st.correct && S.st.wrong && S.st.skipped));
+    $("sV").style.display = HAS_SV ? "" : "none"; $("sV").classList.toggle("on", !!S.saved); $("sV").lastChild.textContent = fa(Object.keys(SV).length);
+    cur = S.saved ? base.slice() : base.filter(function (o) { return S.st[o.s]; });
+    var sc = Object.keys(S.sel).length;
+    $("sum").textContent = fa(cur.length) + " سوال" + (sc ? " — " + fa(sc) + " انتخاب‌شده" : "");
+    $("goP").textContent = sc ? "تمرین انتخاب‌شده‌ها" : "تمرین"; $("goE").textContent = sc ? "آزمون انتخاب‌شده‌ها" : "آزمون";
+    $("goP").disabled = $("goE").disabled = !cur.length && !sc;
+    draw(true);
+  }
+
+  function draw(reset) {
+    var g = $("grid"), bn = {}, bk = {}; D.books.forEach(function (b) { bn[b.id] = b.name; bk[b.id] = b.answerKey || ""; });
+    if (reset) g.innerHTML = "";
+    if (!cur.length) { g.innerHTML = '<div class="empty">' + (S.saved ? "سوال ذخیره‌شده‌ای پیدا نشد؛ در صفحه‌ی آزمون روی دکمه‌ی نشانک بالای هر سوال بزنید." : S.src === "exams" && !Object.keys(S.exams).length ? "یک یا چند آزمون را از فهرست کنار انتخاب کنید." : "سوالی با این فیلترها پیدا نشد.") + "</div>"; return; }
+    var from = reset ? 0 : g.querySelectorAll(".q").length;
+    if (!reset) g.querySelectorAll(".q").forEach(function (el) { el.classList.toggle("picked", !!S.sel[keyOf(cur[+el.getAttribute("data-i")])]); el.querySelector("input").checked = !!S.sel[keyOf(cur[+el.getAttribute("data-i")])]; });
+    for (var i = from; i < Math.min(shown, cur.length); i++) {
+      if (BK && S.sort === "chapter" && (i === 0 || cur[i].ci !== cur[i - 1].ci)) {
+        var h = document.createElement("h4"); h.className = "grp";
+        h.textContent = (D.chapters || [])[cur[i].ci] ? D.chapters[cur[i].ci].title : "بدون فصل"; g.appendChild(h);
+      }
+      g.appendChild(card(cur[i], i, bn, bk));
+    }
+    if (more) { more.disconnect(); more.observe($("more")); }
+  }
+
+  function card(o, i, bn, bk) {
+    var k = keyOf(o), key = parseInt(bk[o.b][o.q - 1], 10) || 0, el = document.createElement("div");
+    el.className = "q " + o.s + (S.sel[k] ? " picked" : ""); el.setAttribute("data-i", i);
+    el.innerHTML = '<label class="ck"><input type="checkbox"' + (S.sel[k] ? " checked" : "") + '></label>' +
+      (HAS_SV ? '<button type="button" class="sv' + (SV[k] ? " on" : "") + '" data-k="' + k + '" title="' + (SV[k] ? "حذف از ذخیره‌شده‌ها" : "ذخیره‌ی سوال") + '">' + SVG + "</button>" : "") +
+      '<div class="img" data-k="' + k + '">' + (imgs[k] ? '<img alt="" src="' + imgs[k] + '">' : "در حال بارگذاری تصویر…") + "</div>" +
+      '<div class="m"><b>' + esc(headOf(o, bn)) + " — سوال " + fa(o.q) + '</b><span class="tag ' + o.s + '">' + STN[o.s] + "</span>" +
+      (o.a ? "پاسخ شما: " + fa(o.a) : "") + (key ? " · کلید: " + fa(key) : "") +
+      '<div class="mut">درست ' + fa(o.ok) + " · غلط " + fa(o.wr) + " · نزده " + fa(o.sk) + "</div>" +
+      (o.ex ? '<div class="mut">' + esc(o.ex) + "</div>" : "") + "</div>";
+    var im = el.querySelector(".img"); im.onclick = function () { lbOpen(i); };
+    el.querySelector("input").onchange = function () { toggle(k); el.classList.toggle("picked", !!S.sel[k]); };
+    var svb = el.querySelector(".sv"); if (svb) svb.onclick = function () { toggleSave(o); };
+    if (io && !imgs[k]) io.observe(im); else want(k);
+    return el;
+  }
+  function svUi(k) {
+    document.querySelectorAll(".sv").forEach(function (b) {
+      var on = !!SV[b.getAttribute("data-k")]; b.classList.toggle("on", on); b.title = on ? "حذف از ذخیره‌شده‌ها" : "ذخیره‌ی سوال";
+    });
+    $("sV").style.display = HAS_SV ? "" : "none"; $("sV").lastChild.textContent = fa(Object.keys(SV).length);
+    if (lbOn() && cur[li]) lbSv();
+  }
+  function toggleSave(o) {
+    if (!window.opener || !HAS_SV) return;
+    var k = keyOf(o), next = !SV[k];
+    if (next) SV[k] = 1; else delete SV[k];
+    svUi(k);
+    try { window.opener.postMessage({ type: "ts_save_toggle", bookId: o.b, q: o.q, saved: next }, "*"); } catch (e) {}
+  }
+  function lbSv() { var on = !!SV[keyOf(cur[li])]; $("lbv").classList.toggle("on", on); $("lbv").textContent = on ? "★ ذخیره شد" : "☆ ذخیره"; }
+  function toggle(k) {
+    if (S.sel[k]) delete S.sel[k]; else S.sel[k] = 1;
+    var sc = Object.keys(S.sel).length;
+    $("sum").textContent = fa(cur.length) + " سوال" + (sc ? " — " + fa(sc) + " انتخاب‌شده" : "");
+    $("goP").textContent = sc ? "تمرین انتخاب‌شده‌ها" : "تمرین"; $("goE").textContent = sc ? "آزمون انتخاب‌شده‌ها" : "آزمون";
+    $("goP").disabled = $("goE").disabled = !cur.length && !sc;
+  }
+
+  /* ---- نمایشگر بزرگ ---- */
+  var li = 0, z = 0;
+  function lbOn() { return $("lb").classList.contains("on"); }
+  function lbOpen(i) { li = i; z = 0; $("lb").classList.add("on"); lbShow(); }
+  function lbShow() {
+    var o = cur[li]; if (!o) return; var k = keyOf(o);
+    var bn = ""; D.books.forEach(function (b) { if (b.id === o.b) bn = b.name; });
+    $("lbi").textContent = (BK ? headOf(o, {}) : bn) + " — سوال " + fa(o.q) + " (" + STN[o.s] + ")" + (o.a ? " · پاسخ شما: " + fa(o.a) : "") + " · " + fa(li + 1) + " از " + fa(cur.length);
+    var im = $("lbImg"); im.removeAttribute("src"); if (imgs[k]) im.src = imgs[k]; else want(k);
+    zoom(0); $("lbs").textContent = S.sel[k] ? "✓ انتخاب شد" : "انتخاب"; lbSv();
+    [li + 1, li + 2].forEach(function (j) { if (cur[j]) want(keyOf(cur[j])); });
+  }
+  function zoom(v) {
+    z = v; var im = $("lbImg");
+    im.style.width = z ? z + "%" : ""; im.style.maxWidth = z ? "none" : "100%"; im.style.maxHeight = z ? "none" : "100%";
+  }
+  function nav(d) { var n = li + d; if (n < 0 || n >= cur.length) return; li = n; if (li >= shown - 2) { shown += CH; draw(false); } lbShow(); }
+  function initLb() {
+    $("lbx").onclick = function () { $("lb").classList.remove("on"); };
+    $("lbp").onclick = function () { nav(-1); }; $("lbn").onclick = function () { nav(1); };
+    $("zi").onclick = function () { zoom(Math.min(400, (z || 100) + 25)); }; $("zo").onclick = function () { zoom(z && z > 50 ? z - 25 : 0); };
+    $("zf").onclick = function () { zoom(0); };
+    $("lbImg").ondblclick = function () { zoom(z ? 0 : 160); };
+    $("lbv").onclick = function () { if (cur[li]) toggleSave(cur[li]); };
+    $("lbs").onclick = function () { var k = keyOf(cur[li]); toggle(k); draw(false); $("lbs").textContent = S.sel[k] ? "✓ انتخاب شد" : "انتخاب"; };
+    document.addEventListener("keydown", function (e) {
+      if (!lbOn()) return;
+      if (e.key === "Escape") $("lbx").onclick(); else if (e.key === "ArrowLeft") nav(1); else if (e.key === "ArrowRight") nav(-1);
+      else if (e.key === "+" || e.key === "=") $("zi").onclick(); else if (e.key === "-") $("zo").onclick(); else if (e.key === " ") { e.preventDefault(); $("lbs").onclick(); }
+      else if ((e.key === "s" || e.key === "S") && HAS_SV) $("lbv").onclick();
+    });
+    var tx = 0; $("stage").addEventListener("touchstart", function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    $("stage").addEventListener("touchend", function (e) { var dx = e.changedTouches[0].clientX - tx; if (!z && Math.abs(dx) > 70) nav(dx < 0 ? 1 : -1); }, { passive: true });
+  }
+
+  function launch(mode) {
+    if (!window.opener) return;
+    var list = Object.keys(S.sel).length ? base.filter(function (o) { return S.sel[keyOf(o)]; }) : cur;
+    if (!list.length) return;
+    window.opener.postMessage({ type: "ts_launch", mode: mode, items: list.map(function (o) { return { bookId: o.b, q: o.q }; }) }, "*");
+    $("sum").textContent = "به پنجره‌ی مرکز آزمون بروید و در پنجره‌ی باز شده «شروع» را بزنید.";
+  }
+})();
+</script>
+</body>
+</html>

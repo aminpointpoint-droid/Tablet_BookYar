@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<!-- LITE-MODE:BEGIN -->
+<style id="lite-mode-css">
+  *, *::before, *::after { animation: none !important; transition: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; text-shadow: none !important; scroll-behavior: auto !important; }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti { display: none !important; }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header { box-shadow: 0 1px 4px rgba(0,0,0,.15) !important; }
+  body { background-attachment: scroll !important; }
+</style>
+<!-- LITE-MODE:END -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل سیستم ضعیف - آزمون یار لایت</title>
+<style>
+  /* بدون انیمیشن، بدون بلور، بدون فونت و آیکون اینترنتی */
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Tahoma, "Segoe UI", Arial, sans-serif; background: #eef7fb; color: #0a3d62; line-height: 1.8; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 18px; }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  .sub { margin: 0 0 16px; color: #4a6b8a; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; background: #006994; color: #fff; font-size: 13px; }
+  .st { background: #fff; border: 1px solid #b3e5fc; border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; }
+  .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: #999; margin-left: 8px; vertical-align: middle; }
+  .dot.ok { background: #2ecc71; } .dot.bad { background: #e74c3c; }
+  .st small { display: block; color: #4a6b8a; }
+  button { font-family: inherit; font-size: 14px; padding: 6px 14px; border: 1px solid #006994; border-radius: 6px; background: #fff; color: #006994; cursor: pointer; }
+  button:hover { background: #e0f7ff; }
+  h2 { font-size: 18px; margin: 20px 0 8px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  a.card { flex: 1 1 280px; display: block; background: #fff; border: 1px solid #81d4fa; border-radius: 8px; padding: 12px 16px; color: inherit; text-decoration: none; }
+  a.card:hover { background: #f0fbff; border-color: #006994; }
+  a.card b { display: block; font-size: 16px; color: #006994; }
+  a.card span { color: #4a6b8a; font-size: 14px; }
+</style>
+    <link rel="stylesheet" href="libs/fonts-local.css" />
+  </head>
+<body>
+<div class="wrap">
+  <h1>پنل سیستم ضعیف <span class="tag">آزمون یار لایت</span></h1>
+  <p class="sub">اینجا فقط دو برنامه‌ی مغازه باز می‌شوند: بوک‌یار و دیجیتال‌یار. آماده‌سازی سؤال و اصلاح برش در خانه انجام می‌شود؛ OMR و برگه‌یار در این نسخه نیست.</p>
+
+  <div class="st"><span class="dot" id="d-img"></span><b>سرور عکس سوال‌ها</b> (پورت ۸۷۶۵)
+    <small id="t-img">در حال بررسی...</small>
+    <button style="margin-top:6px" onclick="check()">بررسی دوباره</button></div>
+
+  <h2>بخش‌ها</h2>
+  <div class="grid">
+    <a class="card" href="Digital_yar/DigitalYar.html"><b>دیجیتال‌یار</b><span>اجرای آزمون‌های ساخته‌شده (عکس سوال‌ها از سرور بالا)</span></a>
+    <a class="card" href="Book_Yar/Book-YAR.html"><b>بوک‌یار</b><span>مطالعه و تست از کتاب‌ها (پوشه‌ی منبع هر کتاب باید وصل باشد)</span></a>
+    <a class="card" href="index.html"><b>منوی اصلی</b><span>محاسبه درصد، تنظیمات و «وارد کردن اطلاعات» از سیستم قوی</span></a>
+  </div>
+</div>
+
+<script>
+  function check() {
+    var d = document.getElementById("d-img"), t = document.getElementById("t-img");
+    t.textContent = "در حال بررسی...";
+    var c = new AbortController();
+    var timer = setTimeout(function () { c.abort(); }, 2500);
+    fetch("http://127.0.0.1:8765/api/status", { cache: "no-store", signal: c.signal })
+      .then(function (r) { clearTimeout(timer); return r.json(); })
+      .then(function (j) {
+        d.className = "dot " + (j && j.ok ? "ok" : "bad");
+        t.textContent = j && j.ok ? "روشن است" : "پاسخ نامعتبر";
+      })
+      .catch(function () {
+        clearTimeout(timer);
+        d.className = "dot bad";
+        t.textContent = "خاموش است؛ Start_Weak.bat را اجرا کن (پایتون ۳٫۸ لازم است) و پنجره‌ی کوچکش را نبند.";
+      });
+  }
+  check();
+</script>
+</body>
+</html>

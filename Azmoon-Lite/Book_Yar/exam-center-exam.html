@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+    <title>مرکز آزمون - اجرای آزمون</title>
+    <link rel="stylesheet" href="../libs/vazirmatn/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="../libs/fontawesome/css/all.min.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-family);
+      }
+      body {
+        background: var(--gradient-water);
+        color: var(--text-color);
+        line-height: 1.6;
+        transition: var(--transition);
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .header {
+        background: var(--header-bg);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-light);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+      .main-content {
+        padding: 24px;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+      }
+      .empty-state i {
+        font-size: 3.5rem;
+        color: var(--primary-light);
+        margin-bottom: 20px;
+      }
+      .empty-state h2 {
+        color: var(--primary-color);
+        margin-bottom: 12px;
+      }
+      .empty-state p {
+        color: var(--text-muted);
+        margin-bottom: 25px;
+      }
+      .exam-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-light);
+        padding: 14px 18px;
+        margin-bottom: 18px;
+      }
+      .floating-timer {
+        position: fixed;
+        bottom: 18px;
+        left: 50%;
+        transform: translateX(-50%) translateY(24px);
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow);
+        border-radius: 999px;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+        color: var(--primary-color);
+        z-index: 500;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        cursor: pointer;
+      }
+      .floating-timer.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+      }
+      .floating-timer.warning {
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+      }
+      .floating-timer.danger {
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+        animation: pulse 1s infinite;
+      }
+      .floating-timer.hidden-timer span {
+        filter: blur(5px);
+      }
+      .exam-title-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .exam-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+      .exam-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .toolbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .timer {
+        font-size: 1.5rem;
+        font-weight: bold;
+        padding: 8px 18px;
+        border-radius: var(--border-radius);
+        background: rgba(0, 105, 148, 0.1);
+        color: var(--primary-color);
+        min-width: 120px;
+        text-align: center;
+        transition: var(--transition);
+      }
+      .timer.warning {
+        background: rgba(243, 156, 18, 0.18);
+        color: var(--warning-color);
+      }
+      .timer.danger {
+        background: rgba(231, 76, 60, 0.18);
+        color: var(--danger-color);
+        animation: pulse 1s infinite;
+      }
+      .timer.hidden-timer {
+        filter: blur(6px);
+      }
+      .icon-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid var(--border-color);
+        background: var(--card-bg);
+        color: var(--text-color);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+        font-size: 1rem;
+      }
+      .icon-btn:hover {
+        background: rgba(0, 105, 148, 0.1);
+      }
+      .icon-btn.active-state {
+        background: var(--gradient-primary);
+        color: white;
+        border-color: transparent;
+      }
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+      }
+      .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+      }
+      .btn-secondary {
+        background: linear-gradient(90deg, #6c757d 0%, #495057 100%);
+        color: white;
+      }
+      .btn-success {
+        background: linear-gradient(90deg, var(--success-color) 0%, #27ae60 100%);
+        color: white;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .quick-stats {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .quick-stat {
+        flex: 1;
+        min-width: 110px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 10px 14px;
+        text-align: center;
+        box-shadow: var(--shadow-light);
+      }
+      .quick-stat .num {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+      .quick-stat .label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+      .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        padding: 8px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        background: var(--card-bg);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 0.9rem;
+      }
+      .filter-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+      .mini-progress {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .mini-item {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--border-color);
+        color: var(--text-muted);
+        font-weight: bold;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+      }
+      .mini-item.answered {
+        background: var(--success-color);
+        color: white;
+      }
+      .mini-item.marked::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--mark-dot-color, var(--warning-color));
+        border: 2px solid var(--card-bg);
+      }
+      .mini-item.current {
+        box-shadow: 0 0 0 3px var(--primary-light);
+        transform: scale(1.08);
+      }
+      .questions-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+      }
+      .question-card {
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 16px;
+        background: var(--card-bg);
+        box-shadow: var(--shadow-light);
+        transition: var(--transition);
+        scroll-margin-top: 100px;
+      }
+      .question-card.hidden-by-filter {
+        display: none;
+      }
+      .question-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .question-number {
+        font-weight: bold;
+        color: var(--primary-color);
+        font-size: 1.05rem;
+      }
+      .mark-buttons {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .mark-btn {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: var(--text-muted);
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+      }
+      .mark-btn:hover {
+        background: rgba(0, 105, 148, 0.08);
+      }
+      .mark-shape {
+        display: inline-block;
+      }
+      .mark-shape.circle {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 2.5px solid currentColor;
+      }
+      .mark-shape.square {
+        width: 13px;
+        height: 13px;
+        border: 2.5px solid currentColor;
+      }
+      .mark-shape.triangle {
+        width: 0;
+        height: 0;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 12px solid currentColor;
+      }
+      .mark-btn.active[data-mark="circle"] {
+        color: var(--success-color);
+        background: rgba(46, 204, 113, 0.15);
+        border-color: var(--success-color);
+      }
+      .mark-btn.active[data-mark="triangle"] {
+        color: var(--warning-color);
+        background: rgba(243, 156, 18, 0.15);
+        border-color: var(--warning-color);
+      }
+      .mark-btn.active[data-mark="square"] {
+        color: var(--danger-color);
+        background: rgba(231, 76, 60, 0.15);
+        border-color: var(--danger-color);
+      }
+      .question-image-wrap {
+        position: relative;
+        margin-bottom: 14px;
+        overflow: hidden;
+        border-radius: var(--border-radius-sm);
+        box-shadow: var(--shadow-light);
+        isolation: isolate;
+        --hz-scale: 1.9;
+      }
+      .question-image {
+        width: 100%;
+        display: block;
+        cursor: default;
+      }
+      /* زوم نرم: وقتی موس روی تصویر سوال می‌رود، تصویر آرام بزرگ می‌شود و نقطه‌ی زوم دنبال موس حرکت می‌کند */
+      .hz-wrap img {
+        transform-origin: var(--hz-x, 50%) var(--hz-y, 50%);
+        transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+        will-change: transform;
+      }
+      .hz-wrap.hz-on img {
+        transform: scale(var(--hz-scale, 1.9));
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hz-wrap img {
+          transition-duration: 0.01s;
+        }
+      }
+      .zoom-img-wrap {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 12px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+        line-height: 0;
+        isolation: isolate;
+        --hz-scale: 2.2;
+      }
+      /* دکمه‌ی ذخیره‌ی سوال (بالا، سمت چپ) برای عیب‌یابی؛ هم‌اندازه‌ی دکمه‌های علامت‌گذاری */
+      .save-q-btn {
+        height: 32px;
+        padding: 0 10px;
+        gap: 6px;
+        flex-shrink: 0;
+        font-family: inherit;
+        white-space: nowrap;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: var(--text-muted);
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        transition: var(--transition);
+      }
+      .save-q-btn i {
+        font-size: 0.95rem;
+      }
+      .save-q-btn:hover {
+        background: rgba(255, 193, 7, 0.14);
+        border-color: #f2b705;
+        color: #d79b00;
+      }
+      .save-q-btn.saved,
+      .save-q-btn.saved:hover {
+        background: #ffc933;
+        border-color: #f2b705;
+        color: #3d2f00;
+      }
+      .zoom-panel .save-q-btn {
+        height: 28px;
+        padding: 0 9px;
+        font-size: 0.8rem;
+        border-color: rgba(255, 255, 255, 0.35);
+        color: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .zoom-panel .save-q-btn:hover {
+        background: rgba(255, 201, 51, 0.22);
+        border-color: #ffc933;
+        color: #ffc933;
+      }
+      .zoom-panel .save-q-btn.saved,
+      .zoom-panel .save-q-btn.saved:hover {
+        background: #ffc933;
+        border-color: #f2b705;
+        color: #3d2f00;
+      }
+      .options-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 10px;
+      }
+      .option-item.prev-correct { outline: 2px dashed var(--success-color); outline-offset: 2px; }
+      .option-item.prev-wrong { outline: 2px dashed var(--danger-color); outline-offset: 2px; }
+      .prev-answer-banner { margin-top: 10px; padding: 8px 12px; border-radius: var(--border-radius-sm); font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: rgba(243, 156, 18, 0.14); color: #d68910; }
+      .prev-answer-banner.correct { background: rgba(46, 204, 113, 0.12); color: var(--success-color); }
+      .prev-answer-banner.incorrect { background: rgba(231, 76, 60, 0.12); color: var(--danger-color); }
+      .option-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: bold;
+      }
+      .option-item:hover {
+        background: rgba(0, 105, 148, 0.1);
+      }
+      .option-item.selected {
+        background: rgba(46, 204, 113, 0.2);
+        border-color: var(--success-color);
+        color: var(--success-color);
+      }
+      .option-item.locked {
+        cursor: default;
+      }
+      .option-item.correct-answer {
+        background: rgba(46, 204, 113, 0.28);
+        border-color: var(--success-color);
+        color: var(--success-color);
+        font-weight: 900;
+      }
+      .option-item.wrong-answer {
+        background: rgba(231, 76, 60, 0.22);
+        border-color: var(--danger-color);
+        color: var(--danger-color);
+      }
+      .instant-feedback-banner {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .instant-feedback-banner.correct {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--success-color);
+      }
+      .instant-feedback-banner.incorrect {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--danger-color);
+      }
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+      .page-btn {
+        padding: 8px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        background: var(--card-bg);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .page-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+      .exam-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+      }
+      .nav-drawer {
+        position: fixed;
+        top: 0;
+        left: -320px;
+        width: 300px;
+        height: 100%;
+        background: var(--card-bg);
+        border-left: 1px solid var(--border-color);
+        box-shadow: var(--shadow);
+        z-index: 900;
+        transition: left 0.3s ease;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .nav-drawer.open {
+        left: 0;
+      }
+      .nav-drawer h3 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .nav-drawer-legend {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+      .nav-drawer-legend span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+      .nav-chip {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        background: var(--border-color);
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+      }
+      .nav-chip.answered {
+        background: var(--success-color);
+        color: white;
+      }
+      .nav-chip.marked::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--mark-dot-color, var(--warning-color));
+        border: 2px solid var(--card-bg);
+      }
+      .nav-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 890;
+      }
+      .nav-overlay.open {
+        display: block;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+        padding: 20px;
+      }
+      .modal.active {
+        display: flex;
+        animation: fadeIn 0.25s ease;
+      }
+      .modal-content {
+        background: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        padding: 28px;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .modal-content h3 {
+        color: var(--primary-color);
+        margin-bottom: 12px;
+      }
+      .modal-content p {
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+      .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .review-summary {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 15px 0;
+        flex-wrap: wrap;
+      }
+      .review-chip-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        max-height: 120px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+      }
+      .review-chip {
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        background: var(--danger-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+      .not-started-note { display: none; text-align: center; padding: 48px 20px; color: var(--text-muted); }
+      .not-started-note i { font-size: 2.5rem; margin-bottom: 12px; color: var(--primary-color); }
+      #exam-app.not-started .not-started-note { display: block; }
+      #exam-app.not-started .quick-stats,
+      #exam-app.not-started .filters,
+      #exam-app.not-started .mini-progress,
+      #exam-app.not-started .pagination,
+      #exam-app.not-started #prev-answers-btn,
+      #exam-app.not-started #auto-next-btn,
+      #exam-app.not-started .exam-actions { display: none !important; }
+      #exam-app.not-started .questions-container {
+        filter: blur(14px);
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .not-started-note { position: relative; z-index: 2; }
+      .finish-hint { width: 100%; text-align: center; font-size: 0.9rem; color: var(--text-muted); }
+      .result-booklets { margin-top: 24px; text-align: center; }
+      .result-booklets h3 { color: var(--primary-color); margin-bottom: 12px; font-size: 1.1rem; }
+      .booklet-table-scroll { overflow-x: auto; max-width: 100%; }
+      .booklet-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+      .booklet-table th, .booklet-table td { padding: 8px 10px; border: 1px solid var(--border-color); white-space: nowrap; }
+      .booklet-table th { background: var(--water-dark); color: var(--text-color); }
+      .result-screen {
+        display: none;
+        text-align: center;
+      }
+      .result-screen.active {
+        display: block;
+      }
+      .result-container {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        margin-bottom: 25px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-light);
+      }
+      .result-score {
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin: 15px 0;
+      }
+      .result-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        margin-top: 25px;
+      }
+      .result-detail-card {
+        background: rgba(0, 105, 148, 0.06);
+        border-radius: var(--border-radius);
+        padding: 18px;
+      }
+      .result-detail-card h4 {
+        color: var(--primary-color);
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+      }
+      .result-detail-card p {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--text-color);
+        margin: 0;
+      }
+      .image-zoom-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 1100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        cursor: default;
+      }
+      .image-zoom-modal.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .zoomed-image {
+        max-width: 92%;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      }
+      .zoom-panel {
+        display: flex;
+        flex-direction: column;
+        width: 94%;
+        max-width: 900px;
+        max-height: 95vh;
+        overflow-y: auto;
+        cursor: default;
+      }
+      .zoom-panel .question-head {
+        margin-bottom: 10px;
+      }
+      .zoom-panel .question-number {
+        color: #fff;
+        font-size: 0.95rem;
+      }
+      .zoom-panel .mark-buttons {
+        gap: 6px;
+      }
+      .zoom-panel .mark-btn {
+        width: 26px;
+        height: 26px;
+        border-color: rgba(255, 255, 255, 0.35);
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .zoom-panel .mark-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .zoom-panel .zoomed-image {
+        width: 100%;
+        max-width: 100%;
+        max-height: 70vh;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        display: block;
+      }
+      .zoom-panel .options-container {
+        grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .zoom-panel .option-item {
+        padding: 9px;
+        font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        color: #fff;
+      }
+      .zoom-panel .option-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .zoom-panel .option-item.selected {
+        background: rgba(46, 204, 113, 0.28);
+        border-color: var(--success-color);
+        color: #fff;
+      }
+      .zoom-panel .option-item.correct-answer {
+        background: rgba(46, 204, 113, 0.35);
+        border-color: var(--success-color);
+        color: #fff;
+      }
+      .zoom-panel .option-item.wrong-answer {
+        background: rgba(231, 76, 60, 0.35);
+        border-color: var(--danger-color);
+        color: #fff;
+      }
+      .notification {
+        position: fixed;
+        bottom: 24px;
+        left: 24px;
+        z-index: 1200;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 260px;
+        max-width: 360px;
+        padding: 14px 18px;
+        border-radius: var(--border-radius);
+        background: var(--card-bg);
+        color: var(--text-color);
+        box-shadow: var(--shadow);
+        border-right: 4px solid var(--primary-color);
+        transform: translateY(20px);
+        opacity: 0;
+        transition: transform 0.35s ease, opacity 0.35s ease;
+      }
+      .notification.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .notification.success { border-right-color: var(--success-color); }
+      .notification.error { border-right-color: var(--danger-color); }
+      .notification.info { border-right-color: var(--secondary-color); }
+      .notification.success i { color: var(--success-color); }
+      .notification.error i { color: var(--danger-color); }
+      .notification.info i { color: var(--secondary-color); }
+      .footer {
+        text-align: center;
+        padding: 18px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border-color);
+        font-size: 0.85rem;
+      }
+      body.modal-open {
+        overflow: hidden;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+        100% { transform: scale(1); }
+      }
+      @media (max-width: 640px) {
+.exam-toolbar { flex-direction: column; align-items: stretch; }
+.toolbar-actions { justify-content: space-between; }
+.nav-drawer { width: 85%; left: -100%; }
+.nav-grid { grid-template-columns: repeat(4, 1fr); }
+}
+    </style>
+  
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>مرکز آزمون — اجرای آزمون</span>
+        </div>
+        <div class="theme-picker"></div>
+      </div>
+
+      <div class="main-content">
+        <!-- حالتی که هیچ آزمونی ساخته نشده -->
+        <div class="empty-state" id="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h2>هیچ آزمون فعالی پیدا نشد</h2>
+          <p>ابتدا باید از مرکز آزمون، یک آزمون جدید بسازید.</p>
+          <button class="btn btn-primary" onclick="window.location.href='exam-center.html'">
+            <i class="fas fa-arrow-right"></i> رفتن به مرکز آزمون
+          </button>
+        </div>
+
+        <!-- حالتی که از مرکز آزمون باز شده و منتظر دریافت اطلاعات آزمون هستیم -->
+        <div class="empty-state" id="waiting-state" style="display: none">
+          <i class="fas fa-spinner fa-spin"></i>
+          <h2>در حال دریافت آزمون از مرکز آزمون...</h2>
+          <p>چند لحظه صبر کنید. اگر این پیام طولانی شد، این پنجره را ببندید و دوباره از مرکز آزمون امتحان کنید.</p>
+        </div>
+
+        <!-- برنامه اصلی آزمون -->
+        <div id="exam-app" class="not-started" style="display:none;">
+          <div class="exam-toolbar">
+            <div class="exam-title-wrap">
+              <div class="exam-title" id="exam-name">آزمون دستی</div>
+              <div class="exam-subtitle" id="exam-subtitle">۰ سوال</div>
+            </div>
+            <div class="toolbar-actions">
+              <div class="timer" id="exam-timer">00:00:00</div>
+              <button class="icon-btn" id="hide-timer-btn" onclick="toggleTimerVisibility()" title="مخفی/نمایش تایمر">
+                <i class="fas fa-eye-slash"></i>
+              </button>
+              <button class="icon-btn" id="prev-answers-btn" onclick="togglePrevAnswers()" title="نمایش/مخفی‌کردن پاسخ‌های قبلی من" style="display:none">
+                <i class="fas fa-clock-rotate-left"></i>
+              </button>
+              <button class="icon-btn" id="auto-next-btn" onclick="toggleAutoNext()" title="بعد از پاسخ در حالت زوم، خودکار برو سوال بعد">
+                <i class="fas fa-forward"></i>
+              </button>
+              <button class="icon-btn" onclick="openNavigator()" title="نمای کلی سوالات">
+                <i class="fas fa-th"></i>
+              </button>
+              <button class="btn btn-secondary" id="next-booklet-btn" onclick="askNextBooklet(false)" style="display:none" title="پایان این دفترچه و رفتن به دفترچه بعدی">
+                <i class="fas fa-angles-left"></i> دفترچه بعدی
+              </button>
+              <button class="btn btn-primary" id="start-exam-btn" onclick="startExam()">
+                <i class="fas fa-play"></i> شروع آزمون
+              </button>
+            </div>
+          </div>
+
+          <!-- تایمر شناور: با اسکرول به پایین صفحه، جای تایمر بالا را می‌گیرد -->
+          <div class="floating-timer" id="floating-timer" onclick="scrollToTop()" title="بازگشت به بالا">
+            <i class="fas fa-clock"></i>
+            <span id="floating-timer-value">00:00:00</span>
+          </div>
+
+          <div class="not-started-note" id="not-started-note">
+            <i class="fas fa-eye-slash"></i>
+            <p>سوالات تا زمانی که دکمه «شروع آزمون» را نزنید تار هستند و قابل خواندن نیستند.</p>
+          </div>
+
+          <div class="quick-stats">
+            <div class="quick-stat">
+              <div class="num" id="stat-answered">0</div>
+              <div class="label">پاسخ داده شده</div>
+            </div>
+            <div class="quick-stat">
+              <div class="num" id="stat-unanswered">0</div>
+              <div class="label">بی‌پاسخ</div>
+            </div>
+            <div class="quick-stat" style="display:none">
+              <div class="num" id="stat-flagged">0</div>
+              <div class="label">علامت‌گذاری شده</div>
+            </div>
+          </div>
+
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all" onclick="filterQuestions('all', this)">همه سوالات</button>
+            <button class="filter-btn" data-filter="not-answered" onclick="filterQuestions('not-answered', this)">پاسخ داده نشده</button>
+            <button class="filter-btn" data-filter="answered" onclick="filterQuestions('answered', this)">پاسخ داده شده</button>
+          </div>
+
+          <div class="mini-progress" id="mini-progress"></div>
+
+          <div class="questions-container" id="questions-container"></div>
+
+          <div class="pagination" id="pagination"></div>
+
+          <div class="exam-actions">
+            <button class="btn btn-success" id="finish-exam-btn" onclick="confirmFinishExam()">
+              <i class="fas fa-flag-checkered"></i> پایان آزمون
+            </button>
+            <div class="finish-hint" id="finish-hint" style="display:none"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <p>ساخته شده با ❤️ | پشتیبانی: support.azmoonyar@gmail.com | نسخه ۴.۱.۰</p>
+      </div>
+    </div>
+
+    <!-- درایور ناوبری سوالات -->
+    <div class="nav-overlay" id="nav-overlay" onclick="closeNavigator()"></div>
+    <div class="nav-drawer" id="nav-drawer">
+      <h3>
+        نمای کلی سوالات
+        <button class="icon-btn" onclick="closeNavigator()"><i class="fas fa-times"></i></button>
+      </h3>
+      <div class="nav-drawer-legend">
+        <span><span class="legend-dot" style="background:var(--success-color)"></span> پاسخ داده شده</span>
+        <span><span class="legend-dot" style="background:var(--border-color)"></span> بی‌پاسخ</span>
+      </div>
+      <div class="nav-grid" id="nav-grid"></div>
+    </div>
+
+    <!-- مودال تایید پایان آزمون -->
+    <div class="modal" id="finishModal">
+      <div class="modal-content">
+        <h3><i class="fas fa-flag-checkered"></i> پایان آزمون</h3>
+        <p>خلاصه وضعیت پاسخ‌های شما:</p>
+        <div class="review-summary">
+          <div class="quick-stat"><div class="num" id="review-answered">0</div><div class="label">پاسخ داده شده</div></div>
+          <div class="quick-stat"><div class="num" id="review-unanswered">0</div><div class="label">بی‌پاسخ</div></div>
+          <div class="quick-stat" style="display:none"><div class="num" id="review-flagged">0</div><div class="label">علامت‌گذاری شده</div></div>
+        </div>
+        <div id="review-unanswered-wrap" style="display:none;">
+          <p style="margin-bottom:8px;">سوالات بی‌پاسخ (برای پرش کلیک کنید):</p>
+          <div class="review-chip-list" id="review-chip-list"></div>
+        </div>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" onclick="finishExam()">بله، پایان آزمون</button>
+          <button class="btn btn-secondary" onclick="closeModal('finishModal')">خیر، ادامه آزمون</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال پایان دفترچه / رفتن به دفترچه بعدی -->
+    <div class="modal" id="bookletModal">
+      <div class="modal-content">
+        <h3><i class="fas fa-file-lines"></i> <span id="booklet-modal-title">پایان دفترچه</span></h3>
+        <p id="booklet-modal-text"></p>
+        <div class="modal-buttons" id="booklet-modal-buttons">
+          <button class="btn btn-primary" onclick="goNextBooklet()">رفتن به دفترچه بعدی</button>
+          <button class="btn btn-secondary" id="booklet-modal-stay" onclick="closeModal('bookletModal')">ماندن در این دفترچه</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال زمان پایان یافته -->
+    <div class="modal" id="timeoutModal">
+      <div class="modal-content">
+        <h3><i class="fas fa-hourglass-end"></i> زمان شما به پایان رسید</h3>
+        <p>آیا می‌خواهید آزمون را ادامه دهید یا به پایان برسانید؟</p>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" onclick="continueExam()">ادامه آزمون</button>
+          <button class="btn btn-secondary" onclick="finishExam()">پایان آزمون</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ================== بارگذاری جلسه آزمون ==================
+      // اگر این صفحه توسط مرکز آزمون با window.open باز شده باشد (window.opener موجود
+      // است)، اطلاعات آزمون به‌جای localStorage مشترک (که بین دو فایل جدا روی
+      // file:// کار نمی‌کند) از طریق postMessage از پنجره‌ی مرکز آزمون دریافت می‌شود.
+      const SESSION_KEY = "dy_examSession";
+      const openedFromBookYar = !!window.opener;
+
+      let session = null;
+      let PROGRESS_KEY = null;
+
+      if (!openedFromBookYar) {
+        const rawSession = localStorage.getItem(SESSION_KEY);
+        if (rawSession) {
+          try {
+            session = JSON.parse(rawSession);
+            PROGRESS_KEY = `dy_examProgress_${session.id}`;
+          } catch (e) {
+            session = null;
+          }
+        }
+      }
+
+      let examState = {
+        answers: {},
+        marks: {},
+        currentPage: 1,
+        questionsPerPage: 10,
+        currentFilter: "all",
+        timeRemaining: session ? session.timeLimitSeconds : 0,
+        examStarted: false,
+        timerInterval: null,
+        timerHidden: false,
+        muted: false,
+        autoNextInZoom: false,
+        showPrevious: false,
+        warned15: false,
+        warned5: false,
+        warned1: false,
+        quarterNotified: false, // نوتیس «یک‌چهارم پایانی» دفترچه نشان داده شده؟
+        halfNotified: false, // نوتیس «نصف زمان گذشت» (فعال‌شدن پایان آزمون) نشان داده شده؟
+        finished: false,
+        bookletIdx: 0, // دفترچه‌ی فعلی (فقط وقتی آزمون چند دفترچه‌ای است)
+        bookletSpent: 0, // ثانیه‌های مصرف‌شده در دفترچه‌های تمام‌شده
+        bookletTimes: [], // ثانیه‌ی مصرف‌شده‌ی هر دفترچه‌ی تمام‌شده
+      };
+
+      function activateSession(newSession) {
+        session = newSession;
+        PROGRESS_KEY = `dy_examProgress_${session.id}`;
+        examState.timeRemaining = session.timeLimitSeconds || 0;
+        try {
+          localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        } catch (e) {
+          /* اگر حجم زیاد بود و ذخیره محلی ناموفق شد، آزمون همچنان از حافظه اجرا می‌شود */
+        }
+        document.getElementById("empty-state").style.display = "none";
+        document.getElementById("waiting-state").style.display = "none";
+        document.getElementById("exam-app").style.display = "block";
+        initExam();
+        querySavedState();
+      }
+
+      if (openedFromBookYar) {
+        document.getElementById("empty-state").style.display = "none";
+        document.getElementById("waiting-state").style.display = "";
+
+        window.addEventListener("message", function (e) {
+          const data = e.data;
+          if (data && data.type === "dy_examSession" && data.session) {
+            activateSession(data.session);
+            try {
+              window.opener.postMessage({ type: "examSessionReceived" }, "*");
+            } catch (err) {
+              /* بی‌اهمیت */
+            }
+          }
+        });
+
+        // به مرکز آزمون اعلام می‌کنیم آماده‌ی دریافت داده هستیم (چند بار برای اطمینان)
+        const pingReady = function () {
+          try {
+            window.opener.postMessage({ type: "examReady" }, "*");
+          } catch (err) {
+            /* بی‌اهمیت */
+          }
+        };
+        pingReady();
+        setTimeout(pingReady, 300);
+        setTimeout(pingReady, 900);
+        setTimeout(pingReady, 2000);
+
+        // اگر بعد از مدتی هیچ داده‌ای نرسید، حالت خالی نمایش داده می‌شود
+        setTimeout(function () {
+          if (!session) {
+            document.getElementById("waiting-state").style.display = "none";
+            document.getElementById("empty-state").style.display = "";
+          }
+        }, 12000);
+      } else if (session) {
+        document.getElementById("empty-state").style.display = "none";
+        document.getElementById("exam-app").style.display = "block";
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+
+        if (session) {
+          initExam();
+        }
+      });
+
+      // ================== مقداردهی اولیه آزمون ==================
+      function initExam() {
+        document.getElementById("exam-name").textContent = session.examName || "آزمون دستی";
+        document.getElementById("exam-subtitle").textContent = `${session.questions.length} سوال`;
+
+        examState.showPrevious = !!session.showPrevious;
+        examState.bookletIdx = 0;
+        examState.bookletSpent = 0;
+        examState.bookletTimes = [];
+        examState.timeRemaining = currentLimitSeconds();
+        restoreProgress();
+        if (examState.finished) {
+          // آزمون قبلاً تمام شده؛ مستقیم کارنامه
+          localStorage.setItem("fromDigitalYar", "true");
+          window.location.href = "karnameh-engine.html";
+          return;
+        }
+        updateStartedUI();
+        updateBookletUI();
+        updatePrevAnswersBtn();
+        renderTimerDisplay();
+        renderQuestions();
+        renderMiniProgress();
+        createPagination();
+        updateStats();
+
+        if (examState.examStarted && !examState.finished) {
+          document.getElementById("start-exam-btn").style.display = "none";
+          startTimer();
+          showNotification("آزمون قبلی شما بازیابی شد و ادامه پیدا کرد.", "info");
+        }
+
+        document.addEventListener("keydown", handleKeyboard);
+        window.addEventListener("beforeunload", (e) => {
+          if (examState.examStarted && !examState.finished) {
+            e.preventDefault();
+            e.returnValue = "";
+          }
+        });
+
+        window.addEventListener("scroll", handleFloatingTimerScroll, { passive: true });
+        handleFloatingTimerScroll();
+      }
+
+      // وقتی نوار ابزار بالا (و تایمر اصلی داخل آن) از دید خارج شود،
+      // تایمر کوچک شناور در پایین صفحه ظاهر می‌شود.
+      function handleFloatingTimerScroll() {
+        const toolbar = document.querySelector(".exam-toolbar");
+        const floating = document.getElementById("floating-timer");
+        if (!toolbar || !floating) return;
+
+        const rect = toolbar.getBoundingClientRect();
+        const toolbarIsHidden = rect.bottom < 0;
+        floating.classList.toggle("show", toolbarIsHidden);
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ================== نمایش پاسخ‌های قبلی (فقط تست آموزشی) ==================
+      function prevAgoText(at) {
+        if (!at) return "";
+        const m = Math.floor((Date.now() - at) / 60000);
+        if (m < 1) return "همین الان";
+        if (m < 60) return m + " دقیقه پیش";
+        const h = Math.floor(m / 60);
+        if (h < 24) return h + " ساعت پیش";
+        return Math.floor(h / 24) + " روز پیش";
+      }
+
+      function updatePrevAnswersBtn() {
+        const btn = document.getElementById("prev-answers-btn");
+        if (!btn) return;
+        const available = !!session && !!session.instantFeedback && session.questions.some((q) => q.prev);
+        btn.style.display = available ? "" : "none";
+        btn.classList.toggle("active-state", !!examState.showPrevious);
+      }
+
+      function togglePrevAnswers() {
+        examState.showPrevious = !examState.showPrevious;
+        updatePrevAnswersBtn();
+        renderQuestions();
+        const zoomModal = document.querySelector(".image-zoom-modal.active");
+        if (zoomModal) refreshZoomModal(parseInt(zoomModal.dataset.questionNumber, 10));
+        saveProgress();
+      }
+
+      // ================== ذخیره/بازیابی پیشرفت ==================
+      function saveProgress() {
+        if (!PROGRESS_KEY) return;
+        const data = {
+          answers: examState.answers,
+          marks: examState.marks,
+          timeRemaining: examState.timeRemaining,
+          bookletIdx: examState.bookletIdx,
+          bookletSpent: examState.bookletSpent,
+          bookletTimes: examState.bookletTimes,
+          examStarted: examState.examStarted,
+          showPrevious: examState.showPrevious,
+          finished: examState.finished,
+          savedAt: Date.now(),
+        };
+        localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+      }
+
+      function restoreProgress() {
+        if (!PROGRESS_KEY) return;
+        const raw = localStorage.getItem(PROGRESS_KEY);
+        if (!raw) return;
+        try {
+          const data = JSON.parse(raw);
+          examState.answers = data.answers || {};
+          examState.marks = {};
+          examState.timeRemaining =
+            typeof data.timeRemaining === "number" ? data.timeRemaining : examState.timeRemaining;
+          if (hasBooklets() && typeof data.bookletIdx === "number") {
+            examState.bookletIdx = Math.max(0, Math.min(data.bookletIdx, session.booklets.length - 1));
+            examState.bookletSpent = Number(data.bookletSpent) || 0;
+            examState.bookletTimes = Array.isArray(data.bookletTimes) ? data.bookletTimes : [];
+          }
+          examState.examStarted = !!data.examStarted;
+          examState.finished = !!data.finished;
+          if (typeof data.showPrevious === "boolean") examState.showPrevious = data.showPrevious;
+        } catch (e) {
+          console.warn("بازیابی پیشرفت آزمون ناموفق بود:", e);
+        }
+      }
+
+      // ================== نمایش سوالات ==================
+      function renderQuestions() {
+        const container = document.getElementById("questions-container");
+        container.innerHTML = "";
+
+        const list = activeQs();
+        const total = list.length;
+        const startIndex = (examState.currentPage - 1) * examState.questionsPerPage;
+        const endIndex = Math.min(startIndex + examState.questionsPerPage, total);
+
+        for (let i = startIndex; i < endIndex; i++) {
+          const question = list[i];
+          const card = document.createElement("div");
+          card.className = "question-card";
+          card.id = `question-${question.number}`;
+
+          const { markButtonsHTML, optionsHTML, feedbackHTML } = buildQuestionMarkAndOptionsHTML(question);
+
+          card.innerHTML = `
+            <div class="question-head">
+              <div class="question-number">سوال ${question.number}</div>
+              ${saveBtnHTML(question)}
+            </div>
+            <div class="question-image-wrap hz-wrap">
+              <img src="${question.image}" class="question-image" alt="سوال ${question.number}" onclick="zoomQuestionImage(${question.number})">
+            </div>
+            <div class="options-container">${optionsHTML}</div>
+            ${feedbackHTML}
+          `;
+
+          applyFilterToCard(card, question.number);
+          container.appendChild(card);
+        }
+      }
+
+      function applyFilterToCard(card, questionNumber) {
+        const filter = examState.currentFilter;
+        let hide = false;
+        if (filter === "not-answered" && examState.answers[questionNumber]) hide = true;
+        if (filter === "answered" && !examState.answers[questionNumber]) hide = true;
+        if (filter === "flagged" && !examState.marks[questionNumber]) hide = true;
+        card.classList.toggle("hidden-by-filter", hide);
+      }
+
+      function filterQuestions(filter, btn) {
+        examState.currentFilter = filter;
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+        if (btn) btn.classList.add("active");
+
+        document.querySelectorAll(".question-card").forEach((card) => {
+          const qNum = parseInt(card.id.replace("question-", ""));
+          applyFilterToCard(card, qNum);
+        });
+      }
+
+      // سربرگ علامت‌گذاری + گزینه‌های یک سوال را می‌سازد (برای کارت اصلی و پنجره زوم مشترک است)
+      function buildQuestionMarkAndOptionsHTML(question) {
+        const activeMark = examState.marks[question.number] || null;
+        const optionsCount = session.optionsCount || 4;
+        const optionLetters = ["۱", "۲", "۳", "۴", "۵"];
+        const instantFeedback = !!session.instantFeedback;
+        const userAnswer = examState.answers[question.number] || null;
+        const revealed = instantFeedback && !!userAnswer;
+        const correctNum = question.correctAnswer
+          ? parseInt(question.correctAnswer, 10)
+          : null;
+        const prev = question.prev || null;
+        const showPrev = !!(instantFeedback && examState.showPrevious && prev);
+
+        let optionsHTML = "";
+        for (let j = 0; j < optionsCount; j++) {
+          const optionNumber = j + 1;
+          const selected = userAnswer === optionNumber;
+          let cls = "option-item";
+          if (selected) cls += " selected";
+          if (showPrev && !revealed && prev.answer === optionNumber) cls += prev.status === "correct" ? " prev-correct" : " prev-wrong";
+          if (revealed) {
+            cls += " locked";
+            if (optionNumber === correctNum) cls += " correct-answer";
+            else if (selected) cls += " wrong-answer";
+          }
+          optionsHTML += `
+            <div class="${cls}" onclick="selectOption(${question.number}, ${optionNumber})">
+              ${optionLetters[j]}
+            </div>
+          `;
+        }
+
+        let feedbackHTML = "";
+        if (revealed) {
+          if (!correctNum) {
+            feedbackHTML = "";
+          } else if (userAnswer === correctNum) {
+            feedbackHTML =
+              '<div class="instant-feedback-banner correct"><i class="fas fa-circle-check"></i> پاسخ درست است</div>';
+          } else {
+            feedbackHTML =
+              '<div class="instant-feedback-banner incorrect"><i class="fas fa-circle-xmark"></i> پاسخ اشتباه — گزینه‌ی صحیح: ' +
+              optionLetters[correctNum - 1] +
+              "</div>";
+          }
+        }
+
+        if (showPrev) {
+          const ok = prev.status === "correct";
+          const ago = prevAgoText(prev.at);
+          feedbackHTML =
+            '<div class="prev-answer-banner ' + (ok ? "correct" : "incorrect") + '"><i class="fas fa-clock-rotate-left"></i> دفعه‌ی قبل: ' +
+            (ok ? "درست زدید" : "غلط زدید") +
+            (prev.answer ? " (گزینه‌ی " + optionLetters[prev.answer - 1] + ")" : "") +
+            " — " + prev.correct + " بار درست / " + prev.wrong + " بار غلط" +
+            (ago ? " — " + ago : "") + "</div>" + feedbackHTML;
+        }
+
+        return { markButtonsHTML: "", optionsHTML, feedbackHTML };
+      }
+
+      // ================== انتخاب پاسخ / علامت‌گذاری ==================
+      function selectOption(questionNumber, optionNumber) {
+        if (isQuestionLocked(questionNumber)) return;
+        if (!examState.examStarted) {
+          showNotification("لطفاً ابتدا آزمون را شروع کنید.", "error");
+          return;
+        }
+
+        if (session.instantFeedback && examState.answers[questionNumber]) {
+          // در حالت آموزشی، بعد از نمایش پاسخ دیگر امکان تغییر آن نیست
+          return;
+        }
+
+        const isSelecting = examState.answers[questionNumber] !== optionNumber;
+        if (!isSelecting) {
+          delete examState.answers[questionNumber];
+        } else {
+          examState.answers[questionNumber] = optionNumber;
+          // در تست آموزشی، هر پاسخ همان لحظه به آزمون‌سنج (مرکز آزمون) فرستاده می‌شود
+          if (session.instantFeedback) logPracticeAnswer(questionNumber, optionNumber);
+        }
+
+        renderQuestions();
+        renderMiniProgress();
+        updateStats();
+        saveProgress();
+        refreshZoomModal(questionNumber);
+
+        if (isSelecting && examState.autoNextInZoom) {
+          const zoomModal = document.querySelector(".image-zoom-modal.active");
+          if (zoomModal && parseInt(zoomModal.dataset.questionNumber, 10) === questionNumber) {
+            setTimeout(() => navigateZoomQuestion(1), 300);
+          }
+        }
+      }
+
+      // ثبت/حذف علامت سه‌گانه (دایره / مثلث / مربع) روی یک سوال.
+      // با کلیک روی همان علامتِ فعال، علامت پاک می‌شود؛ با کلیک روی علامت دیگر، جایگزین می‌شود.
+      function setMark(questionNumber, markType) {
+        if (isQuestionLocked(questionNumber)) return;
+        if (examState.marks[questionNumber] === markType) {
+          delete examState.marks[questionNumber];
+        } else {
+          examState.marks[questionNumber] = markType;
+        }
+        renderQuestions();
+        renderMiniProgress();
+        updateStats();
+        saveProgress();
+        refreshZoomModal(questionNumber);
+      }
+
+      const MARK_COLOR_VAR = {
+        circle: "var(--success-color)",
+        triangle: "var(--warning-color)",
+        square: "var(--danger-color)",
+      };
+
+      // ================== نوار وضعیت فشرده (صفحه فعلی) ==================
+      function renderMiniProgress() {
+        const wrap = document.getElementById("mini-progress");
+        wrap.innerHTML = "";
+
+        const list = activeQs();
+        const total = list.length;
+        const start = (examState.currentPage - 1) * examState.questionsPerPage;
+        const end = Math.min(start + examState.questionsPerPage, total);
+
+        for (let i = start; i < end; i++) {
+          const q = list[i];
+          const item = document.createElement("div");
+          item.className = "mini-item";
+          item.textContent = q.number;
+          if (examState.answers[q.number]) item.classList.add("answered");
+          if (examState.marks[q.number]) {
+            item.classList.add("marked");
+            item.style.setProperty("--mark-dot-color", MARK_COLOR_VAR[examState.marks[q.number]]);
+          }
+          item.onclick = () => scrollToQuestion(q.number);
+          wrap.appendChild(item);
+        }
+      }
+
+      function scrollToQuestion(questionNumber) {
+        const el = document.getElementById(`question-${questionNumber}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      // ================== صفحه‌بندی ==================
+      function createPagination() {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(activeQs().length / examState.questionsPerPage);
+        if (totalPages <= 1) return;
+
+        if (examState.currentPage > 1) {
+          const prevBtn = document.createElement("button");
+          prevBtn.className = "page-btn";
+          prevBtn.innerHTML = '<i class="fas fa-arrow-right"></i> قبلی';
+          prevBtn.onclick = () => changePage(examState.currentPage - 1);
+          pagination.appendChild(prevBtn);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+          const pageBtn = document.createElement("button");
+          pageBtn.className = "page-btn" + (i === examState.currentPage ? " active" : "");
+          pageBtn.textContent = i;
+          pageBtn.onclick = () => changePage(i);
+          pagination.appendChild(pageBtn);
+        }
+
+        if (examState.currentPage < totalPages) {
+          const nextBtn = document.createElement("button");
+          nextBtn.className = "page-btn";
+          nextBtn.innerHTML = 'بعدی <i class="fas fa-arrow-left"></i>';
+          nextBtn.onclick = () => changePage(examState.currentPage + 1);
+          pagination.appendChild(nextBtn);
+        }
+      }
+
+      function changePage(pageNumber) {
+        examState.currentPage = pageNumber;
+        renderQuestions();
+        renderMiniProgress();
+        createPagination();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ================== آمار ==================
+      function updateStats() {
+        const total = session.questions.length;
+        const answeredCount = Object.keys(examState.answers).length;
+        const markValues = Object.values(examState.marks);
+        const flaggedCount = markValues.length;
+
+        document.getElementById("stat-answered").textContent = answeredCount;
+        document.getElementById("stat-unanswered").textContent = total - answeredCount;
+        document.getElementById("stat-flagged").textContent = flaggedCount;
+
+        const statFlagged = document.getElementById("stat-flagged").closest(".quick-stat");
+        if (statFlagged) {
+          const circleCount = markValues.filter((m) => m === "circle").length;
+          const triangleCount = markValues.filter((m) => m === "triangle").length;
+          const squareCount = markValues.filter((m) => m === "square").length;
+          statFlagged.title = `دایره: ${circleCount} | مثلث: ${triangleCount} | مربع: ${squareCount}`;
+        }
+      }
+
+      // ================== ناوبر سوالات (Drawer) ==================
+      function openNavigator() {
+        if (!examState.examStarted) return;
+        renderNavigatorGrid();
+        document.getElementById("nav-drawer").classList.add("open");
+        document.getElementById("nav-overlay").classList.add("open");
+      }
+
+      function closeNavigator() {
+        document.getElementById("nav-drawer").classList.remove("open");
+        document.getElementById("nav-overlay").classList.remove("open");
+      }
+
+      function renderNavigatorGrid() {
+        const grid = document.getElementById("nav-grid");
+        grid.innerHTML = "";
+
+        activeQs().forEach((q) => {
+          const chip = document.createElement("div");
+          chip.className = "nav-chip";
+          if (examState.answers[q.number]) chip.classList.add("answered");
+          if (examState.marks[q.number]) {
+            chip.classList.add("marked");
+            chip.style.setProperty("--mark-dot-color", MARK_COLOR_VAR[examState.marks[q.number]]);
+          }
+          chip.textContent = q.number;
+          chip.onclick = () => {
+            const targetPage = Math.ceil(
+              (activeQs().findIndex((x) => x.number === q.number) + 1) / examState.questionsPerPage
+            );
+            closeNavigator();
+            changePage(targetPage);
+            setTimeout(() => scrollToQuestion(q.number), 250);
+          };
+          grid.appendChild(chip);
+        });
+      }
+
+      // ================== دفترچه‌ها (هر دفترچه تایمر جدا دارد) ==================
+      // session.booklets: [{ name, start, end, timeSeconds }] — شماره‌ی سوال‌ها پیوسته و به ترتیب دفترچه‌هاست
+      function hasBooklets() {
+        return Array.isArray(session.booklets) && session.booklets.length > 0;
+      }
+      function curBooklet() {
+        if (!hasBooklets()) return null;
+        return session.booklets[Math.min(examState.bookletIdx, session.booklets.length - 1)];
+      }
+      function activeQs() {
+        const b = curBooklet();
+        if (!b) return session.questions;
+        return session.questions.filter((q) => q.number >= b.start && q.number <= b.end);
+      }
+      function currentLimitSeconds() {
+        const b = curBooklet();
+        return b ? Number(b.timeSeconds) || 0 : session.timeLimitSeconds || 0;
+      }
+      // سوال‌های دفترچه‌های قبلی (تمام‌شده) قابل تغییر نیستند
+      function isQuestionLocked(n) {
+        const b = curBooklet();
+        return !!b && (n < b.start || n > b.end);
+      }
+      function updateBookletUI() {
+        const sub = document.getElementById("exam-subtitle");
+        const b = curBooklet();
+        if (!b) {
+          sub.textContent = `${session.questions.length} سوال`;
+          updateActionButtons();
+          return;
+        }
+        const n = session.booklets.length;
+        sub.textContent = `${b.name} (${examState.bookletIdx + 1} از ${n}) — ${b.end - b.start + 1} سوال`;
+        updateActionButtons();
+      }
+
+      // ---------- قوانین مرکز آزمون برای آزمون‌های دفترچه‌دار ----------
+      // ۱) دفترچه‌های غیرآخر: نه دکمه‌ی پایان هست و نه «دفترچه بعدی»؛ فرد باید تا پایان زمان بنشیند
+      //    و با تمام‌شدن زمان، مستقیم (بدون پیام و دکمه) وارد دفترچه‌ی بعدی می‌شود.
+      // ۲) در یک‌چهارمِ پایانی زمان هر دفترچه (آخری هم)، نوتیسی می‌آید که تا پایان کل آزمون چقدر زمان مانده.
+      // ۳) آخرین دفترچه: دکمه‌ی «پایان آزمون» فقط بعد از گذشت نصف زمان همان دفترچه فعال می‌شود.
+      // آزمون بدون دفترچه مثل قبل است (پایان آزمون هر لحظه آزاد).
+      function isLastBooklet() {
+        return !hasBooklets() || examState.bookletIdx >= session.booklets.length - 1;
+      }
+      function canFinishNow() {
+        if (!hasBooklets()) return true;
+        if (!isLastBooklet()) return false;
+        const limit = currentLimitSeconds();
+        if (!limit) return true;
+        return limit - examState.timeRemaining >= limit / 2;
+      }
+      // کل ثانیه‌های باقی‌مانده تا پایان آزمون: باقی‌مانده‌ی این دفترچه + تمام زمان دفترچه‌های بعدی
+      function secondsUntilExamEnd() {
+        let total = Math.max(0, examState.timeRemaining);
+        for (let i = examState.bookletIdx + 1; i < session.booklets.length; i++) {
+          total += Number(session.booklets[i].timeSeconds) || 0;
+        }
+        return total;
+      }
+      function faDigits(v) {
+        return String(v).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+      }
+      function formatDurationFa(sec) {
+        const totalMin = Math.max(1, Math.ceil(sec / 60));
+        const h = Math.floor(totalMin / 60);
+        const m = totalMin % 60;
+        if (h && m) return `${faDigits(h)} ساعت و ${faDigits(m)} دقیقه`;
+        if (h) return `${faDigits(h)} ساعت`;
+        return `${faDigits(m)} دقیقه`;
+      }
+      function notifyQuarterLeft() {
+        const b = curBooklet();
+        if (!b) return;
+        const next = session.booklets[examState.bookletIdx + 1];
+        const tail = next
+          ? `با تمام‌شدن زمان این دفترچه، مستقیم وارد «${next.name}» می‌شوید.`
+          : "با تمام‌شدن این زمان، آزمون پایان می‌یابد.";
+        showNotification(
+          `یک‌چهارم پایانی «${b.name}» شروع شد. تا پایان آزمون ${formatDurationFa(secondsUntilExamEnd())} زمان باقی مانده است. ${tail}`,
+          "info",
+          12000,
+        );
+      }
+
+      function updateActionButtons() {
+        const finishBtn = document.getElementById("finish-exam-btn");
+        const nextBtn = document.getElementById("next-booklet-btn");
+        const hint = document.getElementById("finish-hint");
+        const multi = hasBooklets();
+        const isLast = isLastBooklet();
+        const active = examState.examStarted && !examState.finished;
+
+        if (finishBtn) {
+          finishBtn.style.display = isLast ? "" : "none";
+          const ok = canFinishNow();
+          finishBtn.disabled = !ok;
+          if (hint) {
+            if (multi && isLast && !ok && active) {
+              const limit = currentLimitSeconds();
+              const left = limit / 2 - (limit - examState.timeRemaining);
+              hint.textContent = `دکمه‌ی «پایان آزمون» بعد از گذشت نصف زمان این دفترچه فعال می‌شود (حدود ${formatDurationFa(left)} دیگر).`;
+              hint.style.display = "";
+            } else {
+              hint.style.display = "none";
+            }
+          }
+        }
+
+        // «دفترچه بعدی» فقط یک راه خروج است برای دفترچه‌ی غیرآخرِ بدون محدودیت زمان
+        // (چون زمانی وجود ندارد که خودکار تمام شود)
+        if (nextBtn) {
+          const show = multi && !isLast && active && !currentLimitSeconds();
+          nextBtn.style.display = show ? "" : "none";
+        }
+
+        // نوتیس فعال‌شدن «پایان آزمون» در آخرین دفترچه
+        if (multi && isLast && active && currentLimitSeconds() && !examState.halfNotified && canFinishNow()) {
+          examState.halfNotified = true;
+          showNotification("نصف زمان گذشت؛ از این لحظه می‌توانید «پایان آزمون» را بزنید.", "info", 6000);
+        }
+      }
+
+      // فقط برای دفترچه‌ی غیرآخرِ بدون محدودیت زمان استفاده می‌شود
+      function askNextBooklet() {
+        const b = curBooklet();
+        const next = session.booklets[examState.bookletIdx + 1];
+        if (!b || !next) return;
+        document.getElementById("booklet-modal-title").textContent = `پایان «${b.name}»؟`;
+        document.getElementById("booklet-modal-text").textContent =
+          `با رفتن به «${next.name}» دیگر نمی‌توانید به این دفترچه برگردید.`;
+        document.getElementById("booklet-modal-buttons").style.display = "";
+        document.getElementById("bookletModal").classList.add("active");
+        document.body.classList.add("modal-open");
+      }
+
+      // auto = true: زمان دفترچه تمام شده و بدون هیچ پیام/دکمه‌ای مستقیم به دفترچه‌ی بعد می‌رویم
+      function goNextBooklet(auto) {
+        closeModal("bookletModal");
+        document.getElementById("booklet-modal-buttons").style.display = "";
+        if (!hasBooklets() || examState.bookletIdx >= session.booklets.length - 1) return;
+        // اگر زوم تصویر یا نمای کلی سوالات باز بود، می‌بندیم تا سوال دفترچه‌ی قبلی روی صفحه نماند
+        closeImageZoom();
+        closeNavigator();
+        const prevName = curBooklet().name;
+        const limit = currentLimitSeconds();
+        const spentHere = limit ? limit - Math.max(0, examState.timeRemaining) : 0;
+        examState.bookletTimes[examState.bookletIdx] = spentHere;
+        examState.bookletSpent += spentHere;
+        examState.bookletIdx++;
+        examState.timeRemaining = currentLimitSeconds();
+        examState.warned15 = false;
+        examState.warned5 = false;
+        examState.warned1 = false;
+        examState.quarterNotified = false;
+        examState.halfNotified = false;
+        examState.currentPage = 1;
+        examState.currentFilter = "all";
+        updateBookletUI();
+        renderTimerDisplay();
+        renderQuestions();
+        renderMiniProgress();
+        createPagination();
+        updateStats();
+        startTimer();
+        saveProgress();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        showNotification(
+          auto === true ? `زمان «${prevName}» تمام شد؛ «${curBooklet().name}» شروع شد.` : `شروع «${curBooklet().name}»`,
+          "success",
+          5000,
+        );
+      }
+
+      // ================== تایمر ==================
+      function updateStartedUI() {
+        const app = document.getElementById("exam-app");
+        if (app) app.classList.toggle("not-started", !examState.examStarted);
+      }
+
+      function startExam() {
+        examState.examStarted = true;
+        updateStartedUI();
+        document.getElementById("start-exam-btn").style.display = "none";
+        updateBookletUI();
+        startTimer();
+        saveProgress();
+        showNotification("آزمون شروع شد! موفق باشید.", "success");
+      }
+
+      function startTimer() {
+        if (examState.timerInterval) clearInterval(examState.timerInterval);
+
+        if (!currentLimitSeconds()) {
+          renderTimerDisplay();
+          return;
+        }
+
+        examState.timerInterval = setInterval(() => {
+          examState.timeRemaining--;
+
+          if (examState.timeRemaining <= 0) {
+            examState.timeRemaining = 0;
+            renderTimerDisplay();
+            clearInterval(examState.timerInterval);
+            saveProgress();
+            if (hasBooklets() && examState.bookletIdx < session.booklets.length - 1) goNextBooklet(true);
+            else finishExam(); // آخرین دفترچه: کارنامه بلافاصله ساخته می‌شود
+            return;
+          }
+
+          if (examState.timeRemaining === 900 && !examState.warned15) {
+            examState.warned15 = true;
+            playBeep();
+            const bn = curBooklet();
+            showNotification(`⏰ فقط ۱۵ دقیقه تا پایان زمان ${bn ? "«" + bn.name + "»" : "آزمون"} باقی مانده است.`, "error", 8000);
+          }
+          if (examState.timeRemaining === 300 && !examState.warned5) {
+            examState.warned5 = true;
+            playBeep();
+            showNotification("۵ دقیقه تا پایان زمان آزمون باقی مانده است.", "info");
+          }
+          if (examState.timeRemaining === 60 && !examState.warned1) {
+            examState.warned1 = true;
+            playBeep();
+            showNotification("۱ دقیقه تا پایان زمان آزمون باقی مانده است!", "error");
+          }
+
+          // یک‌چهارم پایانی زمان هر دفترچه: اعلام زمان باقی‌مانده تا پایان کل آزمون
+          if (hasBooklets() && !examState.quarterNotified) {
+            const lim = currentLimitSeconds();
+            if (lim && examState.timeRemaining <= lim / 4) {
+              examState.quarterNotified = true;
+              notifyQuarterLeft();
+            }
+          }
+
+          renderTimerDisplay();
+          updateActionButtons();
+
+          if (examState.timeRemaining % 10 === 0) {
+            saveProgress();
+          }
+        }, 1000);
+      }
+
+      function renderTimerDisplay() {
+        const timerEl = document.getElementById("exam-timer");
+        const floatingValue = document.getElementById("floating-timer-value");
+        const floatingEl = document.getElementById("floating-timer");
+
+        if (!currentLimitSeconds()) {
+          timerEl.textContent = "بدون محدودیت";
+          timerEl.classList.remove("warning", "danger");
+          if (floatingValue && floatingEl) {
+            floatingValue.textContent = "بدون محدودیت";
+            floatingEl.classList.remove("warning", "danger");
+            floatingEl.classList.toggle("hidden-timer", examState.timerHidden);
+          }
+          return;
+        }
+
+        const t = examState.timeRemaining;
+        const hours = Math.floor(t / 3600);
+        const minutes = Math.floor((t % 3600) / 60);
+        const seconds = t % 60;
+        const text = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+        timerEl.textContent = text;
+        timerEl.classList.remove("warning", "danger");
+        if (t <= 60) timerEl.classList.add("danger");
+        else if (t <= 300) timerEl.classList.add("warning");
+
+        // همگام‌سازی تایمر شناور پایین صفحه
+        if (floatingValue && floatingEl) {
+          floatingValue.textContent = text;
+          floatingEl.classList.remove("warning", "danger");
+          if (t <= 60) floatingEl.classList.add("danger");
+          else if (t <= 300) floatingEl.classList.add("warning");
+          floatingEl.classList.toggle("hidden-timer", examState.timerHidden);
+        }
+      }
+
+      function toggleTimerVisibility() {
+        examState.timerHidden = !examState.timerHidden;
+        const timer = document.getElementById("exam-timer");
+        const btn = document.getElementById("hide-timer-btn");
+        timer.classList.toggle("hidden-timer", examState.timerHidden);
+        btn.innerHTML = examState.timerHidden
+          ? '<i class="fas fa-eye"></i>'
+          : '<i class="fas fa-eye-slash"></i>';
+
+        const floatingEl = document.getElementById("floating-timer");
+        if (floatingEl) floatingEl.classList.toggle("hidden-timer", examState.timerHidden);
+      }
+
+      function toggleAutoNext() {
+        examState.autoNextInZoom = !examState.autoNextInZoom;
+        const btn = document.getElementById("auto-next-btn");
+        btn.classList.toggle("active-state", examState.autoNextInZoom);
+      }
+
+      function playBeep() {
+        if (examState.muted) return;
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = 880;
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.25);
+        } catch (e) {
+          // پخش صدا در برخی مرورگرها بدون تعامل کاربر مسدود می‌شود؛ بی‌خطر نادیده گرفته می‌شود
+        }
+      }
+
+      function showTimeoutModal() {
+        document.getElementById("timeoutModal").classList.add("active");
+        document.body.classList.add("modal-open");
+      }
+
+      function continueExam() {
+        closeModal("timeoutModal");
+      }
+
+      // ================== پایان آزمون ==================
+      function confirmFinishExam() {
+        if (!canFinishNow()) return;
+        const total = session.questions.length;
+        const answeredCount = Object.keys(examState.answers).length;
+        const unansweredCount = total - answeredCount;
+        const flaggedCount = Object.keys(examState.marks).length;
+
+        document.getElementById("review-answered").textContent = answeredCount;
+        document.getElementById("review-unanswered").textContent = unansweredCount;
+        document.getElementById("review-flagged").textContent = flaggedCount;
+
+        const chipWrap = document.getElementById("review-chip-list");
+        const wrapContainer = document.getElementById("review-unanswered-wrap");
+        chipWrap.innerHTML = "";
+
+        if (unansweredCount > 0) {
+          wrapContainer.style.display = "block";
+          activeQs().forEach((q) => {
+            if (!examState.answers[q.number]) {
+              const chip = document.createElement("div");
+              chip.className = "review-chip";
+              chip.textContent = q.number;
+              chip.onclick = () => {
+                closeModal("finishModal");
+                const targetPage = Math.ceil(
+                  (activeQs().findIndex((x) => x.number === q.number) + 1) / examState.questionsPerPage
+                );
+                changePage(targetPage);
+                setTimeout(() => scrollToQuestion(q.number), 250);
+              };
+              chipWrap.appendChild(chip);
+            }
+          });
+        } else {
+          wrapContainer.style.display = "none";
+        }
+
+        document.getElementById("finishModal").classList.add("active");
+        document.body.classList.add("modal-open");
+      }
+
+      function finishExam() {
+        closeModal("finishModal");
+        closeModal("timeoutModal");
+
+        if (examState.timerInterval) {
+          clearInterval(examState.timerInterval);
+          examState.timerInterval = null;
+        }
+
+        examState.finished = true;
+
+        let answerCode = "";
+        for (let i = 1; i <= session.questions.length; i++) {
+          answerCode += examState.answers[i] || "0";
+        }
+
+        localStorage.setItem("studentAnswers", answerCode);
+        localStorage.setItem("examTotalQuestions", String(session.questions.length));
+        saveProgress();
+
+        closeModal("bookletModal");
+        window._studentAnswerCode = answerCode;
+        finalizeResults();
+        // بدون صفحه‌ی نتیجه‌ی میانی: بلافاصله کارنامه نمایش داده می‌شود
+        localStorage.setItem("fromDigitalYar", "true");
+        window.location.href = "karnameh-engine.html";
+      }
+
+      function fmtTime(t) {
+        return Math.max(0, Math.round(t));
+      }
+
+      // داده‌ی کارنامه را به همان فرمتی که karnameh-engine.html می‌خواند (bargehYarExamData) می‌نویسد
+      // تا کارنامه بدون هیچ دکمه یا فرم دستی، بلافاصله ساخته شود. هر آزمون جدید، داده‌ی قبلی را بازنویسی می‌کند.
+      function writeKarnamehData() {
+        const total = session.questions.length;
+        const key = session.answerKey && Array.isArray(session.answerKey.answers) ? session.answerKey.answers : null;
+        const correctAnswers = [];
+        const userAnswers = [];
+        let hasKey = false;
+        for (let i = 1; i <= total; i++) {
+          const q = session.questions.find((x) => x.number === i) || session.questions[i - 1];
+          let c = q && q.correctAnswer ? parseInt(q.correctAnswer, 10) : 0;
+          if (!c && key && key[i - 1] !== undefined) c = parseInt(key[i - 1], 10) || 0;
+          if (c) hasKey = true;
+          correctAnswers.push(c);
+          userAnswers.push(examState.answers[i] || 0);
+        }
+
+        if (!hasKey) {
+          // بدون کلید پاسخ، کارنامه‌ی تحلیلی ممکن نیست؛ داده‌ی قدیمی پاک می‌شود تا کارنامه‌ی آزمون قبلی نمایش داده نشود
+          localStorage.removeItem("bargehYarExamData");
+          return;
+        }
+
+        let metadata = [];
+        const rawSubjects = session.answerKey && Array.isArray(session.answerKey.subjects) ? session.answerKey.subjects : [];
+        if (rawSubjects.length) {
+          metadata = rawSubjects
+            .map((sj) => ({
+              name: sj.subject || sj.name || "نامشخص",
+              type: sj.type === "تخصصی" ? "تخصصی" : "عمومی",
+              start: parseInt(sj.start) || 1,
+              end: parseInt(sj.end) || total,
+              chapters: sj.chapters ? String(sj.chapters).split(/[،,]+/).map((c) => c.trim()).filter(Boolean) : [],
+            }))
+            .filter((sj) => sj.end >= sj.start);
+        } else if (hasBooklets()) {
+          // هر دفترچه یک ردیف مستقل در کارنامه
+          metadata = session.booklets.map((b) => ({ name: b.name, type: "عمومی", start: b.start, end: b.end, chapters: [] }));
+        }
+        if (!metadata.length) metadata = [{ name: "کل سوالات", type: "عمومی", start: 1, end: total, chapters: [] }];
+
+        const subjectMap = {};
+        metadata.forEach((sj) => {
+          for (let i = sj.start; i <= sj.end && i <= total; i++) subjectMap[i] = sj.name;
+        });
+
+        const data = {
+          userAnswers, correctAnswers, metadata, subjectMap,
+          totalQuestions: total,
+          examName: session.examName || "آزمون",
+          updatedAt: Date.now(),
+        };
+        try {
+          localStorage.setItem("bargehYarExamData", JSON.stringify(data));
+        } catch (e) { /* بی‌اهمیت */ }
+      }
+
+      // محاسبه‌ی نتیجه، ذخیره‌ی کارنامه‌ی تفکیکی دفترچه‌ها و ارسال به مرکز آزمون (بدون نمایش صفحه‌ی نتیجه)
+      function finalizeResults() {
+        const total = session.questions.length;
+        const timeSpent = hasBooklets()
+          ? examState.bookletSpent + (currentLimitSeconds() ? currentLimitSeconds() - Math.max(0, examState.timeRemaining) : 0)
+          : (session.timeLimitSeconds || 0) - examState.timeRemaining;
+        const graded = gradeAgainstAnswerKey();
+
+        writeKarnamehData();
+        sendResultToBookYar(graded, total, timeSpent);
+      }
+
+      // پاسخ‌های دانش‌آموز را با کلید پاسخ هر سوال (session.questions[i].correctAnswer) مقایسه می‌کند
+      function gradeAgainstAnswerKey(from, to) {
+        const allTotal = session.questions.length;
+        from = from || 1;
+        to = to || allTotal;
+        const total = to - from + 1;
+        let correct = 0,
+          wrong = 0,
+          unanswered = 0,
+          hasKey = false;
+
+        for (let i = from; i <= to; i++) {
+          const q = session.questions.find((x) => x.number === i) || session.questions[i - 1];
+          const correctNum = q && q.correctAnswer ? parseInt(q.correctAnswer, 10) : null;
+          if (correctNum) hasKey = true;
+          const userAnswer = examState.answers[i] || 0;
+
+          if (!userAnswer) {
+            unanswered++;
+          } else if (correctNum && userAnswer === correctNum) {
+            correct++;
+          } else if (correctNum) {
+            wrong++;
+          }
+        }
+
+        const optionsCount = session.optionsCount || 4;
+        const negativeMarking = !!session.negativeMarking;
+        let rawScore = correct;
+        if (negativeMarking && optionsCount > 1) {
+          rawScore = correct - wrong / (optionsCount - 1);
+        }
+        const percentage = total > 0 ? Math.round((rawScore / total) * 100) : 0;
+        const scoreOutOf20 = total > 0 ? Math.round(((rawScore / total) * 20) * 100) / 100 : 0;
+
+        return { hasKey, correct, wrong, unanswered, percentage, scoreOutOf20 };
+      }
+
+      // ثبت پاسخ لحظه‌ای تست آموزشی (بعد از انتخاب، تغییرناپذیر است) برای آمار هر سوال
+      function logPracticeAnswer(questionNumber, answer) {
+        if (!openedFromBookYar || !window.opener) return;
+        const q = session.questions.find((x) => x.number === questionNumber);
+        if (!q || !q.bookId || !q.srcNumber) return;
+        const correctNum = q.correctAnswer ? parseInt(q.correctAnswer, 10) : 0;
+        if (!correctNum) return; // بدون کلید پاسخ نمی‌شود درست/غلط را تشخیص داد
+        try {
+          window.opener.postMessage(
+            {
+              type: "dy_answerLog",
+              entries: [{
+                bookId: q.bookId, q: q.srcNumber,
+                status: answer === correctNum ? "correct" : "wrong",
+                answer: answer, mode: "practice", sessionId: session.id, at: Date.now(),
+              }],
+            },
+            "*",
+          );
+        } catch (err) {
+          /* بی‌اهمیت */
+        }
+      }
+
+      // جزئیات پاسخ هر سوال در آزمون واقعی (فقط سوال‌های دارای کلید)؛ همراه کارنامه فرستاده می‌شود
+      function buildExamDetails() {
+        if (session.instantFeedback) return []; // تست آموزشی قبلاً لحظه‌ای ثبت شده
+        const at = Date.now();
+        const out = [];
+        session.questions.forEach((q) => {
+          const correctNum = q.correctAnswer ? parseInt(q.correctAnswer, 10) : 0;
+          if (!q.bookId || !q.srcNumber || !correctNum) return;
+          const ans = examState.answers[q.number] || 0;
+          out.push({
+            bookId: q.bookId, q: q.srcNumber,
+            status: !ans ? "skipped" : ans === correctNum ? "correct" : "wrong",
+            answer: ans, mode: "exam", sessionId: session.id, at,
+          });
+        });
+        return out;
+      }
+
+      // ارسال نتیجه‌ی آزمون به پنجره‌ی مرکز آزمون تا در «آزمون‌سنج» ذخیره شود
+      function sendResultToBookYar(graded, total, timeSpentSeconds) {
+        if (!openedFromBookYar || !window.opener) return;
+        const result = {
+          id: (session.id || "examsession") + "_result",
+          examName: session.examName || "آزمون",
+          finishedAt: Date.now(),
+          negativeMarking: !!session.negativeMarking,
+          total: total,
+          correct: graded.hasKey ? graded.correct : null,
+          wrong: graded.hasKey ? graded.wrong : null,
+          unanswered: graded.unanswered,
+          scoreOutOf20: graded.hasKey ? graded.scoreOutOf20 : null,
+          percentage: graded.hasKey ? graded.percentage : null,
+          timeSpentSeconds: timeSpentSeconds,
+          bookIds: session.bookIds || [],
+        };
+        try {
+          window.opener.postMessage({ type: "dy_examResult", result: result, details: buildExamDetails() }, "*");
+        } catch (err) {
+          /* بی‌اهمیت؛ کارنامه هنوز به‌صورت محلی (karnameh-engine.html) قابل مشاهده است */
+        }
+      }
+
+      function copyStudentAnswers() {
+        const code = window._studentAnswerCode || localStorage.getItem("studentAnswers") || "";
+        if (!code) {
+          showNotification("هیچ پاسخی برای کپی کردن وجود ندارد.", "error");
+          return;
+        }
+        navigator.clipboard
+          .writeText(code)
+          .then(() => showNotification("کد پاسخ‌ها با موفقیت کپی شد!", "success"))
+          .catch((err) => showNotification("خطا در کپی پاسخ‌ها: " + err.message, "error"));
+      }
+
+      function goToAnswerSheet() {
+        localStorage.setItem("fromDigitalYar", "true");
+        window.location.href = "karnameh-engine.html";
+      }
+
+
+      // ================== زوم نرم هنگام قرار گرفتن موس روی تصویر سوال ==================
+      // موس همان موس عادی است (بدون دایره/نشانگر زوم). وقتی روی تصویر سوال می‌رود، تصویر
+      // با انیمیشن نرم بزرگ می‌شود و با حرکت موس، بخش زیر موس دیده می‌شود. با خروج موس، آرام برمی‌گردد.
+      (function () {
+        const finePointer = window.matchMedia ? window.matchMedia("(hover: hover) and (pointer: fine)") : null;
+        let activeWrap = null;
+        let raf = 0;
+        let tx = 50, ty = 50, cx = 50, cy = 50;
+        const clamp = (v) => Math.max(0, Math.min(100, v));
+
+        function paint() {
+          if (!activeWrap || !activeWrap.isConnected) {
+            activeWrap = null;
+            raf = 0;
+            return;
+          }
+          cx += (tx - cx) * 0.18;
+          cy += (ty - cy) * 0.18;
+          activeWrap.style.setProperty("--hz-x", cx.toFixed(2) + "%");
+          activeWrap.style.setProperty("--hz-y", cy.toFixed(2) + "%");
+          raf = requestAnimationFrame(paint);
+        }
+        function aim(wrap, e) {
+          const r = wrap.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          tx = clamp(((e.clientX - r.left) / r.width) * 100);
+          ty = clamp(((e.clientY - r.top) / r.height) * 100);
+        }
+        function leave() {
+          if (activeWrap) activeWrap.classList.remove("hz-on");
+          activeWrap = null;
+        }
+        window.__hzLeave = leave;
+
+        document.addEventListener(
+          "pointermove",
+          function (e) {
+            if (e.pointerType === "touch" || !finePointer || !finePointer.matches) return;
+            const wrap = e.target && e.target.closest ? e.target.closest(".hz-wrap") : null;
+            if (!wrap) {
+              leave();
+              return;
+            }
+            aim(wrap, e);
+            if (wrap !== activeWrap) {
+              leave();
+              activeWrap = wrap;
+              cx = tx;
+              cy = ty;
+              wrap.style.setProperty("--hz-x", cx.toFixed(2) + "%");
+              wrap.style.setProperty("--hz-y", cy.toFixed(2) + "%");
+              void wrap.offsetWidth; // تا انیمیشن از حالت عادی شروع شود
+              wrap.classList.add("hz-on");
+              if (!raf) raf = requestAnimationFrame(paint);
+            }
+          },
+          { passive: true }
+        );
+        document.documentElement.addEventListener("mouseleave", leave);
+        window.addEventListener("blur", leave);
+      })();
+
+      // ================== ذخیره‌ی سوال برای «عیب‌یابی» ==================
+      // کلید هر سوال: «شناسه‌ی کتاب_شماره‌ی سوال در کتاب» (همان کلیدی که عیب‌یابی استفاده می‌کند).
+      // ذخیره‌شدن فقط وقتی قطعی می‌شود که پنجره‌ی اصلی (که عیب‌یابی را مدیریت می‌کند) تأیید کند.
+      const savedQs = new Set();
+      const savePending = {};
+
+      function savKey(q) {
+        return q && q.bookId && q.srcNumber ? q.bookId + "_" + q.srcNumber : "";
+      }
+      function canSaveQuestions() {
+        return !!(openedFromBookYar && window.opener && !window.opener.closed);
+      }
+      function saveBtnHTML(q) {
+        const k = savKey(q);
+        const on = !!k && savedQs.has(k);
+        const safeKey = String(k).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+        return (
+          `<button type="button" class="save-q-btn${on ? " saved" : ""}" data-save-key="${safeKey}" ` +
+          `aria-pressed="${on}" title="${on ? "حذف از سوال‌های ذخیره‌شده" : "ذخیره‌ی سوال در عیب‌یابی"}" ` +
+          `onclick="toggleSaveQuestion(${q.number}, event)"><i class="${on ? "fas" : "far"} fa-bookmark"></i><span class="save-q-label">${on ? "ذخیره‌شده" : "ذخیره"}</span></button>`
+        );
+      }
+      function refreshSaveButtons() {
+        document.querySelectorAll(".save-q-btn").forEach((btn) => {
+          const on = savedQs.has(btn.dataset.saveKey);
+          btn.classList.toggle("saved", on);
+          btn.setAttribute("aria-pressed", String(on));
+          btn.title = on ? "حذف از سوال‌های ذخیره‌شده" : "ذخیره‌ی سوال در عیب‌یابی";
+          const ic = btn.querySelector("i");
+          if (ic) ic.className = (on ? "fas" : "far") + " fa-bookmark";
+          const lb = btn.querySelector(".save-q-label");
+          if (lb) lb.textContent = on ? "ذخیره‌شده" : "ذخیره";
+        });
+      }
+      function applySaved(key, on) {
+        if (on) savedQs.add(key);
+        else savedQs.delete(key);
+        refreshSaveButtons();
+      }
+      function toggleSaveQuestion(number, ev) {
+        if (ev) {
+          ev.stopPropagation();
+          ev.preventDefault();
+        }
+        const q = session && session.questions.find((x) => x.number === number);
+        const k = savKey(q);
+        if (!q) return;
+        if (!k) {
+          showNotification("این سوال به هیچ کتابی وصل نیست؛ فقط سوال‌های کتاب‌ها قابل ذخیره‌اند.", "error", 4500);
+          return;
+        }
+        if (!canSaveQuestions()) {
+          showNotification("برای ذخیره، آزمون باید از داخل بوک‌یار باز شود (نه مستقیم از روی فایل).", "error", 4500);
+          return;
+        }
+        if (savePending[k]) return;
+        const next = !savedQs.has(k);
+        const rollback = function () {
+          if (!savePending[k]) return;
+          clearTimeout(savePending[k]);
+          delete savePending[k];
+          applySaved(k, !next);
+          showNotification("ذخیره انجام نشد؛ ارتباط با پنجره‌ی اصلی برقرار نیست یا نسخه‌ی آن هنوز این قابلیت را ندارد.", "error", 5000);
+        };
+        applySaved(k, next);
+        savePending[k] = setTimeout(rollback, 3000);
+        try {
+          window.opener.postMessage({ type: "ts_save_toggle", bookId: q.bookId, q: q.srcNumber, saved: next }, "*");
+        } catch (err) {
+          rollback();
+        }
+      }
+      function querySavedState() {
+        if (!canSaveQuestions() || !session) return;
+        const ids = Array.from(new Set(session.questions.map((q) => q.bookId).filter(Boolean)));
+        if (!ids.length) return;
+        try {
+          window.opener.postMessage({ type: "ts_saved_query", bookIds: ids }, "*");
+        } catch (err) {
+          /* بی‌اهمیت */
+        }
+      }
+      window.addEventListener("message", function (e) {
+        const d = e.data;
+        if (!d || d.type !== "ts_saved_state") return;
+        if (d.full && Array.isArray(d.keys)) {
+          savedQs.clear();
+          d.keys.forEach((k) => savedQs.add(k));
+          refreshSaveButtons();
+          return;
+        }
+        if (d.bookId == null || d.q == null) return;
+        const k = d.bookId + "_" + d.q;
+        const wasPending = !!savePending[k];
+        if (wasPending) {
+          clearTimeout(savePending[k]);
+          delete savePending[k];
+        }
+        applySaved(k, !!d.saved);
+        if (d.ok === false) showNotification("ذخیره انجام نشد.", "error");
+        else if (wasPending) showNotification(d.saved ? "سوال در عیب‌یابی ذخیره شد" : "سوال از ذخیره‌شده‌ها برداشته شد", "success", 1800);
+      });
+
+      // ================== مودال‌ها ==================
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove("active");
+        document.body.classList.remove("modal-open");
+      }
+
+      // ================== زوم تصویر سوال ==================
+      // با کلیک روی تصویر، همراه با نمای بزرگ‌شده، شماره سوال، دکمه‌های علامت‌گذاری
+      // و گزینه‌های پاسخ (همان چیزهایی که در صفحه اصلی بالا/پایین تصویر هستند) هم نمایش داده می‌شود
+      function zoomQuestionImage(questionNumber) {
+        if (window.__hzLeave) window.__hzLeave();
+        document.body.classList.add("modal-open");
+        const zoomModal = document.createElement("div");
+        zoomModal.className = "image-zoom-modal active";
+        zoomModal.innerHTML = `
+          <div class="zoom-panel" onclick="event.stopPropagation()"></div>
+        `;
+        zoomModal.onclick = function (e) {
+          if (e.target === zoomModal) closeImageZoom();
+        };
+        document.body.appendChild(zoomModal);
+        renderZoomPanel(questionNumber);
+      }
+
+      // محتوای پنجره زوم را برای شماره سوال داده‌شده می‌سازد/جایگزین می‌کند
+      function renderZoomPanel(questionNumber) {
+        const zoomModal = document.querySelector(".image-zoom-modal");
+        if (!zoomModal) return;
+
+        const question = session.questions.find((q) => q.number === questionNumber);
+        if (!question) return;
+
+        zoomModal.dataset.questionNumber = questionNumber;
+        const { markButtonsHTML, optionsHTML, feedbackHTML } = buildQuestionMarkAndOptionsHTML(question);
+        const panel = zoomModal.querySelector(".zoom-panel");
+        panel.innerHTML = `
+          <div class="question-head">
+            <div class="question-number">سوال ${question.number}</div>
+            ${saveBtnHTML(question)}
+          </div>
+          <div class="zoom-img-wrap hz-wrap">
+            <img class="zoomed-image" src="${question.image}" alt="تصویر سوال ${question.number}">
+          </div>
+          <div class="options-container">${optionsHTML}</div>
+          ${feedbackHTML}
+        `;
+      }
+
+      // پنجره زوم بازِ فعلی را (در صورت تعلق به همان سوال) بعد از تغییر پاسخ/علامت به‌روز می‌کند
+      function refreshZoomModal(questionNumber) {
+        const zoomModal = document.querySelector(".image-zoom-modal");
+        if (!zoomModal || parseInt(zoomModal.dataset.questionNumber, 10) !== questionNumber) return;
+        renderZoomPanel(questionNumber);
+      }
+
+      // جابه‌جایی بین سوالات داخل پنجره زوم با کلیدهای چپ/راست کیبورد
+      // step=1 یعنی سوال بعدی، step=-1 یعنی سوال قبلی
+      function navigateZoomQuestion(step) {
+        const zoomModal = document.querySelector(".image-zoom-modal");
+        if (!zoomModal) return;
+
+        const currentNumber = parseInt(zoomModal.dataset.questionNumber, 10);
+        const list = activeQs();
+        const currentIndex = list.findIndex((q) => q.number === currentNumber);
+        if (currentIndex === -1) return;
+
+        const nextIndex = currentIndex + step;
+        if (nextIndex < 0 || nextIndex >= list.length) return;
+
+        renderZoomPanel(list[nextIndex].number);
+      }
+
+      function closeImageZoom() {
+        const zoomModal = document.querySelector(".image-zoom-modal");
+        if (zoomModal) {
+          zoomModal.classList.remove("active");
+          setTimeout(() => {
+            zoomModal.remove();
+            document.body.classList.remove("modal-open");
+          }, 250);
+        }
+      }
+
+      // ================== میانبرهای صفحه‌کلید ==================
+      function handleKeyboard(e) {
+        const zoomActive = document.querySelector(".image-zoom-modal.active");
+        if (document.querySelector(".modal.active") || zoomActive) {
+          if (e.key === "Escape") {
+            closeModal("finishModal");
+            closeModal("timeoutModal");
+            closeImageZoom();
+          } else if (zoomActive && e.key === "ArrowLeft") {
+            e.preventDefault();
+            navigateZoomQuestion(1);
+          } else if (zoomActive && e.key === "ArrowRight") {
+            e.preventDefault();
+            navigateZoomQuestion(-1);
+          }
+          return;
+        }
+
+        if (e.key === "Escape") {
+          closeNavigator();
+          return;
+        }
+
+        if (["1", "2", "3", "4", "5"].includes(e.key)) {
+          const visibleCard = getMostVisibleQuestionCard();
+          if (visibleCard) {
+            const qNum = parseInt(visibleCard.id.replace("question-", ""));
+            const optionNumber = parseInt(e.key);
+            if (optionNumber <= (session.optionsCount || 4)) {
+              selectOption(qNum, optionNumber);
+            }
+          }
+        }
+
+      }
+
+      // با فشردن کلید F، علامت سوال فعلی به ترتیب بین دایره ← مثلث ← مربع ← بدون‌علامت می‌چرخد
+      function cycleMark(questionNumber) {
+        if (isQuestionLocked(questionNumber)) return;
+        const order = [null, "circle", "triangle", "square"];
+        const current = examState.marks[questionNumber] || null;
+        const nextIndex = (order.indexOf(current) + 1) % order.length;
+        const next = order[nextIndex];
+
+        if (next) {
+          examState.marks[questionNumber] = next;
+        } else {
+          delete examState.marks[questionNumber];
+        }
+
+        renderQuestions();
+        renderMiniProgress();
+        updateStats();
+        saveProgress();
+      }
+
+      function getMostVisibleQuestionCard() {
+        const cards = Array.from(document.querySelectorAll(".question-card:not(.hidden-by-filter)"));
+        let best = null;
+        let bestDistance = Infinity;
+        const viewportCenter = window.innerHeight / 2;
+
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(cardCenter - viewportCenter);
+          if (rect.bottom > 0 && rect.top < window.innerHeight && distance < bestDistance) {
+            bestDistance = distance;
+            best = card;
+          }
+        });
+
+        return best;
+      }
+
+      // ================== نوتیفیکیشن ==================
+      function showNotification(message, type = "info", duration = 3200) {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+          <i class="fas fa-${
+            type === "error" ? "exclamation-circle" : type === "success" ? "check-circle" : "info-circle"
+          }"></i>
+          <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => notification.classList.add("show"), 50);
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => notification.remove(), 400);
+        }, duration);
+      }
+    </script>
+  </body>
+</html>

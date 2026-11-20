@@ -1,0 +1,1888 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="libs/theme.css" />
+    <script src="libs/theme.js"></script>
+    <title>پوشه آزمون‌ها - آزمون یار</title>
+    <link rel="icon" href="icon.png" type="image/png" />
+    <link rel="stylesheet" href="libs/vazirmatn/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css" />
+    <script src="libs/chart.umd.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        width: 100%;
+        min-height: 100vh;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-family);
+        background: var(--gradient-water);
+        color: var(--text-color);
+        line-height: 1.6;
+        min-height: 100vh;
+        transition: var(--transition);
+      }
+      .header {
+        background: var(--header-bg);
+        backdrop-filter: blur(10px);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow-light);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .header h1 {
+        font-size: 1.25rem;
+        margin: 0;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .icon-btn {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--primary-color);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1rem;
+      }
+      .icon-btn:hover {
+        background: var(--gradient-primary);
+        color: #fff;
+        transform: translateY(-2px);
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 24px 18px 60px;
+      }
+      .page-intro {
+        margin-bottom: 22px;
+      }
+      .page-intro p {
+        color: var(--text-muted);
+        margin: 4px 0 0;
+      }
+      .page-intro h2 {
+        margin: 0;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+      .breadcrumb a {
+        color: var(--primary-color);
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+      .folder-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 18px;
+        margin-top: 10px;
+      }
+      .bottom-back-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 28px;
+      }
+      .bottom-back-wrap .btn {
+        padding: 11px 28px;
+      }
+      .folder-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 22px 18px;
+        text-align: center;
+        transition: var(--transition);
+        cursor: pointer;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+      .folder-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+        background: var(--card-hover);
+      }
+      .folder-card .folder-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+      }
+      .folder-card h4 {
+        color: var(--primary-color);
+        font-size: 1.05rem;
+        margin: 0 0 6px;
+      }
+      .folder-card .folder-meta {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+      }
+      .folder-card.add-folder-card {
+        border: 2px dashed var(--border-color);
+        background: transparent;
+        justify-content: center;
+        min-height: 160px;
+      }
+      .folder-card.add-folder-card .folder-icon {
+        background: transparent;
+        color: var(--primary-color);
+        border: 2px dashed var(--primary-color);
+        font-size: 1.7rem;
+      }
+      .folder-delete-btn {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(231, 76, 60, 0.12);
+        color: var(--danger-color);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: var(--transition);
+      }
+      .folder-card:hover .folder-delete-btn {
+        opacity: 1;
+      }
+      .exam-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
+      }
+      .exam-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        transition: var(--transition);
+        flex-wrap: wrap;
+      }
+      .exam-card:hover {
+        box-shadow: var(--shadow-light);
+      }
+      .exam-main {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1;
+        min-width: 220px;
+      }
+      .exam-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gradient-primary);
+        color: #fff;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .exam-info h4 {
+        margin: 0 0 4px;
+        color: var(--text-color);
+        font-size: 1rem;
+      }
+      .exam-info .exam-meta {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      .badge-pending {
+        background: rgba(243, 156, 18, 0.15);
+        color: var(--warning-color);
+      }
+      .badge-graded {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--success-color);
+      }
+      .exam-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        font-family: var(--font-family);
+        font-size: 0.92rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: var(--transition);
+        font-weight: 600;
+      }
+      .btn-primary {
+        background: var(--gradient-primary);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--primary-color);
+        border: 1px solid var(--border-color);
+      }
+      .btn-secondary:hover {
+        background: var(--card-hover);
+      }
+      .btn-danger {
+        background: rgba(231, 76, 60, 0.12);
+        color: var(--danger-color);
+      }
+      .btn-danger:hover {
+        background: var(--danger-color);
+        color: #fff;
+      }
+      .btn-wrong {
+        background: rgba(231, 76, 60, 0.12);
+        color: var(--danger-color);
+        border: 1px solid rgba(231, 76, 60, 0.35);
+      }
+      .btn-wrong:hover {
+        background: var(--danger-color);
+        color: #fff;
+      }
+      .btn-sm {
+        padding: 7px 14px;
+        font-size: 0.82rem;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: var(--text-muted);
+      }
+      .empty-state i {
+        font-size: 2.6rem;
+        color: var(--border-color);
+        margin-bottom: 14px;
+        display: block;
+      }
+      .ay-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 20, 30, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 16px;
+      }
+      .ay-modal-overlay.active {
+        display: flex;
+      }
+      .ay-modal-box {
+        background: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        padding: 26px;
+        max-width: 460px;
+        width: 100%;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        max-height: 88vh;
+        overflow-y: auto;
+      }
+      .ay-modal-box h3 {
+        color: var(--primary-color);
+        margin: 0 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ay-modal-box .form-group {
+        margin-bottom: 16px;
+      }
+      .ay-modal-box label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+        color: var(--text-color);
+        font-weight: 600;
+      }
+      .ay-modal-box input[type="text"],
+      .ay-modal-box select,
+      .ay-modal-box textarea {
+        width: 100%;
+        padding: 11px 12px;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.6);
+        font-family: var(--font-family);
+        color: var(--text-color);
+        font-size: 0.95rem;
+      }
+      [data-theme="galaxy"] .ay-modal-box input,
+      [data-theme="galaxy"] .ay-modal-box select,
+      [data-theme="galaxy"] .ay-modal-box textarea,
+      [data-theme="coal-mine"] .ay-modal-box input,
+      [data-theme="coal-mine"] .ay-modal-box select,
+      [data-theme="coal-mine"] .ay-modal-box textarea {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .ay-modal-box textarea {
+        min-height: 90px;
+        resize: vertical;
+      }
+      .ay-modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 18px;
+      }
+      .ay-modal-note {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin-top: -8px;
+        margin-bottom: 14px;
+      }
+      .ay-modal-box-lg {
+        max-width: 680px;
+      }
+      .ay-modal-box hr.ay-divider {
+        border: none;
+        border-top: 1px solid var(--border-color);
+        margin: 18px 0;
+        opacity: 0.6;
+      }
+      .blueprint-mini-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .blueprint-mini-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: var(--water-light);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        padding: 9px 12px;
+        font-size: 0.88rem;
+      }
+      .blueprint-mini-item span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-color);
+        font-weight: 600;
+      }
+      .blueprint-mini-item .blueprint-mini-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .blueprint-mini-item .mini-icon-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        transition: var(--transition);
+      }
+      .blueprint-mini-item .mini-icon-btn.edit {
+        background: rgba(0, 105, 148, 0.12);
+        color: var(--primary-color);
+      }
+      .blueprint-mini-item .mini-icon-btn.edit:hover {
+        background: var(--primary-color);
+        color: #fff;
+      }
+      .blueprint-mini-item .mini-icon-btn.del {
+        background: rgba(231, 76, 60, 0.12);
+        color: var(--danger-color);
+      }
+      .blueprint-mini-item .mini-icon-btn.del:hover {
+        background: var(--danger-color);
+        color: #fff;
+      }
+      .blueprint-empty-note {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-align: center;
+        padding: 8px;
+      }
+      .booklet-block {
+        border: 1px dashed var(--border-color);
+        border-radius: var(--border-radius-sm);
+        padding: 14px;
+        margin-bottom: 14px;
+        background: rgba(255, 255, 255, 0.35);
+      }
+      [data-theme="galaxy"] .booklet-block,
+      [data-theme="coal-mine"] .booklet-block {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .booklet-header {
+        margin-bottom: 10px;
+      }
+      .booklet-time-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+      .booklet-time-row label {
+        color: var(--text-color);
+        font-size: 0.86rem;
+        font-weight: 600;
+      }
+      .booklet-time-input {
+        width: 120px;
+        padding: 8px 9px;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.6);
+        font-family: var(--font-family);
+        color: var(--text-color);
+        font-size: 0.85rem;
+      }
+      [data-theme="galaxy"] .booklet-time-input,
+      [data-theme="coal-mine"] .booklet-time-input {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .booklet-time-note {
+        color: var(--text-muted);
+        font-size: 0.78rem;
+      }
+      .booklet-header input.booklet-name-input {
+        width: 100%;
+        padding: 9px 11px;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.6);
+        font-family: var(--font-family);
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+      .subject-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .subject-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .subject-row .subj-name {
+        flex: 2;
+        min-width: 110px;
+      }
+      .subject-row .subj-type {
+        flex: 1;
+        min-width: 90px;
+      }
+      .subject-row .subj-start,
+      .subject-row .subj-end {
+        flex: 1;
+        min-width: 70px;
+      }
+      .subject-row input,
+      .subject-row select {
+        padding: 8px 9px;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.6);
+        font-family: var(--font-family);
+        color: var(--text-color);
+        font-size: 0.85rem;
+      }
+      [data-theme="galaxy"] .subject-row input,
+      [data-theme="galaxy"] .subject-row select,
+      [data-theme="coal-mine"] .subject-row input,
+      [data-theme="coal-mine"] .subject-row select {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .subj-remove-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        background: rgba(231, 76, 60, 0.12);
+        color: var(--danger-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+      }
+      .subj-remove-btn:hover {
+        background: var(--danger-color);
+        color: #fff;
+      }
+      .add-subject-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .notification {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 14px 20px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        z-index: 10000;
+        transform: translateX(-120%);
+        transition: transform 0.3s ease;
+        max-width: 340px;
+        font-family: var(--font-family);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+      }
+      .notification.show {
+        transform: translateX(0);
+      }
+      .notification-success {
+        background: var(--success-color);
+      }
+      .notification-error {
+        background: var(--danger-color);
+      }
+      .notification-info {
+        background: var(--primary-color);
+      }
+      .notification-warning {
+        background: var(--warning-color);
+      }
+      @media (max-width: 560px) {
+.exam-card {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+.exam-actions {
+          width: 100%;
+        }
+.exam-actions .btn {
+          flex: 1;
+          justify-content: center;
+        }
+}
+      .wv-box { max-width: 760px; max-height: 88vh; overflow-y: auto; }
+      .wv-sum { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+      .wv-chip { padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); font-family: inherit; font-size: .85rem; cursor: pointer; }
+      .wv-chip.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+      .wv-subj { border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+      .wv-subj > header { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; padding: 9px 12px; font-weight: 700; background: rgba(128,128,128,.08); }
+      .wv-subj > header small { font-weight: 400; color: var(--text-muted); }
+      .wv-item { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; padding: 8px 12px; border-top: 1px solid var(--border-color); font-size: .9rem; }
+      .wv-item .n { font-weight: 700; min-width: 64px; }
+      .wv-tag { padding: 1px 9px; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+      .wv-tag.wrong { background: rgba(231,76,60,.15); color: #c0392b; }
+      .wv-tag.empty { background: rgba(243,156,18,.18); color: #b9770e; }
+      .wv-item img { max-width: 100%; max-height: 220px; border-radius: 6px; border: 1px solid var(--border-color); cursor: zoom-in; background: #fff; }
+      .wv-ok { color: var(--text-muted); font-size: .85rem; padding: 4px 2px; }
+    </style>
+  
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+  <body>
+    <header class="header">
+      <h1><i class="fas fa-folder-open"></i> پوشه آزمون‌ها</h1>
+      <div class="header-actions">
+        <button
+          class="icon-btn"
+          title="تنظیمات پوشه آزمون‌ها"
+          onclick="openSettingsModal()"
+        >
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- صفحه لیست پوشه‌ها -->
+      <div id="foldersView">
+        <div class="page-intro">
+          <h2><i class="fas fa-layer-group"></i> پوشه‌های شما</h2>
+          <p>
+            هر آزمون (برگه‌یار یا دیجیتال‌یار) باید داخل یکی از این پوشه‌ها
+            ذخیره شود. برای هر مجموعه آزمون (مثلاً «آزمون ماز») یک پوشه بسازید.
+          </p>
+        </div>
+        <div class="folder-grid" id="foldersGrid"></div>
+        <div class="bottom-back-wrap">
+          <button class="btn btn-secondary" onclick="goBack()">
+            <i class="fas fa-arrow-right"></i> بازگشت
+          </button>
+        </div>
+      </div>
+
+      <!-- صفحه جزئیات یک پوشه -->
+      <div id="folderDetailView" style="display: none">
+        <div class="breadcrumb">
+          <a onclick="showFoldersView()"
+            ><i class="fas fa-folder-open"></i> پوشه آزمون‌ها</a
+          >
+          <span>/</span>
+          <span id="activeFolderName"></span>
+        </div>
+        <div class="page-intro">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
+            <div>
+              <h2><i class="fas fa-clipboard-list"></i> آزمون‌های این پوشه</h2>
+              <p>
+                آزمون‌هایی که هنوز کلید ندارند به عنوان «در انتظار کلید» نمایش
+                داده می‌شوند؛ هر وقت کلید را وارد کنید، کارنامه ساخته می‌شود.
+              </p>
+            </div>
+            <button
+              class="btn btn-primary"
+              onclick="openTrend(currentFolderId)"
+            >
+              <i class="fas fa-chart-line"></i> مشاهده روند آزمون
+            </button>
+          </div>
+        </div>
+        <div class="exam-list" id="examsList"></div>
+        <div class="bottom-back-wrap">
+          <button class="btn btn-secondary" onclick="goBack()">
+            <i class="fas fa-arrow-right"></i> بازگشت
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال ساخت پوشه -->
+    <div class="ay-modal-overlay" id="createFolderModal">
+      <div class="ay-modal-box">
+        <h3><i class="fas fa-folder-plus"></i> پوشه آزمون جدید</h3>
+        <div class="form-group">
+          <label for="newFolderName">نام پوشه (مثلاً: آزمون ماز)</label>
+          <input
+            type="text"
+            id="newFolderName"
+            placeholder="نام پوشه آزمون را وارد کنید"
+          />
+        </div>
+        <div class="ay-modal-actions">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('createFolderModal')"
+          >
+            انصراف
+          </button>
+          <button class="btn btn-primary" onclick="submitCreateFolder()">
+            <i class="fas fa-check"></i> ساخت پوشه
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال تنظیمات (پوشه پیش‌فرض) -->
+    <div class="ay-modal-overlay" id="settingsModal">
+      <div class="ay-modal-box">
+        <h3><i class="fas fa-cog"></i> تنظیمات پوشه آزمون‌ها</h3>
+        <div class="form-group">
+          <label for="defaultFolderSelect">پوشه پیش‌فرض ذخیره کارنامه‌ها</label>
+          <select id="defaultFolderSelect"></select>
+        </div>
+        <p class="ay-modal-note">
+          هر بار که در برگه‌یار یا دیجیتال‌یار آزمون می‌دهید، این پوشه به‌طور
+          پیش‌فرض انتخاب‌شده نمایش داده می‌شود؛ همچنان می‌توانید پوشه دیگری را
+          هم انتخاب کنید.
+        </p>
+
+        <hr class="ay-divider" />
+
+        <div class="form-group">
+          <label><i class="fas fa-layer-group"></i> بودجه‌بندی‌های آزمون</label>
+          <p class="ay-modal-note" style="margin-top: 0">
+            برای هر آزمون می‌توانید تعداد دفترچه، زمان هر دفترچه و بازه سوالات هر درس
+            (عمومی/تخصصی) را یک‌بار به عنوان «بودجه‌بندی» بسازید تا هنگام ثبت
+            آزمون در برگه‌یار یا دیجیتال‌یار، فقط آن را انتخاب کنید؛ این اطلاعات
+            مستقیماً برای ساخت کارنامه استفاده می‌شود.
+          </p>
+          <div class="blueprint-mini-list" id="blueprintsListInSettings"></div>
+          <button
+            class="btn btn-secondary btn-sm"
+            style="margin-top: 10px; width: 100%; justify-content: center"
+            onclick="openBlueprintModal()"
+          >
+            <i class="fas fa-plus"></i> بودجه‌بندی جدید
+          </button>
+        </div>
+
+        <div class="ay-modal-actions">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('settingsModal')"
+          >
+            بستن
+          </button>
+          <button class="btn btn-primary" onclick="submitSettings()">
+            <i class="fas fa-check"></i> ذخیره
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال ساخت/ویرایش بودجه‌بندی آزمون -->
+    <div class="ay-modal-overlay" id="blueprintModal">
+      <div class="ay-modal-box ay-modal-box-lg">
+        <h3>
+          <i class="fas fa-layer-group"></i>
+          <span id="blueprintModalTitle">بودجه‌بندی جدید</span>
+        </h3>
+
+        <div class="form-group">
+          <label for="blueprintNameInput">نام بودجه‌بندی</label>
+          <input
+            type="text"
+            id="blueprintNameInput"
+            placeholder="مثلاً: بودجه‌بندی آزمون جامع کنکور"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="blueprintBookletCount">تعداد دفترچه آزمون</label>
+          <div style="display: flex; gap: 10px">
+            <input
+              type="number"
+              id="blueprintBookletCount"
+              min="1"
+              max="10"
+              value="1"
+              style="max-width: 110px"
+            />
+            <button
+              class="btn btn-secondary btn-sm"
+              onclick="applyBookletCount()"
+            >
+              <i class="fas fa-sync"></i> تنظیم دفترچه‌ها
+            </button>
+          </div>
+          <p class="ay-modal-note">
+            با تغییر تعداد دفترچه، تعداد بخش‌های زیر تغییر می‌کند؛ دروسی که
+            قبلاً وارد کرده‌اید حفظ می‌شوند.
+          </p>
+        </div>
+
+        <div id="bookletsContainer"></div>
+
+        <div class="ay-modal-actions">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('blueprintModal')"
+          >
+            انصراف
+          </button>
+          <button class="btn btn-primary" onclick="submitBlueprint()">
+            <i class="fas fa-check"></i> ذخیره بودجه‌بندی
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال آمار -->
+    <div class="ay-modal-overlay" id="statsModal">
+      <div class="ay-modal-box stats-modal">
+        <h3 id="statsModalTitle">آمار آزمون‌ها</h3>
+        <div class="stats-summary" id="statsSummary"></div>
+        <canvas id="subjectChart"></canvas>
+        <canvas id="answersChart"></canvas>
+        <div class="ay-modal-actions">
+          <button class="btn btn-secondary" onclick="closeModal('statsModal')">
+            بستن
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال کارنامه غلط‌ها -->
+    <div class="ay-modal-overlay" id="wrongViewModal">
+      <div class="ay-modal-box wv-box">
+        <h3><i class="fas fa-circle-xmark"></i> <span id="wvTitle">کارنامه غلط‌ها</span></h3>
+        <div id="wvBody"></div>
+        <div class="ay-modal-actions">
+          <button class="btn btn-wrong" id="wvDownload"><i class="fas fa-download"></i> دانلود</button>
+          <button class="btn btn-secondary" onclick="closeModal('wrongViewModal')">بستن</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال افزودن کلید برای آزمون در انتظار -->
+    <div class="ay-modal-overlay" id="addKeyModal">
+      <div class="ay-modal-box">
+        <h3><i class="fas fa-key"></i> افزودن کلید آزمون</h3>
+        <p class="ay-modal-note" id="addKeyModalNote"></p>
+        <div class="form-group" id="keyInputWrap">
+          <label for="keyInputText">کلید آزمون</label>
+          <textarea
+            id="keyInputText"
+            placeholder="کلید آزمون را اینجا وارد کنید"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="addKeyBlueprintSelect"
+            ><i class="fas fa-layer-group"></i> نوع بودجه‌بندی (اختیاری)</label
+          >
+          <select id="addKeyBlueprintSelect">
+            <option value="">
+              بدون بودجه‌بندی (استفاده از اطلاعات خود کلید)
+            </option>
+          </select>
+          <p class="ay-modal-note">
+            اگر بودجه‌بندی انتخاب کنید، بازه سوالات و نوع دروس آن جایگزین
+            اطلاعاتی می‌شود که از خود کلید استخراج می‌شود.
+          </p>
+        </div>
+        <div class="ay-modal-actions">
+          <button class="btn btn-secondary" onclick="closeModal('addKeyModal')">
+            انصراف
+          </button>
+          <button class="btn btn-primary" onclick="submitAddKey()">
+            <i class="fas fa-magic"></i> ساخت کارنامه
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script src="exam-folder-store.js"></script>
+    <script>
+      const Store = window.ExamFolderStore;
+      let currentFolderId = null;
+      let pendingExamForKey = null;
+
+      function showNotification(message, type) {
+        const el = document.getElementById("notification");
+        el.textContent = message;
+        el.className =
+          "notification notification-" + (type || "info") + " show";
+        setTimeout(() => el.classList.remove("show"), 3200);
+      }
+
+      function goBack() {
+        if (currentFolderId) {
+          showFoldersView();
+          return;
+        }
+        window.location.href = "index.html";
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("active");
+      }
+      function openModal(id) {
+        document.getElementById(id).classList.add("active");
+      }
+
+      // ==================== اتصال پوشه به صفحه روند ====================
+      function openTrend(folderId) {
+        if (!folderId) {
+          showNotification("پوشه‌ای انتخاب نشده است.", "error");
+          return;
+        }
+        window.location.href =
+          "Azmoon_Trend/Trend.html?folderId=" + encodeURIComponent(folderId);
+      }
+
+      // ==================== نمایش لیست پوشه‌ها ====================
+      function showFoldersView() {
+        currentFolderId = null;
+        document.getElementById("folderDetailView").style.display = "none";
+        document.getElementById("foldersView").style.display = "block";
+        renderFolders();
+      }
+
+      function renderFolders() {
+        Store.listFolders().then((folders) => {
+          const grid = document.getElementById("foldersGrid");
+          let html = "";
+          folders.forEach((f) => {
+            html += `
+              <div class="folder-card" onclick="openFolder('${f.id}')">
+                <button class="folder-delete-btn" title="حذف پوشه" onclick="event.stopPropagation(); confirmDeleteFolder('${f.id}','${escapeAttr(f.name)}')">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <div class="folder-icon"><i class="fas fa-folder"></i></div>
+                <h4>${escapeHtml(f.name)}</h4>
+                <div class="folder-meta" id="folderMeta_${f.id}">در حال بارگذاری...</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+                  <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); openStats('${f.id}')"><i class="fas fa-chart-bar"></i> آمار پوشه</button>
+                  <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openTrend('${f.id}')"><i class="fas fa-chart-line"></i> روند آزمون</button>
+                </div>
+              </div>`;
+          });
+          html += `
+            <div class="folder-card add-folder-card" onclick="openCreateFolderModal()">
+              <div class="folder-icon"><i class="fas fa-plus"></i></div>
+              <h4>پوشه آزمون جدید</h4>
+            </div>`;
+          grid.innerHTML = html;
+
+          folders.forEach((f) => {
+            Store.listExams(f.id).then((exams) => {
+              const el = document.getElementById("folderMeta_" + f.id);
+              if (!el) return;
+              const pending = exams.filter(
+                (e) => e.status === "pending",
+              ).length;
+              el.textContent =
+                exams.length +
+                " آزمون" +
+                (pending ? " · " + pending + " در انتظار کلید" : "");
+            });
+          });
+        });
+      }
+
+      function openCreateFolderModal() {
+        document.getElementById("newFolderName").value = "";
+        openModal("createFolderModal");
+        setTimeout(() => document.getElementById("newFolderName").focus(), 100);
+      }
+
+      function submitCreateFolder() {
+        const name = document.getElementById("newFolderName").value.trim();
+        if (!name) {
+          showNotification("لطفاً نام پوشه را وارد کنید.", "error");
+          return;
+        }
+        Store.createFolder(name).then(() => {
+          closeModal("createFolderModal");
+          showNotification("پوشه «" + name + "» ساخته شد.", "success");
+          renderFolders();
+        });
+      }
+
+      function confirmDeleteFolder(id, name) {
+        if (
+          confirm(
+            "آیا از حذف پوشه «" +
+              name +
+              "» و همه آزمون‌های داخل آن مطمئن هستید؟",
+          )
+        ) {
+          Store.deleteFolder(id).then(() => {
+            showNotification("پوشه حذف شد.", "success");
+            renderFolders();
+          });
+        }
+      }
+
+      // ==================== جزئیات پوشه ====================
+      function openFolder(id) {
+        currentFolderId = id;
+        document.getElementById("foldersView").style.display = "none";
+        document.getElementById("folderDetailView").style.display = "block";
+        Store.getFolder(id).then((f) => {
+          document.getElementById("activeFolderName").textContent = f
+            ? f.name
+            : "";
+        });
+        renderExams(id);
+      }
+
+      function renderExams(folderId) {
+        Store.listExams(folderId).then((exams) => {
+          const list = document.getElementById("examsList");
+          if (exams.length === 0) {
+            list.innerHTML = `
+              <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                هنوز آزمونی در این پوشه ذخیره نشده است.<br />
+                از برگه‌یار یا دیجیتال‌یار، این پوشه را برای آزمون بعدی خود انتخاب کنید.
+              </div>`;
+            return;
+          }
+          list.innerHTML = exams
+            .map((e) => {
+              const sourceLabel =
+                e.source === "digital" ? "دیجیتال‌یار" : "برگه‌یار";
+              const sourceIcon =
+                e.source === "digital" ? "fa-laptop" : "fa-file-alt";
+              const statusBadge =
+                e.status === "graded"
+                  ? '<span class="badge badge-graded"><i class="fas fa-check-circle"></i> دارای کارنامه</span>'
+                  : '<span class="badge badge-pending"><i class="fas fa-hourglass-half"></i> در انتظار کلید</span>';
+              const primaryAction =
+                e.status === "graded"
+                  ? `<button class="btn btn-primary btn-sm" onclick="viewKarnameh('${e.id}')"><i class="fas fa-chart-bar"></i> مشاهده کارنامه</button>
+                     <button class="btn btn-wrong btn-sm" onclick="viewWrongReport('${e.id}')" title="مشاهده غلط‌ها و نزده‌های این آزمون به تفکیک درس"><i class="fas fa-circle-xmark"></i> کارنامه غلط‌ها</button>`
+                  : `<button class="btn btn-primary btn-sm" onclick="openAddKeyModal('${e.id}')"><i class="fas fa-key"></i> افزودن کلید</button>`;
+              return `
+                <div class="exam-card">
+                  <div class="exam-main">
+                    <div class="exam-icon"><i class="fas ${sourceIcon}"></i></div>
+                    <div class="exam-info">
+                      <h4>${escapeHtml(e.name || "آزمون بدون نام")}</h4>
+                      <div class="exam-meta">
+                        <span><i class="fas fa-calendar"></i> ${escapeHtml(e.date || "")}</span>
+                        <span><i class="fas fa-list-ol"></i> ${e.totalQuestions || 0} سوال</span>
+                        <span>${sourceLabel}</span>
+                        ${statusBadge}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="exam-actions">
+                    ${primaryAction}
+                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteExam('${e.id}')"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>`;
+            })
+            .join("");
+        });
+      }
+
+      function confirmDeleteExam(id) {
+        if (confirm("آیا از حذف این آزمون مطمئن هستید؟")) {
+          Store.deleteExam(id).then(() => {
+            showNotification("آزمون حذف شد.", "success");
+            renderExams(currentFolderId);
+          });
+        }
+      }
+
+      function viewKarnameh(examId) {
+        Store.getExam(examId).then((exam) => {
+          if (!exam) return;
+          const base =
+            exam.source === "digital"
+              ? "Digital_yar/karnameh-engine.html"
+              : "Bargeh_yar/karnameh.html";
+          window.location.href =
+            base +
+            "?examId=" +
+            encodeURIComponent(exam.id) +
+            "&folderId=" +
+            encodeURIComponent(exam.folderId);
+        });
+      }
+
+      // ==================== کارنامه غلط‌ها ====================
+      // لیست سوال‌های غلط و نزده را از روی پاسخ‌های داوطلب و کلید می‌سازد
+      function computeWrongList(exam) {
+        const ua = exam.userAnswers || [];
+        const ca = exam.correctAnswers || [];
+        const total = exam.totalQuestions || ca.length;
+        const items = [];
+        for (let n = 1; n <= total; n++) {
+          const u = parseInt(ua[n - 1], 10) || 0;
+          const c = parseInt(ca[n - 1], 10) || 0;
+          if (!c) continue; // سوال بدون کلید (مثلاً حذف‌شده)
+          const m = (exam.metadata || []).find((r) => n >= r.start && n <= r.end);
+          const subject = m ? m.name : "";
+          if (u === 0) items.push({ n, type: "empty", user: 0, correct: c, subject });
+          else if (u !== c) items.push({ n, type: "wrong", user: u, correct: c, subject });
+        }
+        return items;
+      }
+
+      // عکس سوال شماره n را از هر جایی که در آزمون ذخیره شده پیدا می‌کند.
+      // اگر ساختار ذخیره‌سازی شما فرق دارد فقط همین تابع را اصلاح کنید.
+      function getQuestionImageSrc(exam, n) {
+        const i = n - 1;
+        const pick = (v) => {
+          if (!v) return null;
+          if (typeof v === "string") return v;
+          return v.dataUrl || v.src || v.image || v.url || null;
+        };
+        const pools = [
+          exam.questionImages,
+          exam.images,
+          exam.questionPngs,
+          exam.croppedQuestions,
+        ];
+        for (const pool of pools) {
+          if (!pool) continue;
+          const v = pick(pool[i]) || pick(pool[n]) || pick(pool[String(n)]);
+          if (v) return v;
+        }
+        if (Array.isArray(exam.questions) && exam.questions[i]) {
+          const q = exam.questions[i];
+          return pick(q.image) || pick(q.img) || pick(q.src) || pick(q.png);
+        }
+        return null;
+      }
+
+      function downloadTextFile(fileName, content, mime) {
+        const blob = new Blob(["\ufeff" + content], {
+          type: (mime || "text/plain") + ";charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+      }
+
+      function safeFileName(str) {
+        return String(str || "آزمون").replace(/[\\/:*?"<>|]+/g, "-").trim();
+      }
+
+      // ---- نمایش درون‌صفحه‌ای غلط‌ها به تفکیک درس ----
+      let wvState = null;
+      function viewWrongReport(examId) {
+        Store.getExam(examId).then((exam) => {
+          if (!exam || exam.status !== "graded") {
+            showNotification("ابتدا کلید آزمون را وارد کنید.", "error");
+            return;
+          }
+          const items = computeWrongList(exam);
+          const ca = exam.correctAnswers || [];
+          const total = exam.totalQuestions || ca.length;
+          const keyed = ca.filter((c) => parseInt(c, 10)).length || total;
+          wvState = { exam, items, filter: "all", keyed };
+          document.getElementById("wvTitle").textContent = "کارنامه غلط‌ها: " + (exam.name || "آزمون بدون نام");
+          document.getElementById("wvDownload").onclick = () => downloadWrongReport(examId);
+          renderWrongView();
+          openModal("wrongViewModal");
+        });
+      }
+      function setWrongFilter(f) {
+        if (!wvState) return;
+        wvState.filter = f;
+        renderWrongView();
+      }
+      function renderWrongView() {
+        const { exam, items, filter, keyed } = wvState;
+        const fa = toPersianDigits;
+        const wrong = items.filter((x) => x.type === "wrong").length;
+        const empty = items.filter((x) => x.type === "empty").length;
+        const correct = Math.max(0, keyed - wrong - empty);
+        const chip = (k, label) => '<button class="wv-chip ' + (filter === k ? "active" : "") + '" onclick="setWrongFilter(\'' + k + '\')">' + label + "</button>";
+        const shown = items.filter((x) => filter === "all" || x.type === filter);
+        const groups = new Map();
+        shown.forEach((x) => {
+          const k = x.subject || "بدون درس";
+          if (!groups.has(k)) groups.set(k, []);
+          groups.get(k).push(x);
+        });
+        let body = "";
+        groups.forEach((list, name) => {
+          const w = list.filter((x) => x.type === "wrong").length;
+          const e = list.length - w;
+          body += '<div class="wv-subj"><header><span>' + escapeHtml(name) + "</span><small>غلط " + fa(w) + " · نزده " + fa(e) + "</small></header>" +
+            list.map((x) => {
+              const src = getQuestionImageSrc(exam, x.n);
+              return '<div class="wv-item"><span class="n">سوال ' + fa(x.n) + '</span><span class="wv-tag ' + x.type + '">' + (x.type === "wrong" ? "غلط" : "نزده") + "</span>" +
+                "<span>" + (x.type === "wrong" ? "پاسخ شما: " + fa(x.user) + " · " : "") + "پاسخ درست: " + fa(x.correct) + "</span>" +
+                (src ? '<img src="' + escapeAttrHtml(src) + '" alt="سوال ' + x.n + '" onclick="window.open(this.src)">' : "") + "</div>";
+            }).join("") + "</div>";
+        });
+        if (!body) body = '<p class="wv-ok">' + (items.length ? "موردی در این دسته نیست." : "در این آزمون غلط یا نزده‌ای وجود ندارد 🎉") + "</p>";
+        document.getElementById("wvBody").innerHTML =
+          '<div class="wv-sum">' + chip("all", "همه (" + fa(items.length) + ")") + chip("wrong", "غلط (" + fa(wrong) + ")") + chip("empty", "نزده (" + fa(empty) + ")") +
+          '<span class="wv-ok" style="align-self:center">درست: ' + fa(correct) + "</span></div>" + body;
+      }
+
+      function downloadWrongReport(examId) {
+        Store.getExam(examId).then((exam) => {
+          if (!exam || exam.status !== "graded") {
+            showNotification("ابتدا کلید آزمون را وارد کنید.", "error");
+            return;
+          }
+          const items = computeWrongList(exam);
+          if (items.length === 0) {
+            showNotification("در این آزمون غلط یا نزده‌ای وجود ندارد 🎉", "success");
+            return;
+          }
+          if (exam.source === "digital") buildDigitalWrongReport(exam, items);
+          else buildBargehWrongReport(exam, items);
+        });
+      }
+
+      // ---- برگه‌یار: فایل متنی ----
+      function buildBargehWrongReport(exam, items) {
+        const fa = toPersianDigits;
+        const wrong = items.filter((x) => x.type === "wrong");
+        const empty = items.filter((x) => x.type === "empty");
+        const lines = [];
+        lines.push("غلط‌های آزمون: " + (exam.name || "آزمون بدون نام"));
+        if (exam.date) lines.push("تاریخ: " + exam.date);
+        lines.push("تعداد غلط: " + fa(wrong.length) + "   |   تعداد نزده: " + fa(empty.length));
+        lines.push("=".repeat(40));
+        lines.push("");
+        lines.push("سوال‌های غلط‌زده‌شده:");
+        if (wrong.length === 0) lines.push("  (ندارد)");
+        wrong.forEach((x) =>
+          lines.push(
+            "  سوال " + fa(x.n) + (x.subject ? " (" + x.subject + ")" : "") + " ← پاسخ شما: " + fa(x.user) + "  |  پاسخ درست: " + fa(x.correct),
+          ),
+        );
+        lines.push("");
+        lines.push("سوال‌های نزده:");
+        if (empty.length === 0) lines.push("  (ندارد)");
+        else {
+          empty.forEach((x) =>
+            lines.push("  سوال " + fa(x.n) + (x.subject ? " (" + x.subject + ")" : "") + " ← پاسخ درست: " + fa(x.correct)),
+          );
+          lines.push("");
+          lines.push("شماره سوال‌های نزده: " + empty.map((x) => fa(x.n)).join("، "));
+        }
+        downloadTextFile(
+          "غلط‌های آزمون - " + safeFileName(exam.name) + ".txt",
+          lines.join("\r\n"),
+          "text/plain",
+        );
+        showNotification("فایل متنی غلط‌ها دانلود شد.", "success");
+      }
+
+      // ---- دیجیتال‌یار: فایل HTML مرتب (عکس سوال فقط اگر موجود باشد) ----
+      function buildDigitalWrongReport(exam, items) {
+        const fa = toPersianDigits;
+        const wrong = items.filter((x) => x.type === "wrong");
+        const empty = items.filter((x) => x.type === "empty");
+
+        const table = (list, withUser) =>
+          list.length === 0
+            ? '<p class="none">ندارد 🎉</p>'
+            : '<table><thead><tr><th>سوال</th><th>درس</th>' +
+              (withUser ? "<th>پاسخ شما</th>" : "") +
+              "<th>پاسخ درست</th></tr></thead><tbody>" +
+              list
+                .map(
+                  (x) =>
+                    "<tr><td><b>" + fa(x.n) + "</b></td><td>" +
+                    escapeHtml(x.subject || "—") + "</td>" +
+                    (withUser ? "<td>" + fa(x.user) + "</td>" : "") +
+                    "<td>" + fa(x.correct) + "</td></tr>",
+                )
+                .join("") +
+              "</tbody></table>";
+
+        // عکس‌ها فقط برای سوال‌هایی که عکس دارند
+        const imgCards = items
+          .map((x) => {
+            const src = getQuestionImageSrc(exam, x.n);
+            if (!src) return "";
+            const tag = x.type === "wrong" ? "غلط زده" : "نزده";
+            return (
+              '<section class="q ' + x.type + '"><header><span class="num">سوال ' +
+              fa(x.n) + '</span><span class="tag tag-' + x.type + '">' + tag +
+              '</span></header><img src="' + escapeAttrHtml(src) + '" alt="سوال ' + x.n + '"></section>'
+            );
+          })
+          .join("");
+
+        const html =
+          '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="UTF-8">' +
+          '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+          "<title>غلط‌های آزمون - " + escapeHtml(exam.name || "") + "</title>" +
+          '<link href="libs/vazirmatn/Vazirmatn-font-face.css" rel="stylesheet" />' +
+          "<style>" +
+          "body{font-family:Vazirmatn,Tahoma,sans-serif;background:#f4f7fa;color:#1c2b36;margin:0;padding:20px}" +
+          ".wrap{max-width:820px;margin:0 auto}" +
+          "h1{margin:0 0 6px;font-size:1.4rem}" +
+          ".meta{color:#667;margin-bottom:18px;display:flex;gap:16px;flex-wrap:wrap;font-size:.92rem}" +
+          ".box{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);padding:16px 18px;margin-bottom:18px}" +
+          ".box h2{margin:0 0 10px;font-size:1.05rem}" +
+          ".wr h2{color:#c0392b}.em h2{color:#b9770e}" +
+          "table{width:100%;border-collapse:collapse;font-size:.92rem}" +
+          "th,td{padding:8px 10px;text-align:center;border-bottom:1px solid #e6edf2}" +
+          "th{background:#f7fafc;color:#556}td:nth-child(2){text-align:right}" +
+          ".none{color:#2e8b57;margin:0}" +
+          ".q{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:16px;overflow:hidden;border-right:5px solid #e74c3c}" +
+          ".q.empty{border-right-color:#f39c12}" +
+          ".q header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fafcfd;border-bottom:1px solid #e6edf2}" +
+          ".tag{padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:700}" +
+          ".tag-wrong{background:rgba(231,76,60,.14);color:#c0392b}" +
+          ".tag-empty{background:rgba(243,156,18,.18);color:#b9770e}" +
+          ".q img{display:block;max-width:100%;margin:0 auto;padding:12px;box-sizing:border-box}" +
+          "@media print{body{background:#fff;padding:0}.box,.q{box-shadow:none;border:1px solid #ccc;break-inside:avoid}}" +
+          '</style></head><body><div class="wrap">' +
+          "<h1>غلط‌های آزمون: " + escapeHtml(exam.name || "آزمون بدون نام") + "</h1>" +
+          '<div class="meta">' +
+          (exam.date ? "<span>تاریخ: " + escapeHtml(exam.date) + "</span>" : "") +
+          "<span>غلط: <b>" + fa(wrong.length) + "</b></span>" +
+          "<span>نزده: <b>" + fa(empty.length) + "</b></span></div>" +
+          '<div class="box wr"><h2>سوال‌های غلط زده (' + fa(wrong.length) + ")</h2>" + table(wrong, true) + "</div>" +
+          '<div class="box em"><h2>سوال‌های نزده (' + fa(empty.length) + ")</h2>" + table(empty, false) + "</div>" +
+          imgCards +
+          "</div></body></html>";
+
+        downloadTextFile(
+          "غلط‌های آزمون - " + safeFileName(exam.name) + ".html",
+          html,
+          "text/html",
+        );
+        showNotification("فایل غلط‌های آزمون دانلود شد.", "success");
+      }
+
+      // ==================== افزودن کلید به آزمون در انتظار ====================
+      function openAddKeyModal(examId) {
+        Store.getExam(examId).then((exam) => {
+          if (!exam) return;
+          pendingExamForKey = exam;
+          const note =
+            exam.source === "digital"
+              ? "متن کامل فایل کلید دیجیتال‌یار را اینجا وارد یا paste کنید (شامل total_questions و subject)."
+              : "کد کلید آزمون را همانند برگه‌یار وارد کنید (مثال: 123421342134213...total_questions:...).";
+          document.getElementById("addKeyModalNote").textContent = note;
+          document.getElementById("keyInputText").value = "";
+          Store.listBlueprints().then((blueprints) => {
+            const select = document.getElementById("addKeyBlueprintSelect");
+            let html =
+              '<option value="">بدون بودجه‌بندی (استفاده از اطلاعات خود کلید)</option>';
+            blueprints.forEach((b) => {
+              html += `<option value="${b.id}" ${exam.blueprintId === b.id ? "selected" : ""}>${escapeHtml(b.name)}</option>`;
+            });
+            select.innerHTML = html;
+            openModal("addKeyModal");
+          });
+        });
+      }
+
+      function submitAddKey() {
+        if (!pendingExamForKey) return;
+        const keyText = document.getElementById("keyInputText").value.trim();
+        if (!keyText) {
+          showNotification("لطفاً کلید آزمون را وارد کنید.", "error");
+          return;
+        }
+
+        try {
+          const exam = pendingExamForKey;
+          let userAnswers, correctAnswers, metadata, totalQuestions;
+
+          if (exam.source === "digital") {
+            const parsedKey = Store.parseDigitalKeyText(keyText);
+            totalQuestions = Math.min(
+              parsedKey.totalQuestions,
+              exam.totalQuestions || parsedKey.totalQuestions,
+            );
+            userAnswers = (exam.studentAnswersCode || "")
+              .split("")
+              .map((c) => parseInt(c, 10) || 0)
+              .slice(0, totalQuestions);
+            correctAnswers = parsedKey.answers
+              .map((c) => parseInt(c, 10) || 0)
+              .slice(0, totalQuestions);
+            metadata = Store.digitalSubjectsToMetadata(
+              parsedKey.subjects,
+              totalQuestions,
+            );
+          } else {
+            const parsed = Store.parseBargehKeyCode(
+              exam.studentAnswersCode || "",
+              keyText,
+            );
+            userAnswers = parsed.userAnswers;
+            correctAnswers = parsed.correctAnswers;
+            metadata = parsed.metadata;
+            totalQuestions = parsed.totalQuestions;
+          }
+
+          const blueprintId = document.getElementById(
+            "addKeyBlueprintSelect",
+          ).value;
+
+          const finalizeAndSave = (finalMetadata) => {
+            exam.userAnswers = userAnswers;
+            exam.correctAnswers = correctAnswers;
+            exam.metadata = finalMetadata;
+            exam.totalQuestions = totalQuestions;
+            exam.examKeyRaw = keyText;
+            exam.blueprintId = blueprintId || exam.blueprintId || null;
+            exam.status = "graded";
+            exam.gradedAt = Date.now();
+
+            Store.saveExam(exam).then(() => {
+              closeModal("addKeyModal");
+              showNotification("کارنامه با موفقیت ساخته شد.", "success");
+              renderExams(currentFolderId);
+            });
+          };
+
+          if (blueprintId) {
+            Store.getBlueprint(blueprintId).then((blueprint) => {
+              const overridden = Store.blueprintToMetadata(
+                blueprint,
+                totalQuestions,
+              );
+              finalizeAndSave(overridden || metadata);
+            });
+          } else {
+            finalizeAndSave(metadata);
+          }
+        } catch (err) {
+          showNotification("خطا در پردازش کلید: " + err.message, "error");
+        }
+      }
+
+      // ==================== تنظیمات ====================
+      function openSettingsModal() {
+        Store.listFolders().then((folders) => {
+          Store.getSettings().then((settings) => {
+            const select = document.getElementById("defaultFolderSelect");
+            let html = '<option value="">بدون پوشه پیش‌فرض</option>';
+            folders.forEach((f) => {
+              html += `<option value="${f.id}" ${settings.defaultFolderId === f.id ? "selected" : ""}>${escapeHtml(f.name)}</option>`;
+            });
+            select.innerHTML = html;
+            renderBlueprintsListInSettings();
+            openModal("settingsModal");
+          });
+        });
+      }
+
+      function submitSettings() {
+        const val = document.getElementById("defaultFolderSelect").value;
+        Store.setDefaultFolder(val || null).then(() => {
+          closeModal("settingsModal");
+          showNotification("تنظیمات ذخیره شد.", "success");
+        });
+      }
+
+      function renderBlueprintsListInSettings() {
+        Store.listBlueprints().then((blueprints) => {
+          const list = document.getElementById("blueprintsListInSettings");
+          if (!blueprints.length) {
+            list.innerHTML =
+              '<div class="blueprint-empty-note">هنوز بودجه‌بندی‌ای نساخته‌اید.</div>';
+            return;
+          }
+          list.innerHTML = blueprints
+            .map((b) => {
+              const subjectCount = (b.booklets || []).reduce(
+                (sum, bk) => sum + (bk.subjects || []).length,
+                0,
+              );
+              return `
+              <div class="blueprint-mini-item">
+                <span><i class="fas fa-layer-group"></i> ${escapeHtml(b.name)}
+                  <span style="color: var(--text-muted); font-weight: 400; font-size: 0.78rem;">
+                    (${(b.booklets || []).length} دفترچه، ${subjectCount} درس)
+                  </span>
+                </span>
+                <span class="blueprint-mini-actions">
+                  <button class="mini-icon-btn edit" title="ویرایش" onclick="openBlueprintModal('${b.id}')"><i class="fas fa-pen"></i></button>
+                  <button class="mini-icon-btn del" title="حذف" onclick="confirmDeleteBlueprint('${b.id}','${escapeAttr(b.name)}')"><i class="fas fa-trash"></i></button>
+                </span>
+              </div>`;
+            })
+            .join("");
+        });
+      }
+
+      function confirmDeleteBlueprint(id, name) {
+        if (confirm("آیا از حذف بودجه‌بندی «" + name + "» مطمئن هستید؟")) {
+          Store.deleteBlueprint(id).then(() => {
+            showNotification("بودجه‌بندی حذف شد.", "success");
+            renderBlueprintsListInSettings();
+          });
+        }
+      }
+
+      // ==================== ساخت/ویرایش بودجه‌بندی آزمون ====================
+      let editingBlueprintId = null;
+      let subjectRowSeq = 0;
+
+      function emptySubjectRow() {
+        return { name: "", type: "تخصصی", start: "", end: "" };
+      }
+
+      function openBlueprintModal(blueprintId) {
+        editingBlueprintId = blueprintId || null;
+        if (blueprintId) {
+          Store.getBlueprint(blueprintId).then((bp) => {
+            if (!bp) return;
+            document.getElementById("blueprintModalTitle").textContent =
+              "ویرایش بودجه‌بندی";
+            document.getElementById("blueprintNameInput").value = bp.name || "";
+            const booklets = (
+              bp.booklets && bp.booklets.length
+                ? bp.booklets
+                : [{ name: "دفترچه ۱", timeMinutes: "", subjects: [emptySubjectRow()] }]
+            ).map((bk) => ({
+              name: bk.name,
+              timeMinutes:
+                Number.isFinite(Number(bk.timeMinutes)) && Number(bk.timeMinutes) > 0
+                  ? Number(bk.timeMinutes)
+                  : "",
+              subjects: (bk.subjects && bk.subjects.length
+                ? bk.subjects
+                : [emptySubjectRow()]
+              ).map((s) => ({ ...s })),
+            }));
+            document.getElementById("blueprintBookletCount").value =
+              booklets.length;
+            renderBookletsUI(booklets);
+            openModal("blueprintModal");
+          });
+        } else {
+          document.getElementById("blueprintModalTitle").textContent =
+            "بودجه‌بندی جدید";
+          document.getElementById("blueprintNameInput").value = "";
+          document.getElementById("blueprintBookletCount").value = 1;
+          renderBookletsUI([
+            { name: "دفترچه ۱", timeMinutes: "", subjects: [emptySubjectRow()] },
+          ]);
+          openModal("blueprintModal");
+        }
+      }
+
+      function renderBookletsUI(booklets) {
+        const container = document.getElementById("bookletsContainer");
+        container.innerHTML = booklets
+          .map(
+            (bk, idx) => `
+          <div class="booklet-block" data-booklet-index="${idx}">
+            <div class="booklet-header">
+              <input type="text" class="booklet-name-input" value="${escapeAttrHtml(bk.name || "دفترچه " + toPersianDigits(idx + 1))}" placeholder="نام دفترچه" />
+              <div class="booklet-time-row">
+                <label>زمان دفترچه:</label>
+                <input
+                  type="number"
+                  class="booklet-time-input"
+                  min="1"
+                  max="600"
+                  step="1"
+                  value="${bk.timeMinutes || ""}"
+                  placeholder="مثلاً ۷۵"
+                  inputmode="numeric"
+                />
+                <span class="booklet-time-note">دقیقه</span>
+              </div>
+            </div>
+            <div class="subject-rows" id="subjectRows_${idx}">
+              ${bk.subjects.map((s) => subjectRowHtml(s)).join("")}
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm add-subject-btn" onclick="addSubjectRow(${idx})">
+              <i class="fas fa-plus"></i> افزودن درس
+            </button>
+          </div>`,
+          )
+          .join("");
+      }
+
+      function subjectRowHtml(s) {
+        s = s || emptySubjectRow();
+        const rowId = "srow_" + subjectRowSeq++;
+        return `
+          <div class="subject-row" id="${rowId}">
+            <input type="text" class="subj-name" placeholder="نام درس (مثلاً ریاضی)" value="${escapeAttrHtml(s.name || "")}" />
+            <select class="subj-type">
+              <option value="عمومی" ${s.type === "عمومی" ? "selected" : ""}>عمومی</option>
+              <option value="تخصصی" ${s.type !== "عمومی" ? "selected" : ""}>تخصصی</option>
+            </select>
+            <input type="number" class="subj-start" placeholder="از سوال" min="1" value="${s.start || ""}" />
+            <input type="number" class="subj-end" placeholder="تا سوال" min="1" value="${s.end || ""}" />
+            <button type="button" class="subj-remove-btn" title="حذف درس" onclick="removeSubjectRow('${rowId}')"><i class="fas fa-times"></i></button>
+          </div>`;
+      }
+
+      function addSubjectRow(bookletIndex) {
+        const wrap = document.getElementById("subjectRows_" + bookletIndex);
+        wrap.insertAdjacentHTML("beforeend", subjectRowHtml(emptySubjectRow()));
+      }
+
+      function removeSubjectRow(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) row.remove();
+      }
+
+      function applyBookletCount() {
+        const desired = Math.max(
+          1,
+          Math.min(
+            10,
+            parseInt(
+              document.getElementById("blueprintBookletCount").value,
+              10,
+            ) || 1,
+          ),
+        );
+        const current = collectBookletsFromUI();
+        while (current.length < desired) {
+          current.push({
+            name: "دفترچه " + toPersianDigits(current.length + 1),
+            timeMinutes: "",
+            subjects: [emptySubjectRow()],
+          });
+        }
+        if (current.length > desired) {
+          if (
+            !confirm(
+              "تعداد دفترچه کمتر شده؛ دفترچه‌های اضافی و دروس داخل آن‌ها حذف می‌شوند. ادامه می‌دهید؟",
+            )
+          ) {
+            document.getElementById("blueprintBookletCount").value =
+              current.length;
+            return;
+          }
+          current.length = desired;
+        }
+        renderBookletsUI(current);
+      }
+
+      function collectBookletsFromUI() {
+        const blocks = document.querySelectorAll(
+          "#bookletsContainer .booklet-block",
+        );
+        const booklets = [];
+        blocks.forEach((block) => {
+          const name = block.querySelector(".booklet-name-input").value.trim();
+          const timeInput = block.querySelector(".booklet-time-input");
+          const timeMinutes = timeInput ? timeInput.value : "";
+          const subjects = [];
+          block.querySelectorAll(".subject-row").forEach((row) => {
+            const sName = row.querySelector(".subj-name").value.trim();
+            const sType = row.querySelector(".subj-type").value;
+            const sStart = row.querySelector(".subj-start").value;
+            const sEnd = row.querySelector(".subj-end").value;
+            subjects.push({
+              name: sName,
+              type: sType,
+              start: sStart,
+              end: sEnd,
+            });
+          });
+          booklets.push({ name, timeMinutes, subjects });
+        });
+        return booklets;
+      }
+
+      function submitBlueprint() {
+        const name = document.getElementById("blueprintNameInput").value.trim();
+        if (!name) {
+          showNotification("لطفاً نام بودجه‌بندی را وارد کنید.", "error");
+          return;
+        }
+        const rawBooklets = collectBookletsFromUI();
+        const booklets = rawBooklets.map((bk, idx) => ({
+          name: bk.name || "دفترچه " + toPersianDigits(idx + 1),
+          timeMinutes:
+            Number.isFinite(Number(bk.timeMinutes)) && Number(bk.timeMinutes) > 0
+              ? Math.min(600, Math.floor(Number(bk.timeMinutes)))
+              : null,
+          subjects: bk.subjects
+            .filter((s) => s.name && s.start && s.end)
+            .map((s) => ({
+              name: s.name,
+              type: s.type === "تخصصی" ? "تخصصی" : "عمومی",
+              start: parseInt(s.start, 10),
+              end: parseInt(s.end, 10),
+            })),
+        }));
+
+        const totalSubjects = booklets.reduce(
+          (sum, bk) => sum + bk.subjects.length,
+          0,
+        );
+        if (!totalSubjects) {
+          showNotification(
+            "لطفاً حداقل یک درس با بازه سوالات معتبر وارد کنید.",
+            "error",
+          );
+          return;
+        }
+
+        const blueprint = {
+          id: editingBlueprintId || undefined,
+          name,
+          booklets,
+        };
+        Store.saveBlueprint(blueprint).then(() => {
+          closeModal("blueprintModal");
+          showNotification("بودجه‌بندی «" + name + "» ذخیره شد.", "success");
+          renderBlueprintsListInSettings();
+        });
+      }
+
+      function toPersianDigits(n) {
+        const fa = "۰۱۲۳۴۵۶۷۸۹";
+        return String(n).replace(/[0-9]/g, (d) => fa[d]);
+      }
+
+      function escapeAttrHtml(str) {
+        return String(str || "").replace(/"/g, "&quot;");
+      }
+
+      // ==================== ابزارها ====================
+      function escapeHtml(str) {
+        return String(str || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function escapeAttr(str) {
+        return String(str || "").replace(/'/g, "\\'");
+      }
+
+      let barChart = null,
+        pieChart = null;
+      function openStats(folderId) {
+        const p = folderId ? Store.listExams(folderId) : Store.listAllExams();
+        p.then((exams) => {
+          const s = Store.computeStats(exams);
+          document.getElementById("statsModalTitle").textContent = folderId
+            ? "آمار این پوشه"
+            : "آمار کل آزمون‌ها";
+          document.getElementById("statsSummary").innerHTML =
+            `<div class="stats-summary-grid"><div>آزمون‌های دارای کارنامه: <b>${s.examCount}</b></div><div>درست: <b>${s.totals.correct}</b></div><div>غلط: <b>${s.totals.wrong}</b></div><div>نزده: <b>${s.totals.empty}</b></div></div>`;
+          barChart?.destroy();
+          barChart = new Chart(document.getElementById("subjectChart"), {
+            type: "bar",
+            data: {
+              labels: s.subjects.map((x) => x.name + " (" + x.type + ")"),
+              datasets: [
+                {
+                  label: "درصد",
+                  data: s.subjects.map((x) => x.percentage),
+                  backgroundColor: "#006994",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: { y: { min: -100, max: 100 } },
+            },
+          });
+          pieChart?.destroy();
+          pieChart = new Chart(document.getElementById("answersChart"), {
+            type: "doughnut",
+            data: {
+              labels: ["درست", "غلط", "نزده"],
+              datasets: [
+                { data: [s.totals.correct, s.totals.wrong, s.totals.empty] },
+              ],
+            },
+            options: { responsive: true },
+          });
+          openModal("statsModal");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+
+        // اگر از صفحه روند برگشتیم و openFolder در URL هست، همون پوشه رو باز کن
+        const params = new URLSearchParams(window.location.search);
+        const openFolderId = params.get("openFolder");
+
+        if (openFolderId) {
+          Store.getFolder(openFolderId).then((f) => {
+            if (f) {
+              openFolder(openFolderId);
+            } else {
+              showFoldersView();
+            }
+          });
+        } else {
+          showFoldersView();
+        }
+      });
+    </script>
+  </body>
+</html>

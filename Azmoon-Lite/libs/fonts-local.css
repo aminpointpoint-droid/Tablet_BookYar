@@ -1,0 +1,3 @@
+/* B Nazanin / B Naznin: no internet copy. Uses the font installed on the PC (Windows Persian fonts).
+   If it is not installed the pages fall back to Vazirmatn (see the font-family stacks).
+   To bundle your own copy: put BNazanin.woff2 (or .ttf) in libs/fonts/ and add it as a url() below. */

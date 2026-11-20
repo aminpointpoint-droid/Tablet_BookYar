@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+    <title>نمونه آزمون تستی — دو دفترچه</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        font-family: Vazirmatn, Tahoma, "Segoe UI", sans-serif;
+        background: var(--water-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 24px 14px;
+      }
+      .card {
+        max-width: 640px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 26px 24px;
+        box-shadow: var(--shadow-light);
+      }
+      h1 { font-size: 1.3rem; margin: 0 0 6px; }
+      p.sub { margin: 0 0 18px; color: var(--text-muted); font-size: 0.92rem; line-height: 1.9; }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0; }
+      .row label { font-size: 0.95rem; }
+      input[type="number"] {
+        width: 110px;
+        padding: 8px 10px;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: inherit;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        text-align: center;
+      }
+      .card button {
+        width: 100%;
+        margin-top: 18px;
+        padding: 13px;
+        border: 0;
+        border-radius: 10px;
+        background: var(--primary-color);
+        color: #fff;
+        font-family: inherit;
+        font-size: 1.05rem;
+        cursor: pointer;
+      }
+      .card button:hover { background: var(--primary-dark); }
+      .hint { margin-top: 14px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.9; }
+      #log {
+        margin-top: 18px;
+        padding: 12px 14px;
+        background: var(--water-light);
+        border: 1px dashed var(--border-color);
+        border-radius: 10px;
+        font-size: 0.88rem;
+        line-height: 2;
+        min-height: 44px;
+        white-space: pre-wrap;
+      }
+    </style>
+  
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+  <body>
+    <div class="card">
+      <h1>نمونه آزمون تستی — دو دفترچه</h1>
+      <p class="sub">
+        ۸ سوال (۴ سوال در هر دفترچه) با کلید پاسخ آماده. این صفحه دقیقاً مثل «مرکز آزمون»،
+        آزمون را در <b>exam-center-exam.html</b> باز می‌کند؛ پس این فایل باید در همان پوشه‌ی آن باشد.
+      </p>
+
+      <div class="row">
+        <label for="t1">زمان دفترچه ۱ (ثانیه)</label>
+        <input type="number" id="t1" value="120" min="20" step="10" />
+      </div>
+      <div class="row">
+        <label for="t2">زمان دفترچه ۲ (ثانیه)</label>
+        <input type="number" id="t2" value="120" min="20" step="10" />
+      </div>
+      <div class="row">
+        <label for="neg">نمره‌ی منفی (هر ۳ غلط = ۱ درست)</label>
+        <input type="checkbox" id="neg" />
+      </div>
+
+      <button id="startBtn">شروع آزمون نمونه</button>
+
+      <div class="hint">
+        با زمان‌های پیش‌فرض (۱۲۰ ثانیه): نوتیس یک‌چهارم پایانی هر دفترچه در ثانیه‌ی ۹۰ می‌آید،
+        دفترچه ۱ در ثانیه‌ی ۱۲۰ خودکار به دفترچه ۲ می‌رود، و در دفترچه ۲ دکمه‌ی «پایان آزمون»
+        بعد از ۶۰ ثانیه فعال می‌شود. اگر پاپ‌آپ مسدود شد، برای این صفحه آن را مجاز کنید.
+      </div>
+
+      <div id="log">هنوز آزمونی شروع نشده است.</div>
+    </div>
+
+    <script>
+      // ---------- سوالات نمونه ----------
+      const BOOKLETS = [
+        {
+          name: "دفترچه ۱",
+          subject: "ریاضی",
+          questions: [
+            { text: "حاصل ۷ × ۸ کدام است؟", options: ["۵۴", "۵۶", "۶۴", "۴۸"], answer: 2 },
+            { text: "ریشه‌ی معادله‌ی ۲x + ۶ = ۱۴ کدام است؟", options: ["۳", "۴", "۵", "۸"], answer: 2 },
+            { text: "مساحت مربعی به ضلع ۹ چند واحد مربع است؟", options: ["۱۸", "۳۶", "۸۱", "۷۲"], answer: 3 },
+            { text: "بیست‌وپنج درصد عدد ۲۰۰ کدام است؟", options: ["۲۵", "۴۰", "۵۰", "۷۵"], answer: 3 },
+          ],
+        },
+        {
+          name: "دفترچه ۲",
+          subject: "اطلاعات عمومی",
+          questions: [
+            { text: "پایتخت ایران کدام شهر است؟", options: ["اصفهان", "تهران", "شیراز", "تبریز"], answer: 2 },
+            { text: "بلندترین قله‌ی ایران کدام است؟", options: ["سبلان", "علم‌کوه", "دماوند", "زردکوه"], answer: 3 },
+            { text: "«شاهنامه» سروده‌ی کیست؟", options: ["سعدی", "حافظ", "فردوسی", "مولوی"], answer: 3 },
+            { text: "یک دقیقه چند ثانیه است؟", options: ["۳۰", "۶۰", "۱۰۰", "۱۲۰"], answer: 2 },
+          ],
+        },
+      ];
+
+      function esc(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+      const FA = "۰۱۲۳۴۵۶۷۸۹";
+      const faNum = (n) => String(n).replace(/\d/g, (d) => FA[d]);
+
+      // تصویر هر سوال به‌صورت SVG (مرورگر فارسی را درست و راست‌به‌چپ نمایش می‌دهد)
+      function makeQuestionImage(qText, options, label) {
+        const font = "Vazirmatn, Tahoma, 'Segoe UI', sans-serif";
+        let body = "";
+        body += `<text x="860" y="52" direction="rtl" text-anchor="start" font-family="${font}" font-size="30" font-weight="bold" fill="#0f172a">${esc(qText)}</text>`;
+        options.forEach((opt, i) => {
+          const y = 118 + i * 52;
+          body += `<circle cx="846" cy="${y - 9}" r="17" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>`;
+          body += `<text x="846" y="${y - 1}" text-anchor="middle" font-family="${font}" font-size="20" fill="#3730a3">${faNum(i + 1)}</text>`;
+          body += `<text x="812" y="${y}" direction="rtl" text-anchor="start" font-family="${font}" font-size="26" fill="#1e293b">${esc(opt)}</text>`;
+        });
+        body += `<text x="30" y="${118 + options.length * 52 + 8}" text-anchor="start" direction="rtl" font-family="${font}" font-size="16" fill="#94a3b8">${esc(label)}</text>`;
+        const h = 118 + options.length * 52 + 30;
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${h}" viewBox="0 0 900 ${h}"><rect width="900" height="${h}" fill="#ffffff"/><rect x="2" y="2" width="896" height="${h - 4}" rx="12" fill="none" stroke="#e2e8f0" stroke-width="2"/>${body}</svg>`;
+        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      }
+
+      // ---------- ساخت session (همان قالبی که مرکز آزمون می‌سازد) ----------
+      function buildSession(t1Sec, t2Sec, negative) {
+        const times = [t1Sec, t2Sec];
+        const questions = [];
+        const booklets = [];
+        const subjects = [];
+        let n = 0;
+        BOOKLETS.forEach((b, bi) => {
+          const start = n + 1;
+          b.questions.forEach((q, qi) => {
+            n++;
+            questions.push({
+              number: n,
+              image: makeQuestionImage(q.text, q.options, `${b.name} — سوال ${faNum(qi + 1)}`),
+              label: "",
+              bookName: b.subject,
+              itemLabel: "",
+              correctAnswer: String(q.answer),
+              bookId: "",
+              srcNumber: null,
+              subjectName: b.subject,
+              subjectType: "عمومی",
+              subjectKey: b.subject,
+              bookletIdx: bi,
+            });
+          });
+          booklets.push({ name: b.name, start, end: n, timeSeconds: times[bi] });
+          subjects.push({ subject: b.subject, type: "عمومی", start, end: n, chapters: [] });
+        });
+
+        return {
+          id: "sample_" + Date.now(),
+          examName: "آزمون نمونه (دو دفترچه)",
+          optionsCount: 4,
+          timeLimitSeconds: times[0] + times[1],
+          booklets,
+          instantFeedback: false,
+          negativeMarking: !!negative,
+          answerKey: { answers: questions.map((q) => q.correctAnswer), subjects },
+          questions,
+          createdAt: Date.now(),
+          originPage: "by-home",
+          bookIds: [],
+        };
+      }
+
+      // ---------- باز کردن پنجره‌ی آزمون و تحویل session (پروتکل مرکز آزمون) ----------
+      const logEl = document.getElementById("log");
+      function log(msg) {
+        logEl.textContent = msg;
+      }
+
+      document.getElementById("startBtn").addEventListener("click", function () {
+        const t1 = Math.max(20, parseInt(document.getElementById("t1").value, 10) || 120);
+        const t2 = Math.max(20, parseInt(document.getElementById("t2").value, 10) || 120);
+        const neg = document.getElementById("neg").checked;
+
+        // باید همین‌جا و سینک باز شود، وگرنه به‌عنوان پاپ‌آپ مسدود می‌شود
+        const examWin = window.open("exam-center-exam.html", "_blank");
+        if (!examWin) {
+          log("مرورگر پنجره‌ی آزمون را مسدود کرد؛ پاپ‌آپ را برای این صفحه مجاز کنید و دوباره تلاش کنید.");
+          return;
+        }
+
+        const session = buildSession(t1, t2, neg);
+        let delivered = false;
+        function sendSession() {
+          if (delivered || examWin.closed) return;
+          try {
+            examWin.postMessage({ type: "dy_examSession", session }, "*");
+          } catch (err) {
+            /* تلاش بعدی */
+          }
+        }
+        function onMessage(e) {
+          if (e.source !== examWin || !e.data) return;
+          const d = e.data;
+          if (d.type === "examReady") {
+            sendSession();
+          } else if (d.type === "examSessionReceived") {
+            delivered = true;
+            log(`آزمون باز شد. دفترچه ۱: ${t1} ثانیه | دفترچه ۲: ${t2} ثانیه`);
+          } else if (d.type === "dy_examResult") {
+            const r = d.result || {};
+            log(
+              "آزمون تمام شد. نتیجه‌ی ارسالی به مرکز آزمون:\n" +
+                `کل: ${r.total} | درست: ${r.correct} | غلط: ${r.wrong} | نزده: ${r.unanswered}\n` +
+                `نمره از ۲۰: ${r.scoreOutOf20} | درصد: ${r.percentage}٪ | زمان صرف‌شده: ${r.timeSpentSeconds} ثانیه`,
+            );
+          }
+        }
+        window.addEventListener("message", onMessage);
+        log("در حال باز کردن آزمون...");
+        sendSession();
+        [300, 800, 1500, 3000].forEach((ms) => setTimeout(sendSession, ms));
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../libs/theme.css" />
+    <script src="../libs/theme.js"></script>
+    <title>روند آزمون - آزمون یار</title>
+    <link rel="icon" href="../icon.png" type="image/png" />
+    <link rel="stylesheet" href="../libs/vazirmatn/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="../libs/fontawesome/css/all.min.css" />
+    <script src="../libs/chart.umd.js"></script>
+    <style>
+      html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; width: 100%; min-height: 100vh; }
+      * { box-sizing: border-box; }
+      body {
+        font-family: var(--font-family);
+        background: var(--gradient-water);
+        color: var(--text-color);
+        line-height: 1.6;
+        min-height: 100vh;
+        transition: var(--transition);
+      }
+      .header {
+        background: var(--header-bg);
+        backdrop-filter: blur(10px);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow-light);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .header h1 { font-size: 1.25rem; margin: 0; color: var(--primary-color); display: flex; align-items: center; gap: 8px; }
+      .header-actions { display: flex; gap: 10px; }
+      .icon-btn {
+        background: var(--card-bg); border: 1px solid var(--border-color); color: var(--primary-color);
+        width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: var(--transition); font-size: 1rem;
+      }
+      .icon-btn:hover { background: var(--gradient-primary); color: #fff; transform: translateY(-2px); }
+      .container { max-width: 1000px; margin: 0 auto; padding: 24px 18px 60px; }
+      .page-intro { margin-bottom: 22px; }
+      .page-intro h2 { margin: 0; color: var(--primary-color); display: flex; align-items: center; gap: 8px; }
+      .page-intro p { color: var(--text-muted); margin: 4px 0 0; }
+      .btn {
+        padding: 10px 20px; border: none; border-radius: var(--border-radius-sm); cursor: pointer;
+        font-family: var(--font-family); font-size: 0.92rem; display: inline-flex; align-items: center; gap: 6px;
+        transition: var(--transition); font-weight: 600; text-decoration: none;
+      }
+      .btn-primary { background: var(--gradient-primary); color: #fff; }
+      .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+      .btn-secondary { background: transparent; color: var(--primary-color); border: 1px solid var(--border-color); }
+      .btn-secondary:hover { background: var(--card-hover); }
+      .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+      .bottom-back-wrap { display: flex; justify-content: center; margin-top: 28px; }
+      .bottom-back-wrap .btn { padding: 11px 28px; }
+      .filter-bar {
+        background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius);
+        padding: 16px 18px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;
+        box-shadow: var(--shadow-light); margin-bottom: 22px; backdrop-filter: blur(10px);
+      }
+      .filter-bar .form-group { flex: 1; min-width: 180px; }
+      .filter-bar label { display: block; margin-bottom: 6px; font-size: 0.88rem; font-weight: 600; color: var(--text-color); }
+      .filter-bar select {
+        width: 100%; padding: 10px 12px; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.6); font-family: var(--font-family); color: var(--text-color); font-size: 0.95rem;
+      }
+      [data-theme="galaxy"] .filter-bar select, [data-theme="coal-mine"] .filter-bar select { background: rgba(255, 255, 255, 0.06); }
+      [data-theme="galaxy"] .filter-bar select option, [data-theme="coal-mine"] .filter-bar select option { color: #111; }
+      .progress-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 22px; }
+      .progress-stat-card {
+        background: var(--card-bg); border-radius: var(--border-radius); padding: 18px; text-align: center;
+        border: 1px solid var(--border-color); box-shadow: var(--shadow-light);
+      }
+      .progress-stat-card .stat-icon { font-size: 1.4rem; margin-bottom: 6px; color: var(--primary-color); }
+      .progress-stat-card .stat-value { font-size: 1.7rem; font-weight: 700; color: var(--text-color); }
+      .progress-stat-card .stat-label { color: var(--text-muted); font-size: 0.88rem; margin-top: 2px; }
+      .progress-stat-card.up .stat-icon, .progress-stat-card.up .stat-value { color: var(--success-color); }
+      .progress-stat-card.down .stat-icon, .progress-stat-card.down .stat-value { color: var(--danger-color); }
+      .chart-card {
+        background: var(--card-bg); border-radius: var(--border-radius-lg); padding: 22px;
+        border: 1px solid var(--border-color); box-shadow: var(--shadow-light); margin-bottom: 22px;
+      }
+      .chart-card h3 { margin: 0 0 4px; color: var(--primary-color); display: flex; align-items: center; gap: 8px; font-size: 1.05rem; }
+      .chart-card .chart-note { margin: 0 0 14px; color: var(--text-muted); font-size: 0.85rem; }
+      .chart-wrap { position: relative; height: 320px; }
+      .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+      .chip {
+        display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; cursor: pointer;
+        border: 1px solid var(--border-color); background: transparent; color: var(--text-color);
+        font-family: var(--font-family); font-size: 0.82rem; transition: var(--transition);
+      }
+      .chip .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--chip-color, var(--primary-color)); }
+      .chip.off { opacity: 0.45; }
+      .chip.off .dot { background: transparent; border: 1px solid var(--text-muted); }
+      .chip:hover { background: var(--card-hover); }
+      .table-scroll { overflow-x: auto; }
+      table.trend-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 520px; }
+      .trend-table th, .trend-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border-color); }
+      .trend-table th { color: var(--text-muted); font-weight: 600; font-size: 0.82rem; }
+      .trend-table tr:last-child td { border-bottom: none; }
+      .delta { font-weight: 700; display: inline-flex; align-items: center; gap: 4px; direction: ltr; }
+      .delta.up { color: var(--success-color); }
+      .delta.down { color: var(--danger-color); }
+      .delta.flat { color: var(--text-muted); }
+      .perf-score { display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:14px; }
+      .perf-ring { width:96px; height:96px; border-radius:50%; display:grid; place-items:center; flex:0 0 auto;
+        background:conic-gradient(var(--ring-color,var(--primary-color)) calc(var(--p)*1%), var(--border-color) 0); }
+      .perf-ring > div { width:76px; height:76px; border-radius:50%; background:var(--card-bg,#fff); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+      .perf-ring .n { font-weight:800; font-size:1.5rem; line-height:1; color:var(--text-color); }
+      .perf-ring .u { font-size:.7rem; color:var(--text-muted); }
+      .perf-label { font-weight:800; font-size:1.15rem; color:var(--text-color); }
+      .perf-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:12px; }
+      .perf-fact { border:1px solid var(--border-color); border-radius:var(--border-radius-sm); padding:10px 12px; font-size:.85rem; color:var(--text-muted); }
+      .perf-fact b { display:block; color:var(--text-color); font-size:1rem; margin-top:2px; }
+      .perf-notes { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; font-size:.9rem; color:var(--text-color); }
+      .perf-notes li i { color:var(--primary-color); margin-left:6px; }
+      .pct-neg { color: var(--danger-color); }
+      .type-tag { font-size: 0.75rem; padding: 2px 9px; border-radius: 999px; background: rgba(0, 105, 148, 0.12); color: var(--primary-color); font-weight: 600; }
+      .exam-list { display: flex; flex-direction: column; gap: 10px; }
+      .exam-row {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+        padding: 12px 14px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background: var(--water-light);
+      }
+      [data-theme="galaxy"] .exam-row, [data-theme="coal-mine"] .exam-row { background: rgba(255, 255, 255, 0.04); }
+      .exam-row .name { font-weight: 700; color: var(--text-color); }
+      .exam-row .meta { color: var(--text-muted); font-size: 0.8rem; display: flex; gap: 12px; flex-wrap: wrap; }
+      .exam-row .pct { font-weight: 700; font-size: 1.05rem; direction: ltr; }
+      .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
+      .empty-state i { font-size: 2.6rem; color: var(--border-color); margin-bottom: 14px; display: block; }
+      .notification {
+        position: fixed; top: 20px; left: 20px; padding: 14px 20px; border-radius: var(--border-radius); box-shadow: var(--shadow);
+        z-index: 10000; transform: translateX(-120%); transition: transform 0.3s ease; max-width: 340px; font-family: var(--font-family);
+        display: flex; align-items: center; gap: 10px; color: #fff; background: var(--primary-color);
+      }
+      .notification.show { transform: translateX(0); }
+      .section-title { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--primary-color); font-size: 1.1rem; }
+      .section-gap { margin-top: 30px; }
+      .board {
+        background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg);
+        padding: 22px; box-shadow: var(--shadow-light); backdrop-filter: blur(10px);
+      }
+      .board-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+      .board-top .sub { color: var(--text-muted); font-size: 0.88rem; }
+      .board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+      .board-cell { border-radius: var(--border-radius); padding: 16px 12px; text-align: center; border: 1px solid var(--border-color); background: var(--water-light); }
+      [data-theme="galaxy"] .board-cell, [data-theme="coal-mine"] .board-cell { background: rgba(255,255,255,0.04); }
+      .board-cell .v { font-size: 1.9rem; font-weight: 700; line-height: 1.2; }
+      .board-cell .l { color: var(--text-muted); font-size: 0.88rem; margin-top: 2px; }
+      .board-cell.ok .v, .board-cell.ok i { color: var(--success-color); }
+      .board-cell.bad .v, .board-cell.bad i { color: var(--danger-color); }
+      .board-cell.none .v, .board-cell.none i { color: var(--text-muted); }
+      .board-cell.main { background: var(--gradient-primary); border-color: transparent; }
+      .board-cell.main .v, .board-cell.main .l, .board-cell.main i { color: #fff; }
+      .board-cell i { font-size: 1.2rem; margin-bottom: 4px; display: block; }
+      .ratio-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin-top: 18px; background: var(--border-color); }
+      .ratio-bar span { display: block; height: 100%; }
+      .board-body { display:grid; grid-template-columns:minmax(0,1fr) 250px; gap:20px; align-items:center; }
+      .overall-pie-wrap { position:relative; height:220px; }
+      .trend-controls { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; }
+      .trend-filter { display:inline-flex; align-items:center; gap:7px; padding:7px 12px; border-radius:999px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-color); cursor:pointer; font-family:var(--font-family); font-size:.82rem; transition:var(--transition); }
+      .trend-filter .dot { width:9px; height:9px; border-radius:50%; background:var(--filter-color,var(--primary-color)); }
+      .trend-filter.off { opacity:.45; }
+      .trend-filter.active { box-shadow:0 0 0 2px var(--primary-color) inset; }
+      .trend-filter.all { background:var(--gradient-primary); color:#fff; border-color:transparent; }
+      .trend-filter.all .dot { background:#fff; }
+      @media (max-width:760px) {
+.board-body{grid-template-columns:1fr;}
+.overall-pie-wrap{height:190px;max-width:280px;width:100%;margin:0 auto;}
+}
+      .folder-pick { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+      .folder-pill {
+        display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: var(--border-radius);
+        border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer;
+        font-family: var(--font-family); font-size: 0.95rem; transition: var(--transition);
+      }
+      .folder-pill i { color: var(--primary-color); }
+      .folder-pill small { color: var(--text-muted); font-size: 0.78rem; }
+      .folder-pill:hover { transform: translateY(-2px); box-shadow: var(--shadow-light); }
+      .folder-pill.active { background: var(--gradient-primary); color: #fff; border-color: transparent; }
+      .folder-pill.active i, .folder-pill.active small { color: #fff; }
+      .exam-row { cursor: pointer; transition: var(--transition); }
+      .exam-row:hover { box-shadow: var(--shadow-light); }
+      .exam-row.active { border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-color) inset; }
+      .karnameh-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+      .karnameh-head h4 { margin: 0; font-size: 1.1rem; color: var(--text-color); }
+      .karnameh-head .meta { color: var(--text-muted); font-size: 0.82rem; }
+      .bar-cell { display: flex; align-items: center; gap: 10px; min-width: 150px; }
+      .bar-track { position: relative; flex: 1; height: 8px; border-radius: 999px; background: var(--border-color); overflow: hidden; direction: ltr; }
+      .bar-fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 999px; background: var(--primary-color); }
+      .bar-fill.neg { background: var(--danger-color); }
+      .pending-note { color: var(--text-muted); font-size: 0.85rem; margin-top: 10px; }
+      @media (max-width: 560px) {
+.chart-wrap { height: 260px; }
+.progress-stat-card .stat-value { font-size: 1.4rem; }
+}
+    </style>
+  
+<style id="lite-mode-css">
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    scroll-behavior: auto !important;
+  }
+  .background-effects, .bubble, .bubble-small, .particle, .wave, .confetti {
+    display: none !important;
+  }
+  .card, [class*="card"], [class*="modal"], [class*="panel"], header, .header {
+    box-shadow: 0 1px 4px rgba(0,0,0,.15) !important;
+  }
+  body { background-attachment: scroll !important; }
+</style>
+
+</head>
+  <body>
+    <header class="header">
+      <h1><i class="fas fa-chart-line"></i> روند آزمون</h1>
+      <div class="header-actions">
+        <button class="icon-btn" title="پوشه آزمون‌ها" onclick="goToFolders()"><i class="fas fa-folder-open"></i></button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div id="content"></div>
+      <div class="bottom-back-wrap">
+        <button class="btn btn-secondary" onclick="goBack()"><i class="fas fa-arrow-right"></i> بازگشت</button>
+      </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script src="../exam-folder-store.js"></script>
+    <script>
+      const Store = window.ExamFolderStore;
+      const PALETTE = ["#006994", "#e67e22", "#2ecc71", "#9b59b6", "#e74c3c", "#16a085", "#f1c40f", "#34495e", "#e84393", "#00b4d8"];
+
+      let allExams = []; // آزمون‌های دارای کارنامه (بعد از فیلتر پوشه) به‌همراه آمار محاسبه‌شده
+      let overallChart = null;
+      let subjectChart = null;
+      let hiddenSubjects = new Set();
+      let trendMode = "overall";
+      let selectedSubjects = new Set();
+
+      /* ============ ابزارها ============ */
+      function showNotification(message) {
+        const el = document.getElementById("notification");
+        el.textContent = message;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 3200);
+      }
+      function goBack() { window.location.href = "../index.html"; }
+      function goToFolders() {
+        var fid = (typeof selectedFolderId !== "undefined" && selectedFolderId) ? selectedFolderId : (new URLSearchParams(window.location.search)).get("folderId");
+        window.location.href = "../Exam_Folders.html" + (fid ? "?openFolder=" + encodeURIComponent(fid) : "");
+      }
+      function escapeHtml(str) {
+        return String(str == null ? "" : str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      }
+      function toFa(n) { return String(n).replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]); }
+      function toEn(s) {
+        return String(s == null ? "" : s)
+          .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+          .replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+      }
+      function fmtPct(v) {
+        if (v == null || isNaN(v)) return "—";
+        const r = Math.round(v * 10) / 10;
+        return toFa(String(r).replace("-", "")) + "٪" + (r < 0 ? "-" : "");
+      }
+      function fmtPctPlain(v) {
+        if (v == null || isNaN(v)) return "—";
+        return (Math.round(v * 10) / 10).toString();
+      }
+      function themeColor(name) {
+        return getComputedStyle(document.body).getPropertyValue(name).trim();
+      }
+      // رنگ نمودارها از تم خوانده می‌شود؛ با تغییر تم دوباره رسم کن
+      document.addEventListener("themechange", function () {
+        try { render(); } catch (e) {}
+      });
+
+      /* ============ محاسبه درصد (فرمول کنکوری: هر ۳ غلط = ۱ درست) ============ */
+      function calcPct(correct, wrong, total) {
+        if (!total) return null;
+        return ((correct - wrong / 3) / total) * 100;
+      }
+
+      function countRange(exam, start, end) {
+        const ua = exam.userAnswers || [];
+        const ca = exam.correctAnswers || [];
+        let correct = 0, wrong = 0, empty = 0, total = 0;
+        for (let q = start; q <= end; q++) {
+          const c = ca[q - 1];
+          if (c == null) continue;
+          total++;
+          const u = ua[q - 1];
+          if (!u) empty++;
+          else if (u === c) correct++;
+          else wrong++;
+        }
+        return { correct, wrong, empty, total };
+      }
+
+      /* استخراج لیست دروس از metadata (با پشتیبانی از چند ساختار ممکن) */
+      function extractSubjectList(metadata) {
+        if (!metadata) return [];
+        let list = [];
+        if (Array.isArray(metadata)) list = metadata;
+        else if (Array.isArray(metadata.subjects)) list = metadata.subjects;
+        else if (Array.isArray(metadata.booklets)) {
+          metadata.booklets.forEach((bk) => (bk.subjects || []).forEach((s) => list.push(s)));
+        } else if (typeof metadata === "object") {
+          Object.keys(metadata).forEach((k) => {
+            const v = metadata[k];
+            if (Array.isArray(v)) v.forEach((s) => list.push(s));
+            else if (v && typeof v === "object") list.push(Object.assign({ name: k }, v));
+          });
+        }
+        // اگر هر عنصر خودش دفترچه بود (booklet با subjects)
+        const flat = [];
+        list.forEach((s) => {
+          if (s && Array.isArray(s.subjects)) s.subjects.forEach((x) => flat.push(x));
+          else flat.push(s);
+        });
+        return flat.filter(Boolean);
+      }
+
+      function pick(obj, keys) {
+        for (const k of keys) if (obj[k] != null && obj[k] !== "") return obj[k];
+        return null;
+      }
+
+      function computeExamStats(exam) {
+        const total = exam.totalQuestions || (exam.correctAnswers || []).length;
+        const all = countRange(exam, 1, total);
+        const overall = Object.assign({}, all, { pct: calcPct(all.correct, all.wrong, all.total) });
+
+        const subjects = [];
+        extractSubjectList(exam.metadata).forEach((s) => {
+          const name = pick(s, ["name", "subject", "title", "lesson"]);
+          const start = parseInt(toEn(pick(s, ["start", "from", "startQuestion", "begin"])), 10);
+          const end = parseInt(toEn(pick(s, ["end", "to", "endQuestion", "last"])), 10);
+          if (!name || isNaN(start) || isNaN(end)) return;
+          const type = pick(s, ["type", "kind", "category"]) === "عمومی" ? "عمومی" : "تخصصی";
+          const c = countRange(exam, start, end);
+          if (!c.total) return;
+          subjects.push(Object.assign({ name: String(name), type }, c, { pct: calcPct(c.correct, c.wrong, c.total) }));
+        });
+
+        // پشتیبان: اگر بازه‌ها قابل خواندن نبود، از computeStats خود Store استفاده شود
+        if (!subjects.length && typeof Store.computeStats === "function") {
+          try {
+            const st = Store.computeStats([exam]);
+            (st.subjects || []).forEach((s) => {
+              subjects.push({ name: s.name, type: s.type === "عمومی" ? "عمومی" : "تخصصی", pct: s.percentage, correct: null, wrong: null, empty: null, total: null });
+            });
+          } catch (e) { /* نادیده */ }
+        }
+        return { overall, subjects };
+      }
+
+      /* ترتیب زمانی آزمون‌ها */
+      function dateKey(e) {
+        const m = toEn(e.date || "").match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+        return m ? +m[1] * 10000 + +m[2] * 100 + +m[3] : null;
+      }
+      function timeKey(e) { return e.createdAt || e.gradedAt || e.timestamp || 0; }
+      function compareExams(a, b) {
+        const da = dateKey(a), db = dateKey(b);
+        if (da != null && db != null && da !== db) return da - db;
+        return timeKey(a) - timeKey(b);
+      }
+
+      /* ============ وضعیت ============ */
+      let folders = [];
+      let gradedByFolder = {}; // folderId -> [exam با _stats]
+      let pendingByFolder = {};
+      let selectedFolderId = null;
+      let selectedExamId = null;
+      let trendChart = null;
+
+      // اگر از داخل یک پوشه وارد صفحه روند شدیم، همان پوشه را باز کن.
+      const trendUrlParams = new URLSearchParams(window.location.search);
+      const requestedFolderId = trendUrlParams.get("folderId");
+
+      function loadAll() {
+        return Store.listFolders().then((fs) => {
+          folders = fs || [];
+          return Promise.all(folders.map((f) => Store.listExams(f.id).then((list) => [f.id, list || []])));
+        }).then((pairs) => {
+          gradedByFolder = {}; pendingByFolder = {};
+          pairs.forEach(([fid, list]) => {
+            gradedByFolder[fid] = list
+              .filter((e) => e.status === "graded" && Array.isArray(e.correctAnswers) && e.correctAnswers.length)
+              .sort(compareExams)
+              .map((e) => Object.assign({}, e, { _stats: computeExamStats(e) }));
+            pendingByFolder[fid] = list.filter((e) => e.status === "pending").length;
+          });
+        });
+      }
+
+      function allGraded() {
+        return folders.flatMap((f) => gradedByFolder[f.id] || []);
+      }
+
+      /* ============ رندر اصلی ============ */
+      function render() {
+        const root = document.getElementById("content");
+        const graded = allGraded();
+
+        if (!folders.length || !graded.length) {
+          trendChart?.destroy(); trendChart = null;
+          root.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-chart-line"></i>
+              هنوز آزمونی با کارنامه ندارید.<br />
+              آزمون‌های خود را در برگه‌یار یا دیجیتال‌یار ثبت کنید و کلید را در «پوشه آزمون‌ها» وارد کنید تا روند شما اینجا ساخته شود.
+              <br /><br />
+              <button class="btn btn-primary" onclick="goToFolders()"><i class="fas fa-folder-open"></i> رفتن به پوشه آزمون‌ها</button>
+            </div>`;
+          return;
+        }
+
+        // آمار کلی همه آزمون‌ها
+        let C = 0, W = 0, E = 0, T = 0;
+        graded.forEach((e) => { const o = e._stats.overall; C += o.correct; W += o.wrong; E += o.empty; T += o.total; });
+        const pct = calcPct(C, W, T);
+        const pc = (n) => (T ? (n / T) * 100 : 0);
+
+        // انتخاب پوشه: اگر از صفحه پوشه‌ها آمده‌ایم همان پوشه را باز کن؛
+        // در غیر این صورت اولین پوشه دارای کارنامه انتخاب می‌شود.
+        if (!selectedFolderId || !folders.some((f) => f.id === selectedFolderId)) {
+          const requested = requestedFolderId && folders.some((f) => f.id === requestedFolderId)
+            ? requestedFolderId
+            : null;
+          const first = folders.find((f) => (gradedByFolder[f.id] || []).length);
+          selectedFolderId = requested || (first ? first.id : folders[0].id);
+          selectedExamId = null;
+        }
+
+        root.innerHTML = `
+          <section class="board">
+            <div class="board-top">
+              <h2 class="section-title" style="margin:0"><i class="fas fa-gauge-high"></i> آمار کلی شما</h2>
+              <span class="sub">از ${toFa(graded.length)} آزمون دارای کارنامه در ${toFa(folders.filter((f) => (gradedByFolder[f.id] || []).length).length)} پوشه · ${toFa(T)} سوال</span>
+            </div>
+            <div class="board-body"><div>
+              <div class="board-grid">
+                <div class="board-cell ok"><i class="fas fa-circle-check"></i><div class="v">${toFa(C)}</div><div class="l">درست</div></div>
+                <div class="board-cell bad"><i class="fas fa-circle-xmark"></i><div class="v">${toFa(W)}</div><div class="l">غلط</div></div>
+                <div class="board-cell none"><i class="fas fa-circle-minus"></i><div class="v">${toFa(E)}</div><div class="l">نزده</div></div>
+                <div class="board-cell main"><i class="fas fa-percent"></i><div class="v" style="direction:ltr">${toFa(fmtPctPlain(pct))}٪</div><div class="l">درصد کلی (با نمره منفی)</div></div>
+              </div>
+              <div class="ratio-bar" title="نسبت درست، غلط و نزده"><span style="width:${pc(C)}%;background:var(--success-color)"></span><span style="width:${pc(W)}%;background:var(--danger-color)"></span><span style="width:${pc(E)}%;background:var(--text-muted);opacity:.55"></span></div>
+            </div><div><div class="overall-pie-wrap"><canvas id="overallPieCanvas"></canvas></div></div></div>
+          </section>
+
+          <section class="section-gap">
+            <h2 class="section-title"><i class="fas fa-folder-open"></i> روند در پوشه آزمون</h2>
+            <div class="folder-pick" id="folderPick"></div>
+            <div id="folderArea"></div>
+          </section>`;
+
+        renderFolderPick();
+        renderFolderArea();
+        drawOverallPie(C, W, E);
+      }
+
+      function renderFolderPick() {
+        document.getElementById("folderPick").innerHTML = folders
+          .map((f) => {
+            const n = (gradedByFolder[f.id] || []).length;
+            return `<button class="folder-pill ${f.id === selectedFolderId ? "active" : ""}" onclick="selectFolder('${escapeHtml(f.id)}')">
+              <i class="fas fa-folder"></i> ${escapeHtml(f.name)} <small>${toFa(n)} آزمون</small>
+            </button>`;
+          })
+          .join("");
+      }
+
+      function selectFolder(id) {
+        selectedFolderId = id;
+        selectedExamId = null;
+        trendMode = "overall";
+        selectedSubjects = new Set();
+        renderFolderPick();
+        renderFolderArea();
+      }
+
+      function renderFolderArea() {
+        const area = document.getElementById("folderArea");
+        const exams = gradedByFolder[selectedFolderId] || [];
+        const pending = pendingByFolder[selectedFolderId] || 0;
+        const pendingNote = pending ? `<div class="pending-note"><i class="fas fa-hourglass-half"></i> ${toFa(pending)} آزمون این پوشه هنوز کلید ندارد و در روند نیست.</div>` : "";
+
+        if (!exams.length) {
+          trendChart?.destroy(); trendChart = null;
+          area.innerHTML = `
+            <div class="empty-state" style="padding:30px 10px">
+              <i class="fas fa-inbox"></i>
+              این پوشه هنوز آزمونی با کارنامه ندارد.
+              ${pendingNote}
+            </div>`;
+          return;
+        }
+
+        if (!selectedExamId || !exams.some((e) => e.id === selectedExamId)) {
+          selectedExamId = exams[exams.length - 1].id; // آخرین آزمون
+        }
+
+        area.innerHTML = `
+          <div class="chart-card" id="perfCard"></div>
+
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-line"></i> روند درصد در این پوشه</h3>
+            <p class="chart-note">حالت «درصد کل» یا یک/چند درس را انتخاب کنید؛ تاریخ آزمون زیر نمودار نمایش داده می‌شود.</p>
+            <div class="trend-controls" id="trendControls"></div>
+            <div class="chart-wrap"><canvas id="trendCanvas"></canvas></div>
+            ${pendingNote}
+          </div>
+
+          <div class="chart-card">
+            <h3><i class="fas fa-list-ol"></i> آزمون‌های داده‌شده</h3>
+            <p class="chart-note">یک آزمون را انتخاب کنید تا کارنامه‌اش همین‌جا زیر لیست نمایش داده شود.</p>
+            <div class="exam-list" id="examRows"></div>
+          </div>
+
+          <div class="chart-card" id="karnamehCard"></div>`;
+
+        renderPerformance(exams);
+        drawTrendChart(exams);
+        renderExamRows(exams);
+        renderKarnameh();
+      }
+
+      /* ============ نمودار خط شکسته ============ */
+      function chartBase() {
+        const muted = themeColor("--text-muted") || "#4a6b8a";
+        const grid = themeColor("--border-color") || "#81d4fa";
+        const font = { family: "BNazanin, Vazirmatn, sans-serif", size: 13 };
+        return { muted, grid, font };
+      }
+      function examLabel(e, i) {
+        const name = e.name || "آزمون " + toFa(i + 1);
+        return name.length > 16 ? name.slice(0, 15) + "…" : name;
+      }
+      function scaleBounds(values) {
+        const vals = values.filter((v) => v != null);
+        if (!vals.length) return { min: 0, max: 100 };
+        const lo = Math.min(...vals), hi = Math.max(...vals);
+        return { min: Math.max(-100, Math.floor((lo - 8) / 10) * 10), max: Math.min(100, Math.ceil((hi + 8) / 10) * 10) };
+      }
+
+      function allSubjectNames(exams) {
+        const seen = new Map();
+        exams.forEach(e => (e._stats.subjects || []).forEach(s => { const n=String(s.name||"").trim(); if(n&&!seen.has(n)) seen.set(n,s.type||"تخصصی"); }));
+        return Array.from(seen, ([name,type]) => ({name,type}));
+      }
+      function subjectColor(name,index) { let h=0; for(let i=0;i<name.length;i++) h=((h<<5)-h)+name.charCodeAt(i)|0; return PALETTE[Math.abs(h+index)%PALETTE.length]; }
+      function renderTrendControls(exams) {
+        const el=document.getElementById("trendControls"); if(!el)return;
+        const subjects=allSubjectNames(exams), available=new Set(subjects.map(s=>s.name));
+        selectedSubjects.forEach(s=>{if(!available.has(s))selectedSubjects.delete(s);});
+        if(trendMode==="subjects"&&!selectedSubjects.size&&subjects.length)selectedSubjects.add(subjects[0].name);
+        el.innerHTML=`<button class="trend-filter all ${trendMode==="overall"?"active":""}" onclick="setTrendOverall()"><span class="dot"></span> درصد کل</button>`+
+          subjects.map((s,i)=>`<button class="trend-filter ${trendMode==="subjects"&&selectedSubjects.has(s.name)?"active":""}" style="--filter-color:${subjectColor(s.name,i)}" onclick="toggleTrendSubject('${escapeHtml(s.name)}')"><span class="dot"></span>${escapeHtml(s.name)}</button>`).join("");
+      }
+      function setTrendOverall(){trendMode="overall";const e=gradedByFolder[selectedFolderId]||[];renderTrendControls(e);drawTrendChart(e);}
+      function toggleTrendSubject(name){trendMode="subjects";if(selectedSubjects.has(name))selectedSubjects.delete(name);else selectedSubjects.add(name);const e=gradedByFolder[selectedFolderId]||[];renderTrendControls(e);drawTrendChart(e);}
+      function drawOverallPie(correct,wrong,empty){
+        const canvas=document.getElementById("overallPieCanvas");if(!canvas)return;overallChart?.destroy();
+        overallChart=new Chart(canvas,{type:"doughnut",data:{labels:["درست","غلط","نزده"],datasets:[{data:[correct,wrong,empty],backgroundColor:[themeColor("--success-color"),themeColor("--danger-color"),themeColor("--text-muted")],borderWidth:2,borderColor:themeColor("--card-bg")||"#fff"} ]},options:{responsive:true,maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"bottom",labels:{font:{family:"BNazanin, Vazirmatn, sans-serif",size:12}}},tooltip:{rtl:true,textDirection:"rtl",callbacks:{label:ctx=>{const t=correct+wrong+empty,p=t?Math.round(ctx.raw/t*1000)/10:0;return `${ctx.label}: ${toFa(ctx.raw)} (${toFa(p)}٪)`;}}}}}});
+      }
+
+      function drawTrendChart(exams) {
+        const c=chartBase(); const primary=themeColor("--primary-color"); renderTrendControls(exams); const datasets=[];
+        if(trendMode==="overall"){
+          const pts=exams.map(e=>e._stats.overall.pct), si=exams.findIndex(e=>e.id===selectedExamId);
+          datasets.push({label:"درصد کل",data:pts.map(v=>v==null?null:Math.round(v*10)/10),borderColor:primary,backgroundColor:primary,tension:0,borderWidth:3,pointRadius:exams.map((_,i)=>i===si?8:5),pointHoverRadius:9,pointBackgroundColor:exams.map((_,i)=>i===si?"#fff":primary),pointBorderColor:primary,pointBorderWidth:exams.map((_,i)=>i===si?4:1)});
+        } else allSubjectNames(exams).filter(s=>selectedSubjects.has(s.name)).forEach((s,i)=>datasets.push({label:s.name,data:exams.map(e=>{const r=(e._stats.subjects||[]).find(x=>x.name===s.name);return r&&r.pct!=null?Math.round(r.pct*10)/10:null;}),borderColor:subjectColor(s.name,i),backgroundColor:subjectColor(s.name,i),tension:0,borderWidth:2.5,pointRadius:4,pointHoverRadius:7}));
+        const b=scaleBounds(datasets.flatMap(d=>d.data).filter(v=>v!=null)); trendChart?.destroy();
+        trendChart=new Chart(document.getElementById("trendCanvas"),{type:"line",data:{labels:exams.map(e=>e.date||"—"),datasets},options:{responsive:true,maintainAspectRatio:false,onClick:(evt,els)=>{if(els.length)selectExam(exams[els[0].index].id);},onHover:(evt,els)=>{evt.native.target.style.cursor=els.length?"pointer":"default";},interaction:{mode:"index",intersect:false},plugins:{legend:{display:trendMode==="subjects",labels:{color:c.muted,font:c.font,usePointStyle:true}},tooltip:{titleFont:c.font,bodyFont:c.font,rtl:true,textDirection:"rtl",callbacks:{title:items=>{const e=exams[items[0].dataIndex];return(e.name||"آزمون")+(e.date?" — "+e.date:"");},label:ctx=>`${ctx.dataset.label}: ${toFa(ctx.parsed.y)}٪`}}},scales:{x:{ticks:{color:c.muted,font:c.font,maxRotation:45,minRotation:0},grid:{display:false}},y:{min:b.min,max:b.max,ticks:{color:c.muted,font:c.font,callback:v=>toFa(v)+"٪"},grid:{color:c.grid+"55"}}}}});
+      }
+
+      /* ============ لیست آزمون‌ها و کارنامه ============ */
+      function renderExamRows(exams) {
+        document.getElementById("examRows").innerHTML = exams
+          .slice().reverse()
+          .map((e) => {
+            const o = e._stats.overall;
+            return `
+              <div class="exam-row ${e.id === selectedExamId ? "active" : ""}" onclick="selectExam('${escapeHtml(e.id)}')">
+                <div>
+                  <div class="name">${escapeHtml(e.name || "آزمون بدون نام")}</div>
+                  <div class="meta">
+                    <span><i class="fas fa-calendar"></i> ${escapeHtml(e.date || "")}</span>
+                    <span>درست ${toFa(o.correct)} · غلط ${toFa(o.wrong)} · نزده ${toFa(o.empty)}</span>
+                  </div>
+                </div>
+                <span class="pct ${o.pct < 0 ? "pct-neg" : ""}">${toFa(fmtPctPlain(o.pct))}٪</span>
+              </div>`;
+          })
+          .join("");
+      }
+
+      function selectExam(id) {
+        selectedExamId = id;
+        const exams = gradedByFolder[selectedFolderId] || [];
+        drawTrendChart(exams);
+        renderExamRows(exams);
+        renderKarnameh();
+        const card = document.getElementById("karnamehCard");
+        if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      /* ============ عملکرد کلی پوشه ============ */
+      function perfLabel(score) {
+        if (score >= 80) return ["عالی", "var(--success-color)"];
+        if (score >= 60) return ["خوب", "var(--primary-color)"];
+        if (score >= 40) return ["متوسط", "#f9a825"];
+        if (score >= 20) return ["نیازمند تلاش بیشتر", "#ef6c00"];
+        return ["ضعیف", "var(--danger-color)"];
+      }
+      function renderPerformance(exams) {
+        const card = document.getElementById("perfCard");
+        if (!card) return;
+        const pcts = exams.map((e) => e._stats.overall.pct).filter((v) => v != null);
+        if (!pcts.length) { card.innerHTML = ""; return; }
+        const recent = pcts.slice(-3);
+        const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
+        const avg = pcts.reduce((a, b) => a + b, 0) / pcts.length;
+        const best = Math.max(...pcts);
+        const score = Math.max(0, Math.min(100, Math.round(recentAvg)));
+        const [label, color] = perfLabel(score);
+
+        // میانگین هر درس در کل پوشه
+        const map = new Map();
+        exams.forEach((e) => (e._stats.subjects || []).forEach((s) => {
+          if (s.pct == null) return;
+          const n = String(s.name || "").trim();
+          if (!n) return;
+          if (!map.has(n)) map.set(n, []);
+          map.get(n).push(s.pct);
+        }));
+        const subj = Array.from(map, ([name, v]) => ({ name, avg: v.reduce((a, b) => a + b, 0) / v.length }))
+          .sort((a, b) => b.avg - a.avg);
+        const strong = subj[0], weak = subj.length > 1 ? subj[subj.length - 1] : null;
+
+        const notes = [];
+        if (pcts.length >= 2) {
+          const d = pcts[pcts.length - 1] - pcts[pcts.length - 2];
+          notes.push(Math.abs(d) < 0.5
+            ? "درصد آخرین آزمون تقریباً با آزمون قبل برابر است."
+            : `درصد آخرین آزمون نسبت به قبلی ${toFa(fmtPctPlain(Math.abs(d)))} واحد ${d > 0 ? "بیشتر" : "کمتر"} شده است.`);
+        }
+        if (pcts.length >= 4) {
+          const h = Math.floor(pcts.length / 2);
+          const a1 = pcts.slice(0, h).reduce((a, b) => a + b, 0) / h;
+          const a2 = pcts.slice(h).reduce((a, b) => a + b, 0) / (pcts.length - h);
+          notes.push(a2 - a1 > 2 ? "روند کلی پوشه صعودی است." : a1 - a2 > 2 ? "روند کلی پوشه نزولی است؛ مرور دروس ضعیف را جدی بگیرید." : "روند کلی پوشه تقریباً ثابت است.");
+        }
+        if (weak && strong.name !== weak.name) {
+          notes.push(`قوی‌ترین درس: ${escapeHtml(strong.name)} (${toFa(fmtPctPlain(strong.avg))}٪) · ضعیف‌ترین درس: ${escapeHtml(weak.name)} (${toFa(fmtPctPlain(weak.avg))}٪).`);
+        }
+        const o = exams[exams.length - 1]._stats.overall;
+        if (o.total && o.wrong > o.correct / 2) notes.push("تعداد غلط‌ها در آخرین آزمون زیاد است؛ با نمره منفی، نزدن سوال‌های مشکوک می‌تواند به درصد کمک کند.");
+
+        card.innerHTML = `
+          <h3><i class="fas fa-award"></i> عملکرد کلی در این پوشه</h3>
+          <div class="perf-score">
+            <div class="perf-ring" style="--p:${score};--ring-color:${color}"><div><span class="n">${toFa(score)}</span><span class="u">از ۱۰۰</span></div></div>
+            <div><div class="perf-label" style="color:${color}">${label}</div><div class="chart-note" style="margin:0">بر اساس میانگین ${toFa(recent.length)} آزمون اخیر</div></div>
+          </div>
+          <div class="perf-facts">
+            <div class="perf-fact">میانگین پوشه<b style="direction:ltr">${toFa(fmtPctPlain(avg))}٪</b></div>
+            <div class="perf-fact">بهترین درصد<b style="direction:ltr">${toFa(fmtPctPlain(best))}٪</b></div>
+            <div class="perf-fact">تعداد آزمون<b>${toFa(exams.length)}</b></div>
+          </div>
+          <ul class="perf-notes">${notes.map((n) => `<li><i class="fas fa-lightbulb"></i>${n}</li>`).join("")}</ul>`;
+      }
+
+      function prevExamOf(exam) {
+        const list = gradedByFolder[selectedFolderId] || [];
+        const i = list.findIndex((e) => e.id === exam.id);
+        return i > 0 ? list[i - 1] : null;
+      }
+      function deltaHtml(cur, prev) {
+        if (cur == null || prev == null) return `<span class="delta flat">—</span>`;
+        const d = cur - prev;
+        if (Math.abs(d) < 0.05) return `<span class="delta flat"><i class="fas fa-minus"></i> ۰</span>`;
+        const up = d > 0;
+        return `<span class="delta ${up ? "up" : "down"}"><i class="fas fa-arrow-${up ? "up" : "down"}"></i> ${toFa(fmtPctPlain(Math.abs(d)))}</span>`;
+      }
+
+      function renderKarnameh() {
+        const card = document.getElementById("karnamehCard");
+        const exam = (gradedByFolder[selectedFolderId] || []).find((e) => e.id === selectedExamId);
+        if (!card || !exam) return;
+        const o = exam._stats.overall;
+        const subs = exam._stats.subjects;
+
+        const prev = prevExamOf(exam);
+        const prevSub = new Map();
+        if (prev) (prev._stats.subjects || []).forEach((x) => prevSub.set(String(x.name).trim(), x.pct));
+        const rows = subs.map((s) => {
+          const p = s.pct == null ? 0 : s.pct;
+          const w = Math.min(100, Math.abs(p));
+          return `
+            <tr>
+              <td>${escapeHtml(s.name)}</td>
+              <td><span class="type-tag">${s.type}</span></td>
+              <td>${s.correct == null ? "—" : toFa(s.correct)}</td>
+              <td>${s.wrong == null ? "—" : toFa(s.wrong)}</td>
+              <td>${s.empty == null ? "—" : toFa(s.empty)}</td>
+              <td>
+                <div class="bar-cell">
+                  <div class="bar-track"><div class="bar-fill ${p < 0 ? "neg" : ""}" style="width:${w}%"></div></div>
+                  <span class="${p < 0 ? "pct-neg" : ""}" style="direction:ltr; min-width:44px">${toFa(fmtPctPlain(s.pct))}</span>
+                </div>
+              </td>
+              ${prev ? `<td>${deltaHtml(s.pct, prevSub.has(String(s.name).trim()) ? prevSub.get(String(s.name).trim()) : null)}</td>` : ""}
+            </tr>`;
+        }).join("");
+
+        card.innerHTML = `
+          <div class="karnameh-head">
+            <div>
+              <h4><i class="fas fa-clipboard-check"></i> کارنامه: ${escapeHtml(exam.name || "آزمون بدون نام")}</h4>
+              <div class="meta">${escapeHtml(exam.date || "")} · ${toFa(exam.totalQuestions || o.total)} سوال · ${exam.source === "digital" ? "دیجیتال‌یار" : "برگه‌یار"}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="viewKarnameh('${escapeHtml(exam.id)}')"><i class="fas fa-up-right-from-square"></i> کارنامه کامل</button>
+          </div>
+          <div class="board-grid" style="margin-bottom:16px">
+            <div class="board-cell ok"><div class="v">${toFa(o.correct)}</div><div class="l">درست</div></div>
+            <div class="board-cell bad"><div class="v">${toFa(o.wrong)}</div><div class="l">غلط</div></div>
+            <div class="board-cell none"><div class="v">${toFa(o.empty)}</div><div class="l">نزده</div></div>
+            <div class="board-cell main"><div class="v" style="direction:ltr">${toFa(fmtPctPlain(o.pct))}٪</div><div class="l">درصد کل</div></div>
+          </div>
+          ${prev ? `<div class="chart-note" style="margin-bottom:12px">نسبت به «${escapeHtml(prev.name || "آزمون قبل")}»: ${deltaHtml(o.pct, prev._stats.overall.pct)} <span>واحد درصد کل</span></div>` : ""}
+          ${subs.length ? `
+          <div class="table-scroll">
+            <table class="trend-table">
+              <thead><tr><th>درس</th><th>نوع</th><th>درست</th><th>غلط</th><th>نزده</th><th>درصد</th>${prev ? "<th>تغییر نسبت به قبل</th>" : ""}</tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>` : `<div class="chart-note">برای این آزمون اطلاعات درسی ثبت نشده است؛ هنگام افزودن کلید یک «بودجه‌بندی» انتخاب کنید.</div>`}`;
+      }
+
+      /* همان مسیرهای پوشه آزمون‌ها برای مشاهده کارنامه کامل */
+      function viewKarnameh(examId) {
+        const exam = (gradedByFolder[selectedFolderId] || []).find((e) => e.id === examId);
+        if (!exam) return;
+        const base = exam.source === "digital" ? "../Digital_yar/karnameh-engine.html" : "../Bargeh_yar/karnameh.html";
+        window.location.href = base + "?examId=" + encodeURIComponent(exam.id) + "&folderId=" + encodeURIComponent(exam.folderId);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!Store) {
+          document.getElementById("content").innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i>فایل exam-folder-store.js پیدا نشد. این فایل باید کنار همین صفحه باشد.</div>';
+          return;
+        }
+        loadAll().then(render);
+      });
+    </script>
+  </body>
+</html>
